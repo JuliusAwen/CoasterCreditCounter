@@ -12,4 +12,6 @@ public interface IContentRecyclerViewAdapter
     void insertElement(int position, IElement element);
     void notifyElementChanged(IElement element);
     void removeElement(IElement element);
+
+    void groupContent(GroupType groupType);
 }

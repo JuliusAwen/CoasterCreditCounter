@@ -46,7 +46,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IGroupableContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -68,7 +68,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         setContentView(R.layout.activity_navigation_hub);
     }
 
-    private IGroupableContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    private IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     protected void create()
     {
@@ -133,7 +133,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                             return true;
                         }
                     })
-                    .placeOrderFor(IGroupableContentRecyclerViewAdapter.class);
+                    .placeOrder();
 
             RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));

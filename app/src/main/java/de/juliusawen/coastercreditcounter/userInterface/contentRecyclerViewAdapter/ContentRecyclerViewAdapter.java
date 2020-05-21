@@ -18,15 +18,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-class ContentRecyclerViewAdapter extends AdapterExpansionHandler
-        implements
-        IContentRecyclerViewAdapter,
-        IGroupableContentRecyclerViewAdapter,
-        IDecorableContentRecyclerViewAdapter,
-        IExpandableContentRecyclerViewAdapter,
-        ICountableRecyclerViewAdapter,
-        IDecorableExpandableContentRecyclerViewAdapter,
-        IGroupableDecorableExpandableContentRecyclerViewAdapter
+class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
 {
     ContentRecyclerViewAdapter(List<IElement> content, Configuration configuration)
     {

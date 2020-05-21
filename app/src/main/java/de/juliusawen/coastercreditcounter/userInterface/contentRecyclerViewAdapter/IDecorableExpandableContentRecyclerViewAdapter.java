@@ -1,5 +1,0 @@
-package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
-
-public interface IDecorableExpandableContentRecyclerViewAdapter extends IDecorableContentRecyclerViewAdapter, IExpandableContentRecyclerViewAdapter
-{
-}

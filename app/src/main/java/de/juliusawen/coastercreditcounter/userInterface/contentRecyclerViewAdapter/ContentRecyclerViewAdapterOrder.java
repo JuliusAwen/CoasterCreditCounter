@@ -43,7 +43,7 @@ public class ContentRecyclerViewAdapterOrder
         return this;
     }
 
-    public <T extends IContentRecyclerViewAdapter> T placeOrderFor(Class<T> type)
+    public IContentRecyclerViewAdapter placeOrder()
     {
         if(this.configuration.validate(!BuildConfig.DEBUG))
         {
@@ -54,13 +54,7 @@ public class ContentRecyclerViewAdapterOrder
                             this.configuration.getDecoration()),
                     '=', false);
 
-            ContentRecyclerViewAdapter adapter = new ContentRecyclerViewAdapter(this.content, this.configuration);
-            if(type.isInstance(adapter))
-            {
-                return type.cast(adapter);
-            }
-
-            throw new ClassCastException(String.format("not able to cast: [%s] is not instance of [%s]", adapter.getClass().getSimpleName(), type.getSimpleName()));
+            return new ContentRecyclerViewAdapter(this.content, this.configuration);
         }
         else
         {
