@@ -18,20 +18,23 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
 {
     ContentRecyclerViewAdapter(Configuration configuration, List<IElement> content)
     {
-        this.initialize(configuration, content);
-
-        Log.wrap(LogLevel.DEBUG,
-                String.format("Details:\n\n%s\n\n%s\n\n%s",
-                        String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
-                        configuration,
-                        configuration.getDecoration()),
-                '=', false);
-        Log.wrap(LogLevel.INFO, "instantiated", '#', true);
+        super();
+        this.configure(configuration);
+        this.setContent(content);
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
     }
 
-    private void initialize(Configuration configuration, List<IElement> content)
+    @Override
+    protected void configure(Configuration configuration)
     {
+        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n\n%s", configuration, configuration.getDecoration()), '=', false);
         super.configure(configuration);
+    }
+
+    @Override
+    public void setContent(List<IElement> content)
+    {
+        Log.d(String.format(Locale.getDefault(), "setting [%d] Items", content.size()));
         super.setContent(content);
     }
 

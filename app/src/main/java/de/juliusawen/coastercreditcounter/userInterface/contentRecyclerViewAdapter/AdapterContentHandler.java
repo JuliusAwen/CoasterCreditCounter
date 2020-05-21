@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -18,19 +17,17 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected ArrayList<IElement> ungroupedContent;
 
     private GroupType groupType;
-    private GroupHeaderProvider groupHeaderProvider;
+    private final GroupHeaderProvider groupHeaderProvider;
 
     AdapterContentHandler()
     {
-        Log.v("instantiated");
+        this.groupHeaderProvider = new GroupHeaderProvider();
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
     protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
-        this.groupHeaderProvider = new GroupHeaderProvider();
-
-        Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "GroupType[%s]", this.groupType), '=', false);
     }
 
     @Override

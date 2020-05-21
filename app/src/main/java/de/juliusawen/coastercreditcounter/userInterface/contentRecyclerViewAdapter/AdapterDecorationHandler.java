@@ -18,9 +18,10 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
     AdapterDecorationHandler()
     {
         super();
-        Log.v("instantiated");
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
+    @Override
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
@@ -29,7 +30,6 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         if(this.isDecorable)
         {
             this.decoration = configuration.getDecoration();
-            Log.wrap(LogLevel.VERBOSE, String.format("instantiated [%s] with \n%s", this.getClass().getSimpleName(), this.decoration), '=', false);
         }
     }
 

@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class Configuration
 {
-    boolean isGroupable = false;
     private GroupType groupType = GroupType.NONE;
 
     boolean hasExternalOnClickListeners = false;
@@ -38,9 +37,8 @@ public class Configuration
 
     public void setGroupType(GroupType groupType)
     {
-        this.isGroupable = true;
         this.groupType = groupType;
-        Log.v(String.format("GroupType set:\n%s", groupType));
+        Log.d(String.format("set GroupType[%s]", groupType));
     }
 
 
@@ -53,7 +51,7 @@ public class Configuration
     {
         this.isDecorable = true;
         this.decoration = decoration;
-        Log.v(String.format("\n%s", decoration));
+        Log.d(String.format("\n%s", decoration));
     }
 
 
@@ -66,14 +64,14 @@ public class Configuration
     {
         this.isExpandable = true;
         this.childTypesToExpandInSortOrder.addAll(childTypesToExpandInSortOrder);
-        Log.v(String.format(Locale.getDefault(), "added [%d] Elements", childTypesToExpandInSortOrder.size()));
+        Log.d(String.format(Locale.getDefault(), "added [%d] types to expand", childTypesToExpandInSortOrder.size()));
     }
 
     public void addChildTypeToExpand(Class<? extends IElement> childTypeToExpand)
     {
         this.isExpandable = true;
         this.childTypesToExpandInSortOrder.add(childTypeToExpand);
-        Log.v(String.format("added [%s]", childTypeToExpand));
+        Log.v(String.format("added [%s] as type to expand", childTypeToExpand));
     }
 
     Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
@@ -90,14 +88,14 @@ public class Configuration
     {
         this.hasExternalOnClickListeners = true;
         this.onClickListenersByType.put(type, onClickListener);
-        Log.v(String.format("for [%s]", type.getSimpleName()));
+        Log.d(String.format("for [%s]", type.getSimpleName()));
     }
 
     public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
         this.hasExternalOnClickListeners = true;
         this.onLongClickListenersByType.put(type, onLongClickListener);
-        Log.v(String.format("for [%s]", type.getSimpleName()));
+        Log.d(String.format("for [%s]", type.getSimpleName()));
     }
 
     public boolean validate(boolean tryFix)
@@ -106,7 +104,7 @@ public class Configuration
 
         if(this.isDecorable && this.decoration == null)
         {
-            Log.e("isDecorable but now Decoration is set");
+            Log.e("isDecorable but no Decoration is set");
             if(!tryFix)
             {
                 return false;
@@ -138,13 +136,13 @@ public class Configuration
         //Todo: add relevantChildTypes and CustomOnClickListeners
         return String.format(Locale.getDefault(),
                 "ContentRecyclerViewConfiguration:\n" +
-                        "  isGroupable[%S]" + (this.isDecorable ? String.format(" - GroupType[%s]\n", this.groupType) : "\n") +
-                        "  isDecorable[%S]" +
+                        "  groupType[%s]\n" +
+                        "  isDecorable[%S]\n" +
                         "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpandInSortOrder.size()) : "\n") +
                         "  isSelectable[%S]\n" +
                         "  isCountable[%S]\n",
 
-                this.isGroupable,
+                this.groupType,
                 this.isDecorable,
                 this.isExpandable,
                 this.isSelectable,

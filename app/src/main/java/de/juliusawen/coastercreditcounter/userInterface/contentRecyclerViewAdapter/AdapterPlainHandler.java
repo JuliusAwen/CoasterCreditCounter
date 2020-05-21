@@ -34,9 +34,10 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         super();
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
-        Log.v("instantiated");
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
+    @Override
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
@@ -46,12 +47,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         {
             this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
             this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
-
-            Log.wrap(LogLevel.VERBOSE,
-                    String.format(Locale.getDefault(), "Instantiated with [%d] external OnClickListeners and [%d] external OnLongClickListeners",
-                            this.externalOnClickListenersByType.size(),
-                            this.externalOnLongClickListenersByType.size()),
-                    '=', false);
         }
     }
 
@@ -78,8 +73,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
             }
         };
     }
-
-
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
@@ -204,8 +197,8 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     static class ViewHolderElement extends RecyclerView.ViewHolder
     {
         final LinearLayout linearLayout;
-        final TextView textViewDetailAbove;
         final TextView textViewName;
+        final TextView textViewDetailAbove;
         final TextView textViewDetailBelow;
         final ImageView imageViewExpandToggle;
 
@@ -216,8 +209,8 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         {
             super(view);
             this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerView);
-            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerView_DetailAbove);
             this.textViewName = view.findViewById(R.id.textViewRecyclerView_Name);
+            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerView_DetailAbove);
             this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerView_DetailBelow);
             this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerView);
 

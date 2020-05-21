@@ -30,10 +30,10 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     AdapterExpansionHandler()
     {
         super();
-        Log.v("instantiated");
-
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
+    @Override
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
@@ -42,13 +42,12 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         if(this.isExpandable)
         {
             this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
-            Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with [%d] relevant child types", this.relevantChildTypesInSortOrder.size()), '=', false);
         }
     }
 
     private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
     {
-        Log.d(String.format(Locale.getDefault(), "initializing [%d] items - generation [%d]...", items.size(), generation));
+        Log.d(String.format(Locale.getDefault(), "initializing [%d] items for generation [%d]...", items.size(), generation));
 
         ArrayList<IElement> initializedItems = new ArrayList<>();
         for(IElement item : items)
@@ -112,12 +111,12 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
     }
 
-
     public void toggleExpansion(IElement item)
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return;
         }
 
         if(!this.relevantChildTypesInSortOrder.isEmpty())
@@ -126,11 +125,11 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
             if(!this.expandedItems.contains(item))
             {
-                this.expandElement(item, true);
+                this.expandItem(item, true);
             }
             else
             {
-                this.collapseElement(item, true);
+                this.collapseItem(item, true);
             }
         }
     }
@@ -139,12 +138,13 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return;
         }
 
         if(!super.content.isEmpty() && !this.isAllExpanded())
         {
-            Log.d("expanding all elements");
+            Log.d("expanding all items");
 
             int expandedItemsCount;
             do
@@ -156,7 +156,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
                 for(IElement element : itemsToExpand)
                 {
-                    this.expandElement(element, false);
+                    this.expandItem(element, false);
                 }
             }
             while(expandedItemsCount != super.getItemCount());
@@ -177,19 +177,19 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         {
             if(groupHeader.isGroupHeader() && groupHeader.getChildren().contains(item))
             {
-                this.expandElement(groupHeader, true);
+                this.expandItem(groupHeader, true);
                 break;
             }
         }
     }
 
-    public void expandElement(IElement item, boolean scrollToElement)
+    public void expandItem(IElement item, boolean scrollToItem)
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return;
         }
-
         if(!this.expandedItems.contains(item))
         {
             ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
@@ -211,7 +211,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                     Log.v(String.format(Locale.getDefault(), "added child %s at position [%d] - generation [%d]", child, position, generation));
                 }
 
-                if(scrollToElement)
+                if(scrollToItem)
                 {
                     //scroll to item above expanded item (if any)
                     position = super.getPosition(item);
@@ -246,7 +246,8 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return false;
         }
 
         for(IElement item : this.content)
@@ -282,7 +283,8 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return;
         }
 
         if(!this.content.isEmpty() && !this.isAllCollapsed())
@@ -293,7 +295,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
             for(IElement element : itemsToCollapse)
             {
-                this.collapseElement(element, false);
+                this.collapseItem(element, false);
             }
 
             Log.v("all items collapsed");
@@ -304,11 +306,12 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void collapseElement(IElement item, boolean scrollToItem)
+    public void collapseItem(IElement item, boolean scrollToItem)
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return;
         }
 
         if(this.expandedItems.contains(item))
@@ -325,7 +328,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                 {
                     if(this.expandedItems.contains(child))
                     {
-                        this.collapseElement(child, false);
+                        this.collapseItem(child, false);
                     }
 
                     int index = this.content.indexOf(child);
@@ -368,7 +371,8 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
     {
         if(!this.isExpandable)
         {
-            throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
+            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
+            return false;
         }
 
         return this.expandedItems.isEmpty();

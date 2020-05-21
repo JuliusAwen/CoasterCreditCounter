@@ -16,7 +16,6 @@ public class ContentRecyclerViewAdapterOrder
     private List<IElement> content;
     private Configuration configuration;
 
-
     public ContentRecyclerViewAdapterOrder(List<IElement> content)
     {
         this.content = content;
