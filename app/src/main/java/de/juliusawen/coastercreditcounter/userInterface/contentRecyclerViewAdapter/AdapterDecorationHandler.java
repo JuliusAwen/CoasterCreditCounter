@@ -27,6 +27,7 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         super.configure(configuration);
 
         this.isDecorable = configuration.isDecorable;
+
         if(this.isDecorable)
         {
             this.decoration = configuration.getDecoration();

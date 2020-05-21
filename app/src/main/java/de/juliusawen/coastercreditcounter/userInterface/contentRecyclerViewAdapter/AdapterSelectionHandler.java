@@ -29,18 +29,21 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
+
         this.isSelectable = configuration.isSelectable;
         this.isMultipleSelection = configuration.isMultipleSelection;
+
         Log.v(String.format("isSelectable[%S], isMultipleSelection[%S]", configuration.isSelectable, configuration.isMultipleSelection));
     }
 
     @Override
-    public void setContent(List<IElement> content)
+    protected void setContent(List<IElement> content)
     {
         super.setContent(content);
 
         if(this.isSelectable)
         {
+            Log.d("setting Content...");
             this.selectedItemsInOrderOfSelection.clear();
         }
     }
@@ -76,12 +79,18 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
         if(this.isSelectable)
         {
-
+            //do something
         }
     }
 
     public void selectAll()
     {
+        if(!this.isSelectable)
+        {
+            Log.w("ContentRecyclerViewAdapter is not selectable");
+            return;
+        }
+
         Log.d(String.format(Locale.getDefault(), "selecting all [%d] items...", super.getItemCount()));
 
         this.selectedItemsInOrderOfSelection.clear();

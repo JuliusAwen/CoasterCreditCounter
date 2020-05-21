@@ -55,13 +55,13 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     }
 
     @Override
-    public void groupContent(GroupType groupType)
+    protected void groupContent(GroupType groupType)
     {
         super.groupContent(groupType);
 
         if(this.isExpandable)
         {
-            Log.v(String.format("grouping Content by GroupType[%s]", groupType));
+            Log.v("grouping Content...");
             this.generationByItem.clear();
             super.content = this.initializeItems(super.content, 0);
         }

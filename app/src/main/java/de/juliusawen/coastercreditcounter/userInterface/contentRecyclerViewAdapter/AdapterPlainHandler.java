@@ -43,6 +43,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         super.configure(configuration);
 
         this.hasExternalOnClickListeners = configuration.hasExternalOnClickListeners;
+
         if(this.hasExternalOnClickListeners)
         {
             this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
@@ -207,7 +208,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         final ImageView imageViewExpandToggle;
 
         final TextView textViewPrettyPrint;
-
 
         ViewHolderElement(View view)
         {

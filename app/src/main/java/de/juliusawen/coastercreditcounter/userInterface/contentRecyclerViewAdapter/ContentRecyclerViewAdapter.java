@@ -22,16 +22,10 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
         Log.frame(LogLevel.INFO, "instantiated", '#', true);
     }
 
-    public void initialize(Configuration configuration, List<IElement> content)
-    {
-        this.configure(configuration);
-        this.setContent(content);
-        Log.d("initialized");
-    }
-
     @Override
-    protected void configure(Configuration configuration)
+    public void configure(Configuration configuration)
     {
+        Log.v("configuring...");
         super.configure(configuration);
         Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n\n%s", configuration, configuration.getDecoration()), '=', false);
     }
@@ -39,15 +33,46 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     @Override
     public void setContent(List<IElement> content)
     {
-        Log.d(String.format(Locale.getDefault(), "setting [%d] Items", content.size()));
+        Log.d(String.format(Locale.getDefault(), "setting [%d] Items...", content.size()));
         super.setContent(content);
+    }
+
+    @Override
+    public void notifyContentChanged()
+    {
+        Log.d("notifying...");
+        super.notifyContentChanged();
     }
 
     @Override
     public void groupContent(GroupType groupType)
     {
-        Log.d(String.format("grouping Content by GroupType[%s]", groupType));
+        Log.d(String.format("grouping Content by GroupType[%s]...", groupType));
         super.groupContent(groupType);
+    }
+
+    public void insertItem(IElement element)
+    {
+        Log.d(String.format("inserting %s...", element));
+        super.insertItem(element);
+    }
+
+    public void insertItem(int position, IElement element)
+    {
+        Log.d(String.format(Locale.getDefault(), "inserting %s at position[%d]...", element, position));
+        super.insertItem(position, element);
+    }
+
+    public void notifyItemChanged(IElement element)
+    {
+        Log.d(String.format("notifying %s changed...", element));
+        super.notifyItemChanged(element);
+    }
+
+    public void removeItem(IElement element)
+    {
+        Log.d(String.format("removing %s...", element));
+        super.removeItem(element);
     }
 
     @Override
@@ -104,13 +129,13 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         ItemViewType itemViewType = ItemViewType.getValue(viewHolder.getItemViewType());
-        Log.v(String.format(Locale.getDefault(), "binding ViewType[%s] for position[%d]", itemViewType, position));
+        Log.v(String.format(Locale.getDefault(), "binding ViewType[%s] for position[%d]...", itemViewType, position));
 
         switch (itemViewType)
         {
             case ELEMENT:
                 ViewHolderElement viewHolderElement = (ViewHolderElement) viewHolder;
-                super.bindViewHolderElement(viewHolderElement, position);
+                this.bindViewHolderElement(viewHolderElement, position);
                 break;
 
 //            case VISITED_ATTRACTION:
@@ -148,4 +173,3 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
         }
     }
 }
-

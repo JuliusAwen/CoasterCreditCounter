@@ -55,7 +55,8 @@ public class ContentRecyclerViewAdapterOrder
                             this.configuration.getDecoration()),
                     '=', false);
 
-            this.contentRecyclerViewAdapter.initialize(this.configuration, this.content);
+            this.contentRecyclerViewAdapter.configure(this.configuration);
+            this.contentRecyclerViewAdapter.setContent(this.content);
             return this.contentRecyclerViewAdapter;
         }
         else

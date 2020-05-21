@@ -29,13 +29,14 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
+
         Log.v(String.format("GroupType is [%s]", configuration.getGroupType()));
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView)
     {
-        Log.d("attaching...");
+        Log.d("attaching to RecyclerView...");
         this.recyclerView = recyclerView;
         super.onAttachedToRecyclerView(recyclerView);
     }
@@ -51,106 +52,124 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return this.content.size();
     }
 
-    public void setContent(List<IElement> content)
+    protected void setContent(List<IElement> content)
     {
+        Log.d("setting Content...");
+
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
         this.groupContent(this.groupType);
     }
 
-    public void notifyContentChanged()
+    protected void notifyContentChanged()
     {
         super.notifyDataSetChanged();
     }
 
     protected boolean exists(IElement element)
     {
-        if(element != null)
+        if(element == null)
         {
-            return this.content.contains(element);
+            Log.w("Element is null");
+            return false;
         }
 
-        throw new IllegalArgumentException("Element can not be null");
+        return this.content.contains(element);
     }
 
     protected IElement getItem(int position)
     {
-        if(position < this.getItemCount())
+        if(position >= this.getItemCount())
         {
-            return this.content.get(position);
+            throw new IllegalStateException(String.format(Locale.getDefault(), "Position[%d] does not exist: Content contains [%d] items", position, this.getItemCount()));
         }
 
-        throw new IllegalStateException(String.format(Locale.getDefault(), "Position[%d] does not exist: Content contains [%d] items", position, this.getItemCount()));
+        return this.content.get(position);
     }
 
     protected int getPosition(IElement element)
     {
-        if(exists(element))
+        if(!this.exists(element))
         {
-            return this.content.indexOf(element);
+            throw new IllegalStateException(String.format("Item %s does not exist in Content", element));
         }
 
-        throw new IllegalStateException(String.format("Item %s does not exist in Content", element));
+        return this.content.indexOf(element);
     }
 
-    public void insertItem(IElement element)
+    protected void insertItem(IElement element)
     {
         this.insertItem(this.getItemCount(), element);
     }
 
-    public void insertItem(int position, IElement element)
+    protected void insertItem(int position, IElement element)
     {
         this.content.add(position, element);
         super.notifyItemInserted(this.getPosition(element));
     }
 
-    public void notifyItemChanged(IElement element)
+    protected void notifyItemChanged(IElement element)
     {
-        if(this.exists(element))
+        if(!this.exists(element))
         {
-            super.notifyItemChanged(this.getPosition(element));
+            Log.w(String.format("can not notify - %s does not exist in content", element));
+            return;
         }
+
+        super.notifyItemChanged(this.getPosition(element));
     }
 
-    public void removeItem(IElement element)
+    protected void removeItem(IElement element)
     {
-        if(this.exists(element))
+        if(!this.exists(element))
         {
-            super.notifyItemRemoved(this.getPosition(element));
-            this.content.remove(element);
+            Log.w(String.format("can not remove - %s does not exist in content", element));
+            return;
         }
+
+        super.notifyItemRemoved(this.getPosition(element));
+        this.content.remove(element);
     }
 
     private void swapItems(IElement element1, IElement element2)
     {
-        if(this.exists(element1) && this.exists(element2))
+        if(!this.exists(element1))
         {
-            int fromPosition = this.getPosition(element1);
-            int toPosition = this.getPosition(element2);
-
-            Collections.swap(this.content, fromPosition, toPosition);
-            super.notifyItemMoved(fromPosition, toPosition);
-            this.scrollToItem(element1);
+            Log.w(String.format("can not swap - %s does not exist in content", element1));
+            return;
         }
+
+        if(!this.exists(element2))
+        {
+            Log.w(String.format("can not swap - %s does not exist in content", element2));
+            return;
+        }
+
+        int fromPosition = this.getPosition(element1);
+        int toPosition = this.getPosition(element2);
+
+        Collections.swap(this.content, fromPosition, toPosition);
+        super.notifyItemMoved(fromPosition, toPosition);
+        this.scrollToItem(element1);
     }
 
     protected void scrollToItem(IElement element)
     {
         if(this.content.isEmpty())
         {
-            Log.w("not scrolling - Content is empty");
+            Log.w("can not scroll - Content is empty");
             return;
         }
 
         if(!this.exists(element))
         {
-            Log.w(String.format("not scrolling - %s does not exist in Content", element));
+            Log.w(String.format("can not scroll - %s does not exist in Content", element));
             return;
         }
 
         if(this.recyclerView == null)
         {
-            Log.w("not scrolling - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
+            Log.w("can not scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
             return;
         }
 
@@ -158,10 +177,10 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.recyclerView.scrollToPosition(this.getPosition(element));
     }
 
-    public void groupContent(GroupType groupType)
+    protected void groupContent(GroupType groupType)
     {
+        Log.v("grouping Content...");
         this.groupType = groupType;
-        Log.v(String.format("grouping Content by GroupType[%s]", groupType));
 
         //        this.selectedItemsInOrderOfSelection.clear();
         //        if(App.preferences.expandLatestYearHeaderByDefault())
