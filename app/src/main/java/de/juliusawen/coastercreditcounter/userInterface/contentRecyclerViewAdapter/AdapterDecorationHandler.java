@@ -30,23 +30,24 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         if(this.isDecorable)
         {
             this.decoration = configuration.getDecoration();
+            Log.v(String.format("\n%s", this.decoration));
         }
     }
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
-        IElement item = super.bindViewHolderElement(viewHolder, position);
+        IElement element = super.bindViewHolderElement(viewHolder, position);
 
         if(this.isDecorable)
         {
-            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
+            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
-            this.applyTypeface(item, viewHolder);
-            this.applySpecialStringRecource(item, viewHolder);
-            this.setDetails(item, viewHolder);
+            this.applyTypeface(element, viewHolder);
+            this.applySpecialStringRecource(element, viewHolder);
+            this.setDetails(element, viewHolder);
         }
 
-        return item;
+        return element;
     }
 
     private void applyTypeface(IElement item, ViewHolderElement viewHolder)

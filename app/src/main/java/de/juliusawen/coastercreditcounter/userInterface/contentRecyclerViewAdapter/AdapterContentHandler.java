@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -28,6 +29,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
+        Log.v(String.format("set GroupType[%s]", groupType));
     }
 
     @Override
@@ -61,55 +63,86 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         super.notifyDataSetChanged();
     }
 
-    protected int getPosition(IElement item)
+    protected boolean itemExists(IElement element)
     {
-        return this.content.indexOf(item);
+        if(element != null)
+        {
+            return this.content.contains(element);
+        }
+
+        throw new IllegalArgumentException("Element can not be null");
     }
 
     protected IElement getItem(int position)
     {
-        return this.content.get(position);
+        if(position >= this.getItemCount())
+        {
+            return this.content.get(position);
+        }
+
+        throw new IllegalStateException(String.format(Locale.getDefault(), "Position[%d] does not exist: Content contains [%d] items", position, this.getItemCount()));
     }
 
-    public void insertItem(IElement item)
+    protected int getPosition(IElement element)
     {
-        this.insertItem(this.getItemCount(), item);
+        if(itemExists(element))
+        {
+            return this.content.indexOf(element);
+        }
+
+        throw new IllegalStateException(String.format("Item %s does not exist in Content", element));
     }
 
-    public void insertItem(int position, IElement item)
+    public void insertItem(IElement element)
     {
-        this.content.add(position, item);
-        super.notifyItemInserted(this.getPosition(item));
+        this.insertItem(this.getItemCount(), element);
     }
 
-    public void notifyItemChanged(IElement item)
+    public void insertItem(int position, IElement element)
     {
-        super.notifyItemChanged(this.getPosition(item));
+        this.content.add(position, element);
+        super.notifyItemInserted(this.getPosition(element));
     }
 
-    public void removeItem(IElement item)
+    public void notifyItemChanged(IElement element)
     {
-        super.notifyItemRemoved(this.getPosition(item));
-        this.content.remove(item);
+        if(this.itemExists(element))
+        {
+            super.notifyItemChanged(this.getPosition(element));
+        }
     }
 
-    private void swapItems(IElement item1, IElement item2)
+    public void removeItem(IElement element)
     {
-        int fromPosition = this.content.indexOf(item1);
-        int toPosition = this.content.indexOf(item2);
+        if(this.itemExists(element))
+        {
+            super.notifyItemRemoved(this.getPosition(element));
+            this.content.remove(element);
+        }
+    }
 
-        Collections.swap(this.content, fromPosition, toPosition);
-        super.notifyItemMoved(fromPosition, toPosition);
-        this.scrollToItem(item1);
+    private void swapItems(IElement element1, IElement element2)
+    {
+        if(this.itemExists(element1) && this.itemExists(element2))
+        {
+            int fromPosition = this.getPosition(element1);
+            int toPosition = this.getPosition(element2);
+
+            Collections.swap(this.content, fromPosition, toPosition);
+            super.notifyItemMoved(fromPosition, toPosition);
+            this.scrollToItem(element1);
+        }
     }
 
     protected void scrollToItem(IElement element)
     {
-        if(element != null && this.content.contains(element) && this.recyclerView != null)
+        if(this.itemExists(element) && this.recyclerView != null)
         {
             Log.d(String.format("scrolling to %s", element));
             this.recyclerView.scrollToPosition(this.getPosition(element));
         }
+
+        throw new IllegalStateException("RecyclerView can not be null");
     }
 
     public void groupContent(GroupType groupType)

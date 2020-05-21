@@ -14,7 +14,9 @@ public interface IContentRecyclerViewAdapter
     void notifyItemChanged(IElement element);
     void removeItem(IElement element);
 
+
     void groupContent(GroupType groupType);
+
 
     boolean isAllExpanded();
     void expandAll();
@@ -23,4 +25,16 @@ public interface IContentRecyclerViewAdapter
     boolean isAllCollapsed();
     void collapseAll();
     void collapseItem(IElement element, boolean scrollToItem);
+
+
+    boolean isAllSelected();
+    void selectAll();
+    void selectItem(IElement element, boolean scrollToItem);
+
+    boolean isAllDeselected();
+    void deselectAll();
+    void deselectItem(IElement element, boolean scrollToItem);
+
+    List<IElement> getSelectedItemsInOrderOfSelection();
+    IElement getLastSelectedItem();
 }

@@ -48,6 +48,10 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
             this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
             this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
         }
+
+        Log.v(String.format(Locale.getDefault(), "set [%d] external OnClickListeners and [%d] external OnLongClickListeners",
+                configuration.getOnClickListenersByType().size(),
+                configuration.getOnLongClickListenersByType().size()));
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -76,23 +80,23 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
-        IElement item = super.getItem(position);
-        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
+        IElement element = super.getItem(position);
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
         this.setPadding(0, viewHolder);
 
-        viewHolder.itemView.setTag(item);
+        viewHolder.itemView.setTag(element);
         viewHolder.itemView.setOnClickListener(this.internalOnClickListener);
         viewHolder.itemView.setOnLongClickListener(this.internalOnLongClickListener);
 
-        viewHolder.imageViewExpandToggle.setTag(item);
+        viewHolder.imageViewExpandToggle.setTag(element);
         viewHolder.imageViewExpandToggle.setOnClickListener(this.internalOnClickListener);
         viewHolder.imageViewExpandToggle.setOnLongClickListener(this.internalOnLongClickListener);
 
-        viewHolder.textViewName.setText(item.getName());
+        viewHolder.textViewName.setText(element.getName());
         viewHolder.linearLayout.setVisibility(View.VISIBLE);
 
-        return item;
+        return element;
     }
 
     protected void setPadding(int generation, ViewHolderElement viewHolder)

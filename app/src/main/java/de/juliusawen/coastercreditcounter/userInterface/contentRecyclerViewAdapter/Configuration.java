@@ -21,12 +21,12 @@ public class Configuration
     boolean isDecorable = false;
     private Decoration decoration;
 
+    boolean isSelectable = false;
+    boolean isMultipleSelection = false;
 
     boolean isExpandable = false;
     private final LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new LinkedHashSet<>();
 
-
-    boolean isSelectable = false;
     boolean isCountable = false;
 
 
@@ -111,7 +111,19 @@ public class Configuration
             }
 
             Log.w("setting isDecorable to FALSE");
-            this.isExpandable = false;
+            this.isDecorable = false;
+        }
+
+        if(this.isMultipleSelection && !this.isSelectable)
+        {
+            Log.e("isMultipleSelection but not isSelectable");
+            if(!tryFix)
+            {
+                return false;
+            }
+
+            Log.w("setting isMultipleSelection to FALSE");
+            this.isMultipleSelection = false;
         }
 
         if(this.isExpandable && this.childTypesToExpandInSortOrder.isEmpty())
@@ -138,14 +150,14 @@ public class Configuration
                 "ContentRecyclerViewConfiguration:\n" +
                         "  groupType[%s]\n" +
                         "  isDecorable[%S]\n" +
+                        "  isSelectable[%S]\n" + (this.isSelectable ? String.format(" - isMultipleSelection[%S]", this.isMultipleSelection) :  "\n") +
                         "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpandInSortOrder.size()) : "\n") +
-                        "  isSelectable[%S]\n" +
                         "  isCountable[%S]\n",
 
                 this.groupType,
                 this.isDecorable,
-                this.isExpandable,
                 this.isSelectable,
+                this.isExpandable,
                 this.isCountable
         );
     }

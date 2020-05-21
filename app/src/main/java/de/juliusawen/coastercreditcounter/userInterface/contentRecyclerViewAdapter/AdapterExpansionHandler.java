@@ -19,7 +19,7 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-abstract class AdapterExpansionHandler extends AdapterDecorationHandler
+abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 {
     private boolean isExpandable;
 
@@ -42,6 +42,26 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         if(this.isExpandable)
         {
             this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
+
+            StringBuilder childTypes = new StringBuilder();
+            for(Class<? extends IElement> type : configuration.getChildTypesToExpandInSortOrder())
+            {
+                childTypes.append(String.format("\n[%s]", type.getSimpleName()));
+            }
+
+            Log.v(String.format("set ChildTypes:%s", childTypes));
+        }
+    }
+
+    @Override
+    public void groupContent(GroupType groupType)
+    {
+        super.groupContent(groupType);
+
+        if(this.isExpandable)
+        {
+            this.generationByItem.clear();
+            super.content = this.initializeItems(super.content, 0);
         }
     }
 
@@ -109,6 +129,12 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
             IElement item = super.fetchItem(view);
             this.toggleExpansion(item);
         }
+    }
+
+    @Override
+    public void selectAll()
+    {
+        super.selectAll();
     }
 
     public void toggleExpansion(IElement item)
@@ -375,17 +401,5 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
 
         return this.expandedItems.isEmpty();
-    }
-
-    @Override
-    public void groupContent(GroupType groupType)
-    {
-        super.groupContent(groupType);
-
-        if(this.isExpandable)
-        {
-            this.generationByItem.clear();
-            super.content = this.initializeItems(super.content, 0);
-        }
     }
 }
