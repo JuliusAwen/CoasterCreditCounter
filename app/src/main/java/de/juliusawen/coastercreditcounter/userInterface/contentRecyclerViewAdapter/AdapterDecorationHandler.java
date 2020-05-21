@@ -12,15 +12,20 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterDecorationHandler extends AdapterPlainHandler
 {
-    private final boolean isDecorable;
+    private boolean isDecorable;
     private Decoration decoration;
 
-    AdapterDecorationHandler(Configuration configuration)
+    AdapterDecorationHandler()
     {
-        super(configuration);
+        super();
+        Log.v("instantiated");
+    }
+
+    protected void configure(Configuration configuration)
+    {
+        super.configure(configuration);
 
         this.isDecorable = configuration.isDecorable;
-
         if(this.isDecorable)
         {
             this.decoration = configuration.getDecoration();

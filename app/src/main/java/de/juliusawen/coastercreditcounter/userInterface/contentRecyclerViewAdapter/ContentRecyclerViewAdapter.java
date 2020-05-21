@@ -20,10 +20,9 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
 {
-    ContentRecyclerViewAdapter(List<IElement> content, Configuration configuration)
+    ContentRecyclerViewAdapter(Configuration configuration, List<IElement> content)
     {
-        super(configuration);
-        this.setContent(content);
+        this.initialize(configuration, content);
 
         Log.wrap(LogLevel.DEBUG,
                 String.format("Details:\n\n%s\n\n%s\n\n%s",
@@ -32,6 +31,12 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
                         configuration.getDecoration()),
                 '=', false);
         Log.wrap(LogLevel.INFO, "instantiated", '#', true);
+    }
+
+    private void initialize(Configuration configuration, List<IElement> content)
+    {
+        super.configure(configuration);
+        super.setContent(content);
     }
 
     @Override

@@ -21,18 +21,24 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 {
-    private final boolean isExpandable;
+    private boolean isExpandable;
 
     private final HashMap<IElement, Integer> generationByElement = new HashMap<>();
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
     private final HashSet<IElement> expandedElements = new HashSet<>();
 
-    AdapterExpansionHandler(Configuration configuration)
+    AdapterExpansionHandler()
     {
-        super(configuration);
+        super();
+        Log.v("instantiated");
+
+    }
+
+    protected void configure(Configuration configuration)
+    {
+        super.configure(configuration);
 
         this.isExpandable = configuration.isExpandable;
-
         if(this.isExpandable)
         {
             this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());

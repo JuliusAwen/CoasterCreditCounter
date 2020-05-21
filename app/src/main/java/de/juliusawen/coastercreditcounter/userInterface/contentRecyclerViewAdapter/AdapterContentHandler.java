@@ -20,11 +20,17 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     private GroupType groupType;
     private GroupHeaderProvider groupHeaderProvider;
 
-    AdapterContentHandler(Configuration configuration)
+    AdapterContentHandler()
+    {
+        Log.v("instantiated");
+    }
+
+    protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
         this.groupHeaderProvider = new GroupHeaderProvider();
-        Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "instantiated with GroupType[%s]", this.groupType), '=', false);
+
+        Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "GroupType[%s]", this.groupType), '=', false);
     }
 
     @Override

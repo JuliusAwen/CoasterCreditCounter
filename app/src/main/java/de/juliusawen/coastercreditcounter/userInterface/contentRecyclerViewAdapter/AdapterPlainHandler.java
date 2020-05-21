@@ -16,7 +16,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterPlainHandler extends AdapterContentHandler
 {
-    private final boolean hasExternalOnClickListeners;
+    private boolean hasExternalOnClickListeners;
 
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
@@ -24,14 +24,19 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
 
-    AdapterPlainHandler(Configuration configuration)
+    AdapterPlainHandler()
     {
-        super(configuration);
-
-        this.hasExternalOnClickListeners = configuration.hasExternalOnClickListeners;
+        super();
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
+        Log.v("instantiated");
+    }
 
+    protected void configure(Configuration configuration)
+    {
+        super.configure(configuration);
+
+        this.hasExternalOnClickListeners = configuration.hasExternalOnClickListeners;
         if(this.hasExternalOnClickListeners)
         {
             this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
