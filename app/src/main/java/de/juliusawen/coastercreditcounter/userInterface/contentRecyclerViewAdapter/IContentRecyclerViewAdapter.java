@@ -8,10 +8,10 @@ public interface IContentRecyclerViewAdapter
 {
     void setContent(List<IElement> content);
 
-    void insertElement(IElement element);
-    void insertElement(int position, IElement element);
-    void notifyElementChanged(IElement element);
-    void removeElement(IElement element);
+    void insertItem(IElement element);
+    void insertItem(int position, IElement element);
+    void notifyItemChanged(IElement element);
+    void removeItem(IElement element);
 
     void groupContent(GroupType groupType);
 }

@@ -1,6 +1,11 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -76,28 +81,28 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
 
 
-    protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
+    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
-        IElement element = super.getElement(position);
-        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
+        IElement item = super.getItem(position);
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
 
         this.setPadding(0, viewHolder);
 
-        viewHolder.itemView.setTag(element);
+        viewHolder.itemView.setTag(item);
         viewHolder.itemView.setOnClickListener(this.internalOnClickListener);
         viewHolder.itemView.setOnLongClickListener(this.internalOnLongClickListener);
 
-        viewHolder.imageViewExpandToggle.setTag(element);
+        viewHolder.imageViewExpandToggle.setTag(item);
         viewHolder.imageViewExpandToggle.setOnClickListener(this.internalOnClickListener);
         viewHolder.imageViewExpandToggle.setOnLongClickListener(this.internalOnLongClickListener);
 
-        viewHolder.textViewName.setText(element.getName());
+        viewHolder.textViewName.setText(item.getName());
         viewHolder.linearLayout.setVisibility(View.VISIBLE);
 
-        return element;
+        return item;
     }
 
-    protected void setPadding(int generation, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
+    protected void setPadding(int generation, ViewHolderElement viewHolder)
     {
         int padding = ConvertTool.convertDpToPx((int)(App.getContext().getResources().getDimension(R.dimen.standard_padding)
                 / App.getContext().getResources().getDisplayMetrics().density))
@@ -110,7 +115,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     {
         if(performExternalClick && this.hasExternalOnClickListeners)
         {
-            IElement element = this.fetchElement(view);
+            IElement element = this.fetchItem(view);
             View.OnClickListener externalOnClickListener = this.fetchExternalOnClickListener(element);
             if(externalOnClickListener != null)
             {
@@ -119,17 +124,17 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         }
     }
 
-    private View.OnClickListener fetchExternalOnClickListener(IElement element)
+    private View.OnClickListener fetchExternalOnClickListener(IElement item)
     {
-        if(this.externalOnClickListenersByType.containsKey(element.getClass()))
+        if(this.externalOnClickListenersByType.containsKey(item.getClass()))
         {
-            return this.externalOnClickListenersByType.get(element.getClass());
+            return this.externalOnClickListenersByType.get(item.getClass());
         }
         else
         {
             for(Class<? extends IElement> type : this.externalOnClickListenersByType.keySet())
             {
-                if(type.isAssignableFrom(element.getClass()))
+                if(type.isAssignableFrom(item.getClass()))
                 {
                     return this.externalOnClickListenersByType.get(type);
                 }
@@ -143,8 +148,8 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     {
         if(performExternalLongClick && this.hasExternalOnClickListeners)
         {
-            IElement element = this.fetchElement(view);
-            View.OnLongClickListener externalOnLongClickListener = fetchExternalOnLongClickListener(element);
+            IElement item = this.fetchItem(view);
+            View.OnLongClickListener externalOnLongClickListener = fetchExternalOnLongClickListener(item);
             if(externalOnLongClickListener != null)
             {
                 return externalOnLongClickListener.onLongClick(view);
@@ -154,17 +159,17 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         return false;
     }
 
-    private View.OnLongClickListener fetchExternalOnLongClickListener(IElement element)
+    private View.OnLongClickListener fetchExternalOnLongClickListener(IElement item)
     {
-        if(this.externalOnLongClickListenersByType.containsKey(element.getClass()))
+        if(this.externalOnLongClickListenersByType.containsKey(item.getClass()))
         {
-            return this.externalOnLongClickListenersByType.get(element.getClass());
+            return this.externalOnLongClickListenersByType.get(item.getClass());
         }
         else
         {
             for(Class<? extends IElement> type : this.externalOnLongClickListenersByType.keySet())
             {
-                if(type.isAssignableFrom(element.getClass()))
+                if(type.isAssignableFrom(item.getClass()))
                 {
                     return this.externalOnLongClickListenersByType.get(type);
                 }
@@ -174,7 +179,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         return null;
     }
 
-    protected IElement fetchElement(View view)
+    protected IElement fetchItem(View view)
     {
         Object tag = view.getTag();
         if(IElement.class.isAssignableFrom(tag.getClass()))
@@ -187,12 +192,78 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected AdapterPlainHandler addBottomSpacer()
     {
-        if(!super.content.isEmpty() && !(super.getElement(super.getItemCount() - 1) instanceof BottomSpacer))
+        if(!super.content.isEmpty() && !(super.getItem(super.getItemCount() - 1) instanceof BottomSpacer))
         {
-            super.insertElement(new BottomSpacer());
+            super.insertItem(new BottomSpacer());
             Log.v("added BottomSpacer");
         }
 
         return this;
+    }
+
+    static class ViewHolderElement extends RecyclerView.ViewHolder
+    {
+        final LinearLayout linearLayout;
+        final TextView textViewDetailAbove;
+        final TextView textViewName;
+        final TextView textViewDetailBelow;
+        final ImageView imageViewExpandToggle;
+
+        final TextView textViewPrettyPrint;
+
+
+        ViewHolderElement(View view)
+        {
+            super(view);
+            this.linearLayout = view.findViewById(R.id.linearLayoutRecyclerView);
+            this.textViewDetailAbove = view.findViewById(R.id.textViewRecyclerView_DetailAbove);
+            this.textViewName = view.findViewById(R.id.textViewRecyclerView_Name);
+            this.textViewDetailBelow = view.findViewById(R.id.textViewRecyclerView_DetailBelow);
+            this.imageViewExpandToggle = view.findViewById(R.id.imageViewRecyclerView);
+
+            this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItem_PrettyPrint);
+        }
+    }
+
+    static class ViewHolderVisitedAttraction extends RecyclerView.ViewHolder
+    {
+        final LinearLayout linearLayoutEditable;
+        final LinearLayout linearLayoutCounter;
+        final TextView textViewName;
+        final TextView textViewCount;
+        final ImageView imageViewDecrease;
+        final ImageView imageViewIncrease;
+
+        final TextView textViewPrettyPrint;
+
+        ViewHolderVisitedAttraction(View view)
+        {
+            super(view);
+
+            this.linearLayoutEditable = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_OpenForEditing);
+
+            this.linearLayoutCounter = view.findViewById(R.id.linearLayoutRecyclerViewVisitedAttraction_Counter);
+
+            this.textViewName = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Name);
+            this.textViewCount = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_Count);
+
+            this.imageViewIncrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Increase);
+            this.imageViewIncrease.setImageDrawable(App.getContext().getDrawable(R.drawable.add_circle_outline));
+
+            this.imageViewDecrease = view.findViewById(R.id.imageViewRecyclerViewItemVisitedAttraction_Decrease);
+            this.imageViewDecrease.setImageDrawable(App.getContext().getDrawable(R.drawable.remove_circle_outline));
+
+
+            this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
+        }
+    }
+
+    static class ViewHolderBottomSpacer extends RecyclerView.ViewHolder
+    {
+        ViewHolderBottomSpacer(View view)
+        {
+            super(view);
+            view.setClickable(false);
+        }
     }
 }

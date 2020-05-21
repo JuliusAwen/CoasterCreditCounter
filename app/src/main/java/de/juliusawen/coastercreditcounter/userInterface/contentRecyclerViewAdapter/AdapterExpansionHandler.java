@@ -23,9 +23,9 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 {
     private boolean isExpandable;
 
-    private final HashMap<IElement, Integer> generationByElement = new HashMap<>();
+    private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
     private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
-    private final HashSet<IElement> expandedElements = new HashSet<>();
+    private final HashSet<IElement> expandedItems = new HashSet<>();
 
     AdapterExpansionHandler()
     {
@@ -46,20 +46,20 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
     }
 
-    private ArrayList<IElement> initializeItems(List<IElement> elements, int generation)
+    private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
     {
-        Log.d(String.format(Locale.getDefault(), "initializing [%d] elements - generation [%d]...", elements.size(), generation));
+        Log.d(String.format(Locale.getDefault(), "initializing [%d] items - generation [%d]...", items.size(), generation));
 
         ArrayList<IElement> initializedItems = new ArrayList<>();
-        for(IElement item : elements)
+        for(IElement item : items)
         {
             initializedItems.add(item);
-            this.generationByElement.put(item, generation);
+            this.generationByItem.put(item, generation);
 
-            if(this.expandedElements.contains(item))
+            if(this.expandedItems.contains(item))
             {
                 ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
-                Log.v(String.format(Locale.getDefault(), "element %s is expanded - adding [%d] children", item, relevantChildren.size()));
+                Log.v(String.format(Locale.getDefault(), "item %s is expanded - adding [%d] children", item, relevantChildren.size()));
                 initializedItems.addAll(this.initializeItems(relevantChildren, generation + 1));
             }
         }
@@ -67,20 +67,20 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         return initializedItems;
     }
 
-    protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
+    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
-        IElement element = super.bindViewHolderElement(viewHolder, position);
+        IElement item = super.bindViewHolderElement(viewHolder, position);
 
         if(this.isExpandable)
         {
-            int generation = this.getGeneration(element);
-            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", element, position, generation));
+            int generation = this.getGeneration(item);
+            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", item, position, generation));
 
-            if(!this.getRelevantChildren(element).isEmpty())
+            if(!this.getRelevantChildren(item).isEmpty())
             {
                 viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
 
-                if(this.expandedElements.contains(element))
+                if(this.expandedItems.contains(item))
                 {
                     viewHolder.imageViewExpandToggle.setImageDrawable(App.getContext().getDrawable(R.drawable.arrow_drop_down));
                 }
@@ -97,7 +97,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
             super.setPadding(generation, viewHolder);
         }
 
-        return element;
+        return item;
     }
 
     @Override
@@ -107,13 +107,13 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
         if(this.isExpandable)
         {
-            IElement element = super.fetchElement(view);
-            this.toggleExpansion(element);
+            IElement item = super.fetchItem(view);
+            this.toggleExpansion(item);
         }
     }
 
 
-    public void toggleExpansion(IElement element)
+    public void toggleExpansion(IElement item)
     {
         if(!this.isExpandable)
         {
@@ -124,13 +124,13 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         {
             Log.d("toggling expansion...");
 
-            if(!this.expandedElements.contains(element))
+            if(!this.expandedItems.contains(item))
             {
-                this.expandElement(element, true);
+                this.expandElement(item, true);
             }
             else
             {
-                this.collapseElement(element, true);
+                this.collapseElement(item, true);
             }
         }
     }
@@ -146,36 +146,36 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         {
             Log.d("expanding all elements");
 
-            int expandedElementsCount;
+            int expandedItemsCount;
             do
             {
                 Log.v("expanding next generation");
 
-                List<IElement> elementsToExpand = new ArrayList<>(this.content);
-                expandedElementsCount = elementsToExpand.size();
+                List<IElement> itemsToExpand = new ArrayList<>(this.content);
+                expandedItemsCount = itemsToExpand.size();
 
-                for(IElement element : elementsToExpand)
+                for(IElement element : itemsToExpand)
                 {
                     this.expandElement(element, false);
                 }
             }
-            while(expandedElementsCount != super.getItemCount());
+            while(expandedItemsCount != super.getItemCount());
 
-            super.scrollToElement(super.getElement(0));
+            super.scrollToItem(super.getItem(0));
 
-            Log.d(String.format(Locale.getDefault(), "all [%d] elements expanded", expandedElementsCount));
+            Log.d(String.format(Locale.getDefault(), "all [%d] items expanded", expandedItemsCount));
         }
         else
         {
-            Log.v("no elements to expand");
+            Log.v("no items to expand");
         }
     }
 
-    private void expandGroupHeaderOfElement(IElement element)
+    private void expandGroupHeaderOfItem(IElement item)
     {
         for(IElement groupHeader : this.content)
         {
-            if(groupHeader.isGroupHeader() && groupHeader.getChildren().contains(element))
+            if(groupHeader.isGroupHeader() && groupHeader.getChildren().contains(item))
             {
                 this.expandElement(groupHeader, true);
                 break;
@@ -183,38 +183,38 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void expandElement(IElement element, boolean scrollToElement)
+    public void expandElement(IElement item, boolean scrollToElement)
     {
         if(!this.isExpandable)
         {
             throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
         }
 
-        if(!this.expandedElements.contains(element))
+        if(!this.expandedItems.contains(item))
         {
-            ArrayList<IElement> relevantChildren = this.getRelevantChildren(element);
+            ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.v(String.format("expanding element %s...", element));
+                Log.v(String.format("expanding item %s...", item));
 
-                this.expandedElements.add(element);
-                super.notifyElementChanged(element);
+                this.expandedItems.add(item);
+                super.notifyItemChanged(item);
 
-                int generation = this.getGeneration(element) + 1;
-                int position = super.getPosition(element);
+                int generation = this.getGeneration(item) + 1;
+                int position = super.getPosition(item);
                 for(IElement child : relevantChildren)
                 {
-                    this.generationByElement.put(child, generation);
+                    this.generationByItem.put(child, generation);
 
                     position++;
-                    super.insertElement(position, child);
+                    super.insertItem(position, child);
                     Log.v(String.format(Locale.getDefault(), "added child %s at position [%d] - generation [%d]", child, position, generation));
                 }
 
                 if(scrollToElement)
                 {
-                    //scroll to element above expanded element (if any)
-                    position = super.getPosition(element);
+                    //scroll to item above expanded item (if any)
+                    position = super.getPosition(item);
                     if(position > 0)
                     {
                         position--;
@@ -225,17 +225,17 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
         else
         {
-            Log.d(String.format("element [%s] is either already expanded or unknown", element));
+            Log.d(String.format("item [%s] is either already expanded or unknown", item));
         }
     }
 
-    private int getGeneration(IElement element)
+    private int getGeneration(IElement item)
     {
-        Integer generation = this.generationByElement.get(element);
+        Integer generation = this.generationByItem.get(item);
 
         if(generation == null)
         {
-            Log.e(String.format("could not determine generation for %s - returning -1...", element));
+            Log.e(String.format("could not determine generation for %s - returning -1...", item));
             generation = -1;
         }
 
@@ -249,9 +249,9 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
             throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
         }
 
-        for(IElement element : this.content)
+        for(IElement item : this.content)
         {
-            for(IElement relevantChild : this.getRelevantChildren(element))
+            for(IElement relevantChild : this.getRelevantChildren(item))
             {
                 //Todo: test with deep location --> getRelevantAncestors needed?
                 if(relevantChild.isLocation())
@@ -259,7 +259,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                     List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
                     if(!relevantGrandchildren.isEmpty())
                     {
-                        if(!this.expandedElements.contains(relevantChild))
+                        if(!this.expandedItems.contains(relevantChild))
                         {
                             return false;
                         }
@@ -267,7 +267,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                 }
                 else if(relevantChild.isAttraction() || relevantChild.isVisit() || relevantChild.isModel())
                 {
-                    if(!this.expandedElements.contains(element))
+                    if(!this.expandedItems.contains(item))
                     {
                         return false;
                     }
@@ -287,16 +287,16 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
         if(!this.content.isEmpty() && !this.isAllCollapsed())
         {
-            List<IElement> elementsToCollapse = new ArrayList<>(this.expandedElements);
+            List<IElement> itemsToCollapse = new ArrayList<>(this.expandedItems);
 
-            Log.d(String.format(Locale.getDefault(), "collapsing all [%s] elements...", elementsToCollapse.size()));
+            Log.d(String.format(Locale.getDefault(), "collapsing all [%s] items...", itemsToCollapse.size()));
 
-            for(IElement element : elementsToCollapse)
+            for(IElement element : itemsToCollapse)
             {
                 this.collapseElement(element, false);
             }
 
-            Log.v("all elements collapsed");
+            Log.v("all items collapsed");
         }
         else
         {
@@ -304,26 +304,26 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void collapseElement(IElement element, boolean scrollToElement)
+    public void collapseElement(IElement item, boolean scrollToItem)
     {
         if(!this.isExpandable)
         {
             throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
         }
 
-        if(this.expandedElements.contains(element))
+        if(this.expandedItems.contains(item))
         {
-            List<IElement> relevantChildren = this.getRelevantChildren(element);
+            List<IElement> relevantChildren = this.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
-                Log.v(String.format("collapsing element %s...", element));
+                Log.v(String.format("collapsing item %s...", item));
 
-                this.expandedElements.remove(element);
-                super.notifyElementChanged(element);
+                this.expandedItems.remove(item);
+                super.notifyItemChanged(item);
 
                 for(IElement child : relevantChildren)
                 {
-                    if(this.expandedElements.contains(child))
+                    if(this.expandedItems.contains(child))
                     {
                         this.collapseElement(child, false);
                     }
@@ -332,24 +332,24 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
                     this.content.remove(child);
                     super.notifyItemRemoved(index);
 
-                    this.generationByElement.remove(child);
+                    this.generationByItem.remove(child);
 
                     Log.v(String.format(Locale.getDefault(), "removed child %s at index [%d]", child, index));
                 }
 
-                if(scrollToElement)
+                if(scrollToItem)
                 {
-                    this.scrollToElement(element);
+                    this.scrollToItem(item);
                 }
             }
         }
     }
 
-    private ArrayList<IElement> getRelevantChildren(IElement element)
+    private ArrayList<IElement> getRelevantChildren(IElement item)
     {
         ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
 
-        for(IElement child : element.getChildren())
+        for(IElement child : item.getChildren())
         {
             for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
             {
@@ -371,7 +371,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
             throw new IllegalAccessError("ContentRecyclerViewAdapter is not expandable");
         }
 
-        return this.expandedElements.isEmpty();
+        return this.expandedItems.isEmpty();
     }
 
     @Override
@@ -381,7 +381,7 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
 
         if(this.isExpandable)
         {
-            this.generationByElement.clear();
+            this.generationByItem.clear();
             super.content = this.initializeItems(super.content, 0);
         }
     }

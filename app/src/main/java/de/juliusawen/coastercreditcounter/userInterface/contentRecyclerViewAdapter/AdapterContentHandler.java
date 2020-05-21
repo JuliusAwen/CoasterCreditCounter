@@ -61,11 +61,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 //        this.selectedItemsInOrderOfSelection.clear();
 //        if(App.preferences.expandLatestYearHeaderByDefault())
 //        {
-//            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedElements);
+//            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
 //            this.expandedItems.add(latestSpecialGroupHeader);
 //        }
 
-        List<IElement> groupedElements = this.groupType == GroupType.NONE
+        List<IElement> groupedItems = this.groupType == GroupType.NONE
                 ? new ArrayList<>(this.content)
                 : this.groupHeaderProvider.groupElements(this.ungroupedContent, this.groupType);
 
@@ -73,42 +73,42 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         if(!this.content.isEmpty())
         {
-            this.scrollToElement(this.getElement(0));
+            this.scrollToItem(this.getItem(0));
         }
 
-        this.content = groupedElements;
+        this.content = groupedItems;
     }
 
-    protected int getPosition(IElement element)
+    protected int getPosition(IElement item)
     {
-        return this.content.indexOf(element);
+        return this.content.indexOf(item);
     }
 
-    protected IElement getElement(int position)
+    protected IElement getItem(int position)
     {
         return this.content.get(position);
     }
 
-    public void insertElement(IElement element)
+    public void insertItem(IElement item)
     {
-        this.insertElement(this.getItemCount(), element);
+        this.insertItem(this.getItemCount(), item);
     }
 
-    public void insertElement(int position, IElement element)
+    public void insertItem(int position, IElement item)
     {
-        this.content.add(position, element);
-        super.notifyItemInserted(this.content.indexOf(element));
+        this.content.add(position, item);
+        super.notifyItemInserted(this.getPosition(item));
     }
 
-    public void notifyElementChanged(IElement element)
+    public void notifyItemChanged(IElement item)
     {
-        super.notifyItemChanged(this.content.indexOf(element));
+        super.notifyItemChanged(this.getPosition(item));
     }
 
-    public void removeElement(IElement element)
+    public void removeItem(IElement item)
     {
-        super.notifyItemRemoved(this.content.indexOf(element));
-        this.content.remove(element);
+        super.notifyItemRemoved(this.getPosition(item));
+        this.content.remove(item);
     }
 
     private void swapItems(IElement item1, IElement item2)
@@ -118,10 +118,10 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         Collections.swap(this.content, fromPosition, toPosition);
         super.notifyItemMoved(fromPosition, toPosition);
-        this.scrollToElement(item1);
+        this.scrollToItem(item1);
     }
 
-    protected void scrollToElement(IElement element)
+    protected void scrollToItem(IElement element)
     {
         if(element != null && this.content.contains(element) && this.recyclerView != null)
         {

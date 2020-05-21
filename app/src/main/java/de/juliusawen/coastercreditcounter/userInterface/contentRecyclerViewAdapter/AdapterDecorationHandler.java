@@ -33,46 +33,46 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         }
     }
 
-    protected IElement bindViewHolderElement(final ContentRecyclerViewAdapter.ViewHolderElement viewHolder, int position)
+    protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
-        IElement element = super.bindViewHolderElement(viewHolder, position);
+        IElement item = super.bindViewHolderElement(viewHolder, position);
 
         if(this.isDecorable)
         {
-            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
+            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
 
-            this.applyTypeface(element, viewHolder);
-            this.applySpecialStringRecource(element, viewHolder);
-            this.setDetails(element, viewHolder);
+            this.applyTypeface(item, viewHolder);
+            this.applySpecialStringRecource(item, viewHolder);
+            this.setDetails(item, viewHolder);
         }
 
-        return element;
+        return item;
     }
 
-    private void applyTypeface(IElement element, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
+    private void applyTypeface(IElement item, ViewHolderElement viewHolder)
     {
-        viewHolder.textViewName.setTypeface(null, this.decoration.getTypeface(element));
+        viewHolder.textViewName.setTypeface(null, this.decoration.getTypeface(item));
     }
 
-    private void applySpecialStringRecource(IElement element, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
+    private void applySpecialStringRecource(IElement item, ViewHolderElement viewHolder)
     {
-        String specialString = this.decoration.getSpecialString(element);
+        String specialString = this.decoration.getSpecialString(item);
         if(specialString != null)
         {
             viewHolder.textViewName.setText(specialString);
         }
     }
 
-    private void setDetails(IElement element, ContentRecyclerViewAdapter.ViewHolderElement viewHolder)
+    private void setDetails(IElement item, ViewHolderElement viewHolder)
     {
         viewHolder.textViewDetailAbove.setVisibility(View.GONE);
         viewHolder.textViewDetailBelow.setVisibility(View.GONE);
 
-        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = this.decoration.getDetailTypesByDetailDisplayMode(element);
+        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = this.decoration.getDetailTypesByDetailDisplayMode(item);
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE).size() > 0)
         {
-            viewHolder.textViewDetailAbove.setText(this.decoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
+            viewHolder.textViewDetailAbove.setText(this.decoration.getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
             if(viewHolder.textViewDetailAbove.getText().length() != 0)
             {
                 viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
@@ -81,7 +81,7 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW).size() > 0)
         {
-            viewHolder.textViewDetailBelow.setText(this.decoration.getSpannableDetailString(element, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
+            viewHolder.textViewDetailBelow.setText(this.decoration.getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
             if(viewHolder.textViewDetailBelow.getText().length() != 0)
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);
