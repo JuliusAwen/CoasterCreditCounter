@@ -7,6 +7,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 public interface IContentRecyclerViewAdapter
 {
     void setContent(List<IElement> content);
+    void notifyContentChanged();
 
     void insertItem(IElement element);
     void insertItem(int position, IElement element);
@@ -14,4 +15,12 @@ public interface IContentRecyclerViewAdapter
     void removeItem(IElement element);
 
     void groupContent(GroupType groupType);
+
+    boolean isAllExpanded();
+    void expandAll();
+    void expandItem(IElement element, boolean scrollToItem);
+
+    boolean isAllCollapsed();
+    void collapseAll();
+    void collapseItem(IElement element, boolean scrollToItem);
 }

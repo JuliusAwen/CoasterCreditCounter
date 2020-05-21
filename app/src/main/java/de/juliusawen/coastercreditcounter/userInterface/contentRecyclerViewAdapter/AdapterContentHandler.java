@@ -37,6 +37,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    protected RecyclerView.LayoutManager getLayoutManager()
+    {
+        return this.recyclerView.getLayoutManager();
+    }
+
     @Override
     public int getItemCount()
     {
@@ -48,32 +53,12 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
         this.groupContent(this.groupType);
+        this.notifyContentChanged();
     }
 
-    public void groupContent(GroupType groupType)
+    public void notifyContentChanged()
     {
-        this.groupType = groupType;
-        Log.d(String.format("grouping Content by GroupType[%s]", this.groupType));
-
-//        this.selectedItemsInOrderOfSelection.clear();
-//        if(App.preferences.expandLatestYearHeaderByDefault())
-//        {
-//            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
-//            this.expandedItems.add(latestSpecialGroupHeader);
-//        }
-
-        List<IElement> groupedItems = this.groupType == GroupType.NONE
-                ? new ArrayList<>(this.content)
-                : this.groupHeaderProvider.groupElements(this.ungroupedContent, this.groupType);
-
-        notifyDataSetChanged();
-
-        if(!this.content.isEmpty())
-        {
-            this.scrollToItem(this.getItem(0));
-        }
-
-        this.content = groupedItems;
+        super.notifyDataSetChanged();
     }
 
     protected int getPosition(IElement item)
@@ -123,12 +108,31 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         if(element != null && this.content.contains(element) && this.recyclerView != null)
         {
             Log.d(String.format("scrolling to %s", element));
-            this.recyclerView.scrollToPosition(content.indexOf(element));
+            this.recyclerView.scrollToPosition(this.getPosition(element));
         }
     }
 
-    protected RecyclerView.LayoutManager getLayoutManager()
+    public void groupContent(GroupType groupType)
     {
-        return this.recyclerView.getLayoutManager();
+        this.groupType = groupType;
+        Log.d(String.format("grouping Content by GroupType[%s]", this.groupType));
+
+        //        this.selectedItemsInOrderOfSelection.clear();
+        //        if(App.preferences.expandLatestYearHeaderByDefault())
+        //        {
+        //            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
+        //            this.expandedItems.add(latestSpecialGroupHeader);
+        //        }
+
+        List<IElement> groupedItems = this.groupType == GroupType.NONE
+                ? new ArrayList<>(this.content)
+                : this.groupHeaderProvider.groupElements(this.ungroupedContent, this.groupType);
+
+        if(!this.content.isEmpty())
+        {
+            this.scrollToItem(this.getItem(0));
+        }
+
+        this.content = groupedItems;
     }
 }

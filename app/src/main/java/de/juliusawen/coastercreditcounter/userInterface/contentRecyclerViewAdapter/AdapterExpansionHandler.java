@@ -254,7 +254,6 @@ abstract class AdapterExpansionHandler extends AdapterDecorationHandler
         {
             for(IElement relevantChild : this.getRelevantChildren(item))
             {
-                //Todo: test with deep location --> getRelevantAncestors needed?
                 if(relevantChild.isLocation())
                 {
                     List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
