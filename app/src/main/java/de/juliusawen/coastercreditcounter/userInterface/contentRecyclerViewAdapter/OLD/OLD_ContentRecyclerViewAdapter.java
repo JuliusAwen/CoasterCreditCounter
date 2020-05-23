@@ -46,11 +46,13 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.Configuration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements IContentRecyclerViewAdapter
 {
     private enum ViewType
     {
@@ -888,13 +890,18 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         return this;
     }
 
-    public OLD_ContentRecyclerViewAdapter toggleExpansion(IElement item)
+    public void toggleExpansion(IElement element)
+    {
+        this.old_toggleExpansion(element);
+    }
+
+    public OLD_ContentRecyclerViewAdapter old_toggleExpansion(IElement item)
     {
         if(!this.relevantChildTypesInSortOrder.isEmpty())
         {
             if(!this.expandedItems.contains(item))
             {
-                this.expandItem(item, true);
+                this.old_expandItem(item, true);
             }
             else
             {
@@ -921,7 +928,7 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
                 for(IElement item : itemsList)
                 {
-                    this.expandItem(item, false);
+                    this.old_expandItem(item, false);
                 }
             }
             while(itemsCount != this.items.size());
@@ -944,7 +951,7 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         {
             if(item.isGroupHeader() && item.getChildren().contains(element))
             {
-                this.expandItem(item, true);
+                this.old_expandItem(item, true);
                 break;
             }
         }
@@ -952,7 +959,8 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         return this;
     }
 
-    public OLD_ContentRecyclerViewAdapter expandItem(IElement item, boolean scrollToItem)
+
+    public OLD_ContentRecyclerViewAdapter old_expandItem(IElement item, boolean scrollToItem)
     {
         if(!this.expandedItems.contains(item))
         {
@@ -991,6 +999,18 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         return this;
+    }
+
+    @Override
+    public boolean isAllContentCollapsed()
+    {
+        return this.isAllCollapsed();
+    }
+
+    @Override
+    public void collapseAllContent()
+    {
+        this.collapseAll();
     }
 
     public boolean isAllExpanded()
@@ -1046,7 +1066,7 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         return this;
     }
 
-    private void collapseItem(IElement item, boolean scrollToItem)
+    public void collapseItem(IElement item, boolean scrollToItem)
     {
         if(this.expandedItems.contains(item))
         {
@@ -1082,6 +1102,42 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
+    @Override
+    public boolean isAllContentSelected()
+    {
+        return this.isAllSelected();
+    }
+
+    @Override
+    public void selectAllContent()
+    {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public void selectItem(IElement element)
+    {
+
+    }
+
+    @Override
+    public boolean isAllContentDeselected()
+    {
+        return false;
+    }
+
+    @Override
+    public void deselectAllContent()
+    {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public void deselectItem(IElement element)
+    {
+        this.setItemDeselected(element);
+    }
+
     public boolean isAllCollapsed()
     {
         for(IElement item : this.items)
@@ -1110,7 +1166,7 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
                 if(!expandedItems.contains(item))
                 {
-                    expandItem(item, true);
+                    old_expandItem(item, true);
                 }
                 else
                 {
@@ -1337,7 +1393,13 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-    public OLD_ContentRecyclerViewAdapter addBottomSpacer()
+    @Override
+    public IContentRecyclerViewAdapter addBottomSpacer()
+    {
+        return this.old_addBottomSpacer();
+    }
+
+    public OLD_ContentRecyclerViewAdapter old_addBottomSpacer()
     {
         if(!this.items.isEmpty() && !(this.items.get(this.items.size() - 1) instanceof BottomSpacer))
         {
@@ -1433,8 +1495,77 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         return this;
     }
 
+    @Override
+    public void configure(Configuration configuration)
+    {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public void setContent(IElement element)
+    {
+        List<IElement> content = new ArrayList<>();
+        content.add(element);
+        this.setItems(content);
+
+    }
+
+    @Override
+    public void setContent(List<IElement> content)
+    {
+        this.setItems(content);
+    }
+
+    @Override
+    public void notifyContentChanged()
+    {
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public void insertItem(IElement element)
+    {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public void insertItem(int position, IElement element)
+    {
+        throw new IllegalAccessError();
+    }
+
     public void notifyItemChanged(IElement element)
     {
         notifyItemChanged(this.items.indexOf(element));
+    }
+
+    @Override
+    public void removeItem(IElement element)
+    {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public void groupContent(GroupType groupType)
+    {
+        this.groupItems(groupType);
+    }
+
+    @Override
+    public boolean isAllContentExpanded()
+    {
+        return this.isAllExpanded();
+    }
+
+    @Override
+    public void expandAllContent()
+    {
+        this.expandAll();
+    }
+
+    @Override
+    public void expandItem(IElement element, boolean scrollToItem)
+    {
+        this.old_expandItem(element, scrollToItem);
     }
 }

@@ -226,7 +226,7 @@ public class PickElementsActivity extends BaseActivity
                 {
                     if(element.isGroupHeader())
                     {
-                        viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                        viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
                         if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                         {
                             invalidateOptionsMenu();

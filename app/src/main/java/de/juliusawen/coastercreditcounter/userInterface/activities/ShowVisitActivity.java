@@ -216,7 +216,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         else
         {
             super.setFloatingActionButtonVisibility(true);
-            this.viewModel.oldContentRecyclerViewAdapter.addBottomSpacer();
+            this.viewModel.oldContentRecyclerViewAdapter.old_addBottomSpacer();
         }
     }
 
@@ -237,7 +237,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
                 if(element.isGroupHeader())
                 {
-                    viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                    viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
                     if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
                     {
                         invalidateOptionsMenu();
@@ -452,7 +452,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
             if(!this.allAttractionsAdded())
             {
-                this.viewModel.oldContentRecyclerViewAdapter.addBottomSpacer();
+                this.viewModel.oldContentRecyclerViewAdapter.old_addBottomSpacer();
             }
         }
         else

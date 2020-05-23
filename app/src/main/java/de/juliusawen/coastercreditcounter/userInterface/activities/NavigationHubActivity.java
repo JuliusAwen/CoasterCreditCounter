@@ -16,8 +16,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,11 +26,7 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalTotals;
@@ -44,8 +38,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
@@ -84,65 +76,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
 
         this.navigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
-        if(true)
-        {
-            this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(App.content.getContentOfType(OnSiteAttraction.class))
-                    .servePreset(this.viewModel.requestCode)
-                    .addOnClickListenerForType(Park.class, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Log.e(String.format("%s clicked", view.getTag()));
-                        }
-                    })
-                    .addOnLongClickListenerForType(Park.class, new View.OnLongClickListener()
-                    {
-                        @Override
-                        public boolean onLongClick(View view)
-                        {
-                            Log.e(String.format("%s long clicked", view.getTag()));
-                            groupCRVA(GroupType.MANUFACTURER);
-                            return true;
-                        }
-                    })
-                    .addOnClickListenerForType(IElement.class, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Log.e(String.format("%s clicked", view.getTag()));
-                            selectAllContent();
-                        }
-                    })
-                    .addOnLongClickListenerForType(OnSiteAttraction.class, new View.OnLongClickListener()
-                    {
-                        @Override
-                        public boolean onLongClick(View view)
-                        {
-                            Log.e(String.format("%s long clicked", view.getTag()));
-                            groupCRVA(GroupType.PARK);
-                            return true;
-                        }
-                    })
-                    .addOnLongClickListenerForType(GroupHeader.class, new View.OnLongClickListener()
-                    {
-                        @Override
-                        public boolean onLongClick(View view)
-                        {
-                            Log.e(String.format("%s long clicked", view.getTag()));
-
-                            return true;
-                        }
-                    })
-                    .placeOrder();
-
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewNavigationHub);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter((RecyclerView.Adapter) contentRecyclerViewAdapter);
-        }
-
-
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.subtitle_navigation_hub)), getString(R.string.help_text_navigation_hub));
         super.createToolbar();
         super.addToolbarMenuIcon();
@@ -151,16 +84,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
         super.setOptionsMenuButlerViewModel(this.viewModel);
 
         this.createStatisticsGlobalTotals();
-    }
-
-    private void groupCRVA(GroupType groupType)
-    {
-        this.contentRecyclerViewAdapter.groupContent(groupType);
-    }
-
-    private void selectAllContent()
-    {
-        this.contentRecyclerViewAdapter.selectAllContent();
     }
 
     @Override

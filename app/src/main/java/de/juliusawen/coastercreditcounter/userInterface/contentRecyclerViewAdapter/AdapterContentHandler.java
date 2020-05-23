@@ -197,6 +197,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.scrollToItem(this.getItem(0));
     }
 
+    protected GroupType getGroupType()
+    {
+        return this.groupType;
+    }
+
     protected void restrictAccess(boolean accessAllowed)
     {
         if(!accessAllowed)

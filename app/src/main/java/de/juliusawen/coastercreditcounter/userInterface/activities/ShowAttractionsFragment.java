@@ -178,7 +178,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
                 }
                 else if(element.isGroupHeader())
                 {
-                    oldContentRecyclerViewAdapter.toggleExpansion(element);
+                    oldContentRecyclerViewAdapter.old_toggleExpansion(element);
                     if(oldContentRecyclerViewAdapter.isAllExpanded() || oldContentRecyclerViewAdapter.isAllCollapsed())
                     {
                         getActivity().invalidateOptionsMenu();

@@ -4,12 +4,12 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
 public interface IOptionsMenuButlerCompatibleViewModel
 {
     RequestCode getRequestCode();
-    OLD_ContentRecyclerViewAdapter getOldContentRecyclerViewAdapter();
+    IContentRecyclerViewAdapter getContentRecyclerViewAdapter();
 
     List<IElement> getElements();
     void setElements(List<IElement> elements);

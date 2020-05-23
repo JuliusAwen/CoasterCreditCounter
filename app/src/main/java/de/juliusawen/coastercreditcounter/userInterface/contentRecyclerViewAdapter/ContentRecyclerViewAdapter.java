@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -32,10 +33,31 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     }
 
     @Override
+    public void setContent(IElement element)
+    {
+        Log.d(String.format(Locale.getDefault(), "setting [%s] as content...", element));
+        List<IElement> content = new ArrayList<>();
+        content.add(element);
+        this.setContent(content);
+    }
+
+    @Override
     public void setContent(List<IElement> content)
     {
         Log.d(String.format(Locale.getDefault(), "setting [%d] Items...", content.size()));
         super.setContent(content);
+    }
+
+    @Override
+    protected boolean handleOnClick(View view, boolean performExternalClick)
+    {
+        return super.handleOnClick(view, performExternalClick);
+    }
+
+    @Override
+    protected boolean handleOnLongClick(View view, boolean performExternalClick)
+    {
+        return super.handleOnLongClick(view, performExternalClick);
     }
 
     @Override
@@ -74,10 +96,30 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     }
 
     @Override
+    public void scrollToItem(IElement element)
+    {
+        Log.d(String.format("scrolling to %s...", element));
+        super.scrollToItem(element);
+    }
+
+    @Override
     public void groupContent(GroupType groupType)
     {
         Log.d(String.format("grouping by GroupType[%s]...", groupType));
         super.groupContent(groupType);
+    }
+
+    @Override
+    public GroupType getGroupType()
+    {
+        return super.getGroupType();
+    }
+
+    @Override
+    public void toggleExpansion(IElement element)
+    {
+        Log.d("toggling expansion...");
+        super.toggleExpansion(element);
     }
 
     @Override
@@ -120,45 +162,45 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
         super.collapseItem(element, scrollToItem);
     }
 
-//    @Override
-//    public boolean isAllContentSelected()
-//    {
-//        return super.isAllContentSelected();
-//    }
-//
+    @Override
+    public boolean isAllContentSelected()
+    {
+        return super.isAllContentSelected();
+    }
+
     @Override
     public void selectAllContent()
     {
         Log.d("selecting all content...");
         super.selectAllContent();
     }
-//
-//    @Override
-//    public void selectItem(IElement element, boolean scrollToItem)
-//    {
-//        Log.d(String.format("selecting %s - scrollToItem[%S]...", element, scrollToItem));
-//        super.selectItem(element, scrollToItem);
-//    }
-//
-//    @Override
-//    public boolean isAllContentDeselected()
-//    {
-//        return super.isAllContentDeselected();
-//    }
-//
+
+    @Override
+    public void selectItem(IElement element)
+    {
+        Log.d(String.format("selecting %s...", element));
+        super.selectItem(element);
+    }
+
+    @Override
+    public boolean isAllContentDeselected()
+    {
+        return super.isAllContentDeselected();
+    }
+
     @Override
     public void deselectAllContent()
     {
         Log.d("deselecting all content...");
         super.deselectAllContent();
     }
-//
-//    @Override
-//    public void deselectItem(IElement element, boolean scrollToItem)
-//    {
-//        Log.d(String.format("deselecting %s - scrollToItem[%S]...", element, scrollToItem));
-//        super.deselectItem(element, scrollToItem);
-//    }
+
+    @Override
+    public void deselectItem(IElement element)
+    {
+        Log.d(String.format("deselecting %s...", element));
+        super.deselectItem(element);
+    }
 
     @Override
     public LinkedList<IElement> getSelectedItemsInOrderOfSelection()
@@ -170,6 +212,18 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     public IElement getLastSelectedItem()
     {
         return super.getLastSelectedItem();
+    }
+
+    @Override
+    public IContentRecyclerViewAdapter addBottomSpacer()
+    {
+        Log.d("adding BottomSpacer...");
+        if(!super.tryAddBottomSpacer())
+        {
+            Log.w("BottomSpacer is already added");
+        }
+
+        return this;
     }
 
     @Override

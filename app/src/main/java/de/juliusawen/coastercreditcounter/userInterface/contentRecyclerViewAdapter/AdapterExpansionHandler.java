@@ -48,7 +48,9 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             }
         }
 
-        Log.v(String.format("isExpandable[%S]%s", configuration.isDecorable, configuration.isExpandable ? String.format("ChildTypes:%s", childTypes) : childTypes));
+        Log.v(String.format("isExpandable[%S]%s", configuration.isDecorable, configuration.isExpandable
+                ? String.format("ChildTypes:%s", childTypes)
+                : childTypes));
     }
 
     @Override
@@ -85,6 +87,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         return initializedItems;
     }
 
+    @Override
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
         IElement item = super.bindViewHolderElement(viewHolder, position);
@@ -121,20 +124,13 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     @Override
     protected boolean handleOnClick(View view, boolean performExternalClick)
     {
-        boolean isConsumed = false;
-        if(view.getId() != R.id.imageViewRecyclerView)
+        if(view.getId() == R.id.imageViewRecyclerView)
         {
-            isConsumed = super.handleOnClick(view, performExternalClick);
-        }
-
-        if(this.isExpandable && !isConsumed)
-        {
-            IElement item = super.fetchItem(view);
-            this.toggleExpansion(item);
+            this.toggleExpansion(super.fetchItem(view));
             return true;
         }
 
-        return isConsumed;
+        return super.handleOnClick(view, performExternalClick);
     }
 
     protected void toggleExpansion(IElement item)
@@ -147,8 +143,6 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
         if(!super.relevantChildTypes.isEmpty())
         {
-            Log.d("toggling expansion...");
-
             if(!this.expandedItems.contains(item))
             {
                 this.expandItem(item, true);
@@ -157,6 +151,8 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             {
                 this.collapseItem(item, true);
             }
+
+            Log.v("expansion toggled");
         }
     }
 

@@ -9,16 +9,23 @@ public interface IContentRecyclerViewAdapter
 {
     void configure(Configuration configuration);
 
+    void setContent(IElement element);
     void setContent(List<IElement> content);
+
+    void notifyContentChanged();
 
     void insertItem(IElement element);
     void insertItem(int position, IElement element);
     void notifyItemChanged(IElement element);
     void removeItem(IElement element);
 
+    void scrollToItem(IElement element);
 
     void groupContent(GroupType groupType);
+    GroupType getGroupType();
 
+
+    void toggleExpansion(IElement element);
 
     boolean isAllContentExpanded();
     void expandAllContent();
@@ -29,14 +36,16 @@ public interface IContentRecyclerViewAdapter
     void collapseItem(IElement element, boolean scrollToItem);
 
 
-//    boolean isAllContentSelected();
+    boolean isAllContentSelected();
     void selectAllContent();
-//    void selectItem(IElement element, boolean scrollToItem);
-//
-//    boolean isAllContentDeselected();
+    void selectItem(IElement element);
+
+    boolean isAllContentDeselected();
     void deselectAllContent();
-//    void deselectItem(IElement element, boolean scrollToItem);
+    void deselectItem(IElement element);
 
     LinkedList<IElement> getSelectedItemsInOrderOfSelection();
     IElement getLastSelectedItem();
+
+    IContentRecyclerViewAdapter addBottomSpacer();
 }

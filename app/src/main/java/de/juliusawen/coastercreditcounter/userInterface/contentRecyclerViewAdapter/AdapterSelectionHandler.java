@@ -203,10 +203,8 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    private void selectItem(IElement element)
+    protected void selectItem(IElement element)
     {
-        super.restrictAccess(this.isSelectable);
-
         if(element != null)
         {
             if(!this.selectedItemsInOrderOfSelection.contains(element))
@@ -236,10 +234,8 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    private void deselectItem(IElement element)
+    protected void deselectItem(IElement element)
     {
-        super.restrictAccess(this.isSelectable);
-
         if(element != null)
         {
             if(this.selectedItemsInOrderOfSelection.contains(element))
@@ -252,7 +248,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    private boolean isAllContentSelected()
+    protected boolean isAllContentSelected()
     {
         super.restrictAccess(this.isSelectable);
 
@@ -262,7 +258,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return items.isEmpty();
     }
 
-    private boolean isAllContentDeselected()
+    protected boolean isAllContentDeselected()
     {
         super.restrictAccess(this.isSelectable);
 

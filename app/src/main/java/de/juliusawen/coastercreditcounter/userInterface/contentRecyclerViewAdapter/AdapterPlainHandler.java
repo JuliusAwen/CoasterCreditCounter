@@ -190,15 +190,16 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         throw new IllegalArgumentException(String.format("View tag object's type [%s] is not assignable from IElement", tag.getClass().getSimpleName()));
     }
 
-    protected AdapterPlainHandler addBottomSpacer()
+    protected boolean tryAddBottomSpacer()
     {
         if(!super.content.isEmpty() && !(super.getItem(super.getItemCount() - 1) instanceof BottomSpacer))
         {
             super.insertItem(new BottomSpacer());
             Log.v("added BottomSpacer");
+            return true;
         }
 
-        return this;
+        return false;
     }
 
     static class ViewHolderElement extends RecyclerView.ViewHolder

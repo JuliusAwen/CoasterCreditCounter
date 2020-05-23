@@ -334,7 +334,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
                 else if(element.hasChildren())
                 {
-                    viewModel.oldContentRecyclerViewAdapter.toggleExpansion(element);
+                    viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
                 }
                 else if(element.isAttraction())
                 {

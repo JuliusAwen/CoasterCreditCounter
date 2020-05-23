@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,9 +18,22 @@ public class ContentRecyclerViewAdapterOrder
     private Configuration configuration;
     private IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
+    public ContentRecyclerViewAdapterOrder(IElement element)
+    {
+        List<IElement> content = new ArrayList<>();
+        content.add(element);
+
+        this.initialize(content);
+    }
+
     public ContentRecyclerViewAdapterOrder(List<IElement> content)
     {
-        Log.d(String.format(Locale.getDefault(), "instantiating with [%d] Elements - instantiating dependencies...", content.size()));
+        this.initialize(content);
+    }
+
+    private void initialize(List<IElement> content)
+    {
+        Log.d(String.format(Locale.getDefault(), "initializing with [%d] Elements - instantiating dependencies...", content.size()));
         this.content = content;
         this.configuration = new Configuration();
         this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapter();
@@ -27,7 +41,7 @@ public class ContentRecyclerViewAdapterOrder
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
     {
-        this.configuration = ConfigurationPresetProvider.createPresetConfiguration(requestCode);
+        ConfigurationPresetProvider.applyPreset(this.configuration, requestCode);
         this.configuration.setDecoration(DecorationPresetProvider.createPresetDecoration(requestCode));
         return this;
     }
