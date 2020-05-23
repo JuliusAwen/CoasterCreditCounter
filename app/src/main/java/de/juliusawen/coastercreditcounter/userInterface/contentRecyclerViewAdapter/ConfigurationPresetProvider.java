@@ -21,6 +21,8 @@ abstract class ConfigurationPresetProvider
             case NAVIGATE:
             {
                 configuration.isDecorable = true;
+                configuration.isSelectable = true;
+                configuration.isMultipleSelection = true;
                 configuration.isExpandable = true;
 
                 relevantChildTypesInSortOrder.add(IAttraction.class);

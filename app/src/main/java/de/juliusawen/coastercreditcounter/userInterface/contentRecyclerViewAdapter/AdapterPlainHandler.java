@@ -109,7 +109,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
     }
 
-    protected void handleOnClick(View view, boolean performExternalClick)
+    protected boolean handleOnClick(View view, boolean performExternalClick)
     {
         if(performExternalClick && this.hasExternalOnClickListeners)
         {
@@ -120,6 +120,8 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
                 externalOnClickListener.onClick(view);
             }
         }
+
+        return false;
     }
 
     private View.OnClickListener fetchExternalOnClickListener(IElement item)

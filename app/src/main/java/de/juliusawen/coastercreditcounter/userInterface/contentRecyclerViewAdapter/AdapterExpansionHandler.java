@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -24,7 +22,6 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     private boolean isExpandable = false;
 
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
-    private final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
     private final HashSet<IElement> expandedItems = new HashSet<>();
 
     AdapterExpansionHandler()
@@ -43,7 +40,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         StringBuilder childTypes = new StringBuilder();
         if(this.isExpandable)
         {
-            this.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
+            super.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
 
             for(Class<? extends IElement> type : configuration.getChildTypesToExpandInSortOrder())
             {
@@ -79,7 +76,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
             if(this.expandedItems.contains(item))
             {
-                ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
+                ArrayList<IElement> relevantChildren = super.getRelevantChildren(item);
                 Log.v(String.format(Locale.getDefault(), "item %s is expanded - adding [%d] children", item, relevantChildren.size()));
                 initializedItems.addAll(this.initializeItems(relevantChildren, generation + 1));
             }
@@ -97,7 +94,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             int generation = this.getGeneration(item);
             Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", item, position, generation));
 
-            if(!this.getRelevantChildren(item).isEmpty())
+            if(!super.getRelevantChildren(item).isEmpty())
             {
                 viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
 
@@ -122,15 +119,17 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     }
 
     @Override
-    protected void handleOnClick(View view, boolean performExternalClick)
+    protected boolean handleOnClick(View view, boolean performExternalClick)
     {
-        super.handleOnClick(view, performExternalClick);
-
-        if(this.isExpandable)
+        boolean isConsumed = super.handleOnClick(view, performExternalClick);
+        if((view.getId() == R.id.imageViewRecyclerView || !isConsumed) && this.isExpandable)
         {
             IElement item = super.fetchItem(view);
             this.toggleExpansion(item);
+            return true;
         }
+
+        return isConsumed;
     }
 
     @Override
@@ -147,7 +146,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return;
         }
 
-        if(!this.relevantChildTypesInSortOrder.isEmpty())
+        if(!super.relevantChildTypesInSortOrder.isEmpty())
         {
             Log.d("toggling expansion...");
 
@@ -164,11 +163,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void expandAllContent()
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return;
-        }
+        super.restrictAccess(this.isExpandable);
 
         if(!super.content.isEmpty() && !this.isAllContentExpanded())
         {
@@ -199,7 +194,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    private void expandGroupHeaderOfItem(IElement item)
+    private void expandItemsGroupHeader(IElement item)
     {
         for(IElement groupHeader : this.content)
         {
@@ -213,14 +208,11 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void expandItem(IElement item, boolean scrollToItem)
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return;
-        }
+        super.restrictAccess(this.isExpandable);
+
         if(!this.expandedItems.contains(item))
         {
-            ArrayList<IElement> relevantChildren = this.getRelevantChildren(item);
+            ArrayList<IElement> relevantChildren = super.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
                 Log.v(String.format("expanding item %s...", item));
@@ -272,19 +264,15 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected boolean isAllContentExpanded()
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return false;
-        }
+        super.restrictAccess(this.isExpandable);
 
         for(IElement item : this.content)
         {
-            for(IElement relevantChild : this.getRelevantChildren(item))
+            for(IElement relevantChild : super.getRelevantChildren(item))
             {
                 if(relevantChild.isLocation())
                 {
-                    List<IElement> relevantGrandchildren = this.getRelevantChildren(relevantChild);
+                    List<IElement> relevantGrandchildren = super.getRelevantChildren(relevantChild);
                     if(!relevantGrandchildren.isEmpty())
                     {
                         if(!this.expandedItems.contains(relevantChild))
@@ -308,11 +296,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void collapseAllContent()
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return;
-        }
+        super.restrictAccess(this.isExpandable);
 
         if(!this.content.isEmpty() && !this.isAllContentCollapsed())
         {
@@ -335,15 +319,11 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void collapseItem(IElement item, boolean scrollToItem)
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return;
-        }
+        super.restrictAccess(this.isExpandable);
 
         if(this.expandedItems.contains(item))
         {
-            List<IElement> relevantChildren = this.getRelevantChildren(item);
+            List<IElement> relevantChildren = super.getRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
                 Log.v(String.format("collapsing item %s...", item));
@@ -375,32 +355,9 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    private ArrayList<IElement> getRelevantChildren(IElement item)
-    {
-        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
-
-        for(IElement child : item.getChildren())
-        {
-            for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
-            {
-                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
-                {
-                    distinctRelevantChildren.add(child);
-                    break;
-                }
-            }
-        }
-
-        return distinctRelevantChildren;
-    }
-
     protected boolean isAllContentCollapsed()
     {
-        if(!this.isExpandable)
-        {
-            Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
-            return false;
-        }
+        super.restrictAccess(this.isExpandable);
 
         return this.expandedItems.isEmpty();
     }

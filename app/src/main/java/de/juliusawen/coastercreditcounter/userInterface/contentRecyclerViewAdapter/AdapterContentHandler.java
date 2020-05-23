@@ -196,4 +196,12 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.notifyContentChanged();
         this.scrollToItem(this.getItem(0));
     }
+
+    protected void restrictAccess(boolean accessAllowed)
+    {
+        if(!accessAllowed)
+        {
+            throw new IllegalAccessError("Access denied");
+        }
+    }
 }
