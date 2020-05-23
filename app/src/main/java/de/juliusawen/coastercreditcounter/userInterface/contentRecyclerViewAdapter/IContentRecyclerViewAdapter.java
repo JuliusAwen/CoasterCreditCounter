@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
@@ -9,7 +10,6 @@ public interface IContentRecyclerViewAdapter
     void configure(Configuration configuration);
 
     void setContent(List<IElement> content);
-    void notifyContentChanged();
 
     void insertItem(IElement element);
     void insertItem(int position, IElement element);
@@ -20,23 +20,23 @@ public interface IContentRecyclerViewAdapter
     void groupContent(GroupType groupType);
 
 
-    boolean isAllExpanded();
-    void expandAll();
+    boolean isAllContentExpanded();
+    void expandAllContent();
     void expandItem(IElement element, boolean scrollToItem);
 
-    boolean isAllCollapsed();
-    void collapseAll();
+    boolean isAllContentCollapsed();
+    void collapseAllContent();
     void collapseItem(IElement element, boolean scrollToItem);
 
 
-    boolean isAllSelected();
-    void selectAll();
+    boolean isAllContentSelected();
+    void selectAllContent();
     void selectItem(IElement element, boolean scrollToItem);
 
-    boolean isAllDeselected();
-    void deselectAll();
+    boolean isAllContentDeselected();
+    void deselectAllContent();
     void deselectItem(IElement element, boolean scrollToItem);
 
-    List<IElement> getSelectedItemsInOrderOfSelection();
+    LinkedList<IElement> getSelectedItemsInOrderOfSelection();
     IElement getLastSelectedItem();
 }

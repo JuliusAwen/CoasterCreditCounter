@@ -83,7 +83,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void selectAll()
+    protected void selectAllContent()
     {
         if(!this.isSelectable)
         {
@@ -118,7 +118,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 //        }
 //    }
 
-    public void selectItem(IElement element, boolean scrollToItem)
+    protected void selectItem(IElement element, boolean scrollToItem)
     {
         if(!this.isSelectable)
         {
@@ -141,7 +141,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void deselectAll()
+    protected void deselectAllContent()
     {
         if(!this.isSelectable)
         {
@@ -162,7 +162,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    public void deselectItem(IElement element, boolean scrollToItem)
+    protected void deselectItem(IElement element, boolean scrollToItem)
     {
         if(!this.isSelectable)
         {
@@ -182,7 +182,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    public boolean isAllSelected()
+    protected boolean isAllContentSelected()
     {
         if(!this.isSelectable)
         {
@@ -196,7 +196,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return items.isEmpty();
     }
 
-    public boolean isAllDeselected()
+    protected boolean isAllContentDeselected()
     {
         if(!this.isSelectable)
         {
@@ -207,7 +207,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return this.selectedItemsInOrderOfSelection.isEmpty();
     }
 
-    public LinkedList<IElement> getSelectedItemsInOrderOfSelection()
+    protected LinkedList<IElement> getSelectedItemsInOrderOfSelection()
     {
         if(!this.isSelectable)
         {
@@ -228,7 +228,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return selectedItems;
     }
 
-    public IElement getLastSelectedItem()
+    protected IElement getLastSelectedItem()
     {
         if(!this.isSelectable)
         {

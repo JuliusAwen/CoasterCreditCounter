@@ -134,12 +134,12 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     }
 
     @Override
-    public void selectAll()
+    protected void selectAllContent()
     {
-        super.selectAll();
+        super.selectAllContent();
     }
 
-    public void toggleExpansion(IElement item)
+    protected void toggleExpansion(IElement item)
     {
         if(!this.isExpandable)
         {
@@ -162,7 +162,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    public void expandAll()
+    protected void expandAllContent()
     {
         if(!this.isExpandable)
         {
@@ -170,7 +170,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return;
         }
 
-        if(!super.content.isEmpty() && !this.isAllExpanded())
+        if(!super.content.isEmpty() && !this.isAllContentExpanded())
         {
             Log.d("expanding all items");
 
@@ -211,7 +211,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    public void expandItem(IElement item, boolean scrollToItem)
+    protected void expandItem(IElement item, boolean scrollToItem)
     {
         if(!this.isExpandable)
         {
@@ -270,7 +270,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         return generation;
     }
 
-    public boolean isAllExpanded()
+    protected boolean isAllContentExpanded()
     {
         if(!this.isExpandable)
         {
@@ -306,7 +306,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         return true;
     }
 
-    public void collapseAll()
+    protected void collapseAllContent()
     {
         if(!this.isExpandable)
         {
@@ -314,7 +314,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return;
         }
 
-        if(!this.content.isEmpty() && !this.isAllCollapsed())
+        if(!this.content.isEmpty() && !this.isAllContentCollapsed())
         {
             List<IElement> itemsToCollapse = new ArrayList<>(this.expandedItems);
 
@@ -333,7 +333,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    public void collapseItem(IElement item, boolean scrollToItem)
+    protected void collapseItem(IElement item, boolean scrollToItem)
     {
         if(!this.isExpandable)
         {
@@ -394,7 +394,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         return distinctRelevantChildren;
     }
 
-    public boolean isAllCollapsed()
+    protected boolean isAllContentCollapsed()
     {
         if(!this.isExpandable)
         {

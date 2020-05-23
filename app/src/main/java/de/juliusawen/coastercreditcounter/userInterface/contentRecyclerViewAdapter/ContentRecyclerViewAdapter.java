@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,34 +46,130 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     }
 
     @Override
-    public void groupContent(GroupType groupType)
-    {
-        Log.d(String.format("grouping Content by GroupType[%s]...", groupType));
-        super.groupContent(groupType);
-    }
-
     public void insertItem(IElement element)
     {
         Log.d(String.format("inserting %s...", element));
         super.insertItem(element);
     }
 
+    @Override
     public void insertItem(int position, IElement element)
     {
         Log.d(String.format(Locale.getDefault(), "inserting %s at position[%d]...", element, position));
         super.insertItem(position, element);
     }
 
+    @Override
     public void notifyItemChanged(IElement element)
     {
         Log.d(String.format("notifying %s changed...", element));
         super.notifyItemChanged(element);
     }
 
+    @Override
     public void removeItem(IElement element)
     {
         Log.d(String.format("removing %s...", element));
         super.removeItem(element);
+    }
+
+    @Override
+    public void groupContent(GroupType groupType)
+    {
+        Log.d(String.format("grouping by GroupType[%s]...", groupType));
+        super.groupContent(groupType);
+    }
+
+    @Override
+    public boolean isAllContentExpanded()
+    {
+        return super.isAllContentExpanded();
+    }
+
+    @Override
+    public void expandAllContent()
+    {
+        Log.d("expanding all content...");
+        super.expandAllContent();
+    }
+
+    @Override
+    public void expandItem(IElement element, boolean scrollToItem)
+    {
+        Log.d(String.format("expanding %s - scrollToItem[%S]...", element, scrollToItem));
+        super.expandItem(element, scrollToItem);
+    }
+
+    @Override
+    public boolean isAllContentCollapsed()
+    {
+        return super.isAllContentCollapsed();
+    }
+
+    @Override
+    public void collapseAllContent()
+    {
+        Log.d("collapsing all content...");
+        super.collapseAllContent();
+    }
+
+    @Override
+    public void collapseItem(IElement element, boolean scrollToItem)
+    {
+        Log.d(String.format("collapsing %s - scrollToItem[%S]...", element, scrollToItem));
+        super.collapseItem(element, scrollToItem);
+    }
+
+    @Override
+    public boolean isAllContentSelected()
+    {
+        return super.isAllContentSelected();
+    }
+
+    @Override
+    public void selectAllContent()
+    {
+        Log.d("selecting all content...");
+        super.selectAllContent();
+    }
+
+    @Override
+    public void selectItem(IElement element, boolean scrollToItem)
+    {
+        Log.d(String.format("selecting %s - scrollToItem[%S]...", element, scrollToItem));
+        super.selectItem(element, scrollToItem);
+    }
+
+    @Override
+    public boolean isAllContentDeselected()
+    {
+        return super.isAllContentDeselected();
+    }
+
+    @Override
+    public void deselectAllContent()
+    {
+        Log.d("deselecting all content...");
+        super.selectAllContent();
+    }
+
+    @Override
+    public void deselectItem(IElement element, boolean scrollToItem)
+    {
+        Log.d(String.format("deselecting %s - scrollToItem[%S]...", element, scrollToItem));
+        super.deselectItem(element, scrollToItem);
+    }
+
+    @Override
+    public LinkedList<IElement> getSelectedItemsInOrderOfSelection()
+    {
+        return super.getSelectedItemsInOrderOfSelection();
+    }
+
+    @Override
+    public IElement getLastSelectedItem()
+    {
+        return super.getLastSelectedItem();
     }
 
     @Override
