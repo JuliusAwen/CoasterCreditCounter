@@ -29,13 +29,13 @@ public interface IContentRecyclerViewAdapter
     void collapseItem(IElement element, boolean scrollToItem);
 
 
-    boolean isAllContentSelected();
+//    boolean isAllContentSelected();
     void selectAllContent();
-    void selectItem(IElement element, boolean scrollToItem);
-
-    boolean isAllContentDeselected();
+//    void selectItem(IElement element, boolean scrollToItem);
+//
+//    boolean isAllContentDeselected();
     void deselectAllContent();
-    void deselectItem(IElement element, boolean scrollToItem);
+//    void deselectItem(IElement element, boolean scrollToItem);
 
     LinkedList<IElement> getSelectedItemsInOrderOfSelection();
     IElement getLastSelectedItem();

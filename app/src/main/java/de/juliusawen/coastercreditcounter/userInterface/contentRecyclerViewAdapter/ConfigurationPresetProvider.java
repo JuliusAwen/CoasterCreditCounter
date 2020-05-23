@@ -33,7 +33,7 @@ abstract class ConfigurationPresetProvider
                 break;
         }
 
-        configuration.addchildTypesToExpandInSortOrder(relevantChildTypesInSortOrder);
+        configuration.addchildTypesToExpand(relevantChildTypesInSortOrder);
 
 
         return configuration;

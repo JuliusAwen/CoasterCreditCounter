@@ -120,45 +120,45 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
         super.collapseItem(element, scrollToItem);
     }
 
-    @Override
-    public boolean isAllContentSelected()
-    {
-        return super.isAllContentSelected();
-    }
-
+//    @Override
+//    public boolean isAllContentSelected()
+//    {
+//        return super.isAllContentSelected();
+//    }
+//
     @Override
     public void selectAllContent()
     {
         Log.d("selecting all content...");
         super.selectAllContent();
     }
-
-    @Override
-    public void selectItem(IElement element, boolean scrollToItem)
-    {
-        Log.d(String.format("selecting %s - scrollToItem[%S]...", element, scrollToItem));
-        super.selectItem(element, scrollToItem);
-    }
-
-    @Override
-    public boolean isAllContentDeselected()
-    {
-        return super.isAllContentDeselected();
-    }
-
+//
+//    @Override
+//    public void selectItem(IElement element, boolean scrollToItem)
+//    {
+//        Log.d(String.format("selecting %s - scrollToItem[%S]...", element, scrollToItem));
+//        super.selectItem(element, scrollToItem);
+//    }
+//
+//    @Override
+//    public boolean isAllContentDeselected()
+//    {
+//        return super.isAllContentDeselected();
+//    }
+//
     @Override
     public void deselectAllContent()
     {
         Log.d("deselecting all content...");
-        super.selectAllContent();
+        super.deselectAllContent();
     }
-
-    @Override
-    public void deselectItem(IElement element, boolean scrollToItem)
-    {
-        Log.d(String.format("deselecting %s - scrollToItem[%S]...", element, scrollToItem));
-        super.deselectItem(element, scrollToItem);
-    }
+//
+//    @Override
+//    public void deselectItem(IElement element, boolean scrollToItem)
+//    {
+//        Log.d(String.format("deselecting %s - scrollToItem[%S]...", element, scrollToItem));
+//        super.deselectItem(element, scrollToItem);
+//    }
 
     @Override
     public LinkedList<IElement> getSelectedItemsInOrderOfSelection()

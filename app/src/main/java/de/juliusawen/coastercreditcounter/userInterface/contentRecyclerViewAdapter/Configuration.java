@@ -26,7 +26,7 @@ public class Configuration
     boolean isMultipleSelection = false;
 
     boolean isExpandable = false;
-    private final LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder = new LinkedHashSet<>();
+    private final LinkedHashSet<Class<? extends IElement>> childTypesToExpand = new LinkedHashSet<>();
 
     boolean isCountable = false;
 
@@ -60,22 +60,22 @@ public class Configuration
     }
 
 
-    LinkedHashSet<Class<? extends IElement>> getChildTypesToExpandInSortOrder()
+    LinkedHashSet<Class<? extends IElement>> getChildTypesToExpand()
     {
-        return this.childTypesToExpandInSortOrder;
+        return this.childTypesToExpand;
     }
 
-    public void addchildTypesToExpandInSortOrder(LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder)
+    public void addchildTypesToExpand(LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder)
     {
         this.isExpandable = true;
-        this.childTypesToExpandInSortOrder.addAll(childTypesToExpandInSortOrder);
+        this.childTypesToExpand.addAll(childTypesToExpandInSortOrder);
         Log.v(String.format(Locale.getDefault(), "added [%d] types to expand", childTypesToExpandInSortOrder.size()));
     }
 
     public void addChildTypeToExpand(Class<? extends IElement> childTypeToExpand)
     {
         this.isExpandable = true;
-        this.childTypesToExpandInSortOrder.add(childTypeToExpand);
+        this.childTypesToExpand.add(childTypeToExpand);
         Log.v(String.format("added [%s] as type to expand", childTypeToExpand));
     }
 
@@ -131,7 +131,7 @@ public class Configuration
             this.isMultipleSelection = false;
         }
 
-        if(this.isExpandable && this.childTypesToExpandInSortOrder.isEmpty())
+        if(this.isExpandable && this.childTypesToExpand.isEmpty())
         {
             Log.e("isExpandable but no child types to expand are set");
             if(!tryFix)
@@ -156,7 +156,7 @@ public class Configuration
                         "  groupType[%s]\n" +
                         "  isDecorable[%S]\n" +
                         "  isSelectable[%S]" + (this.isSelectable ? String.format(" - isMultipleSelection[%S]", this.isMultipleSelection) :  "\n") +
-                        "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpandInSortOrder.size()) : "\n") +
+                        "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpand.size()) : "\n") +
                         "  isCountable[%S]\n",
 
                 this.groupType,

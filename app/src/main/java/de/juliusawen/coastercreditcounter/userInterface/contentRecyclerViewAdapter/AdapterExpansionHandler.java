@@ -40,9 +40,9 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         StringBuilder childTypes = new StringBuilder();
         if(this.isExpandable)
         {
-            super.relevantChildTypesInSortOrder.addAll(configuration.getChildTypesToExpandInSortOrder());
+            super.relevantChildTypes.addAll(configuration.getChildTypesToExpand());
 
-            for(Class<? extends IElement> type : configuration.getChildTypesToExpandInSortOrder())
+            for(Class<? extends IElement> type : configuration.getChildTypesToExpand())
             {
                 childTypes.append(String.format("\n[%s]", type.getSimpleName()));
             }
@@ -121,8 +121,13 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     @Override
     protected boolean handleOnClick(View view, boolean performExternalClick)
     {
-        boolean isConsumed = super.handleOnClick(view, performExternalClick);
-        if((view.getId() == R.id.imageViewRecyclerView || !isConsumed) && this.isExpandable)
+        boolean isConsumed = false;
+        if(view.getId() != R.id.imageViewRecyclerView)
+        {
+            isConsumed = super.handleOnClick(view, performExternalClick);
+        }
+
+        if(this.isExpandable && !isConsumed)
         {
             IElement item = super.fetchItem(view);
             this.toggleExpansion(item);
@@ -130,12 +135,6 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
 
         return isConsumed;
-    }
-
-    @Override
-    protected void selectAllContent()
-    {
-        super.selectAllContent();
     }
 
     protected void toggleExpansion(IElement item)
@@ -146,7 +145,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return;
         }
 
-        if(!super.relevantChildTypesInSortOrder.isEmpty())
+        if(!super.relevantChildTypes.isEmpty())
         {
             Log.d("toggling expansion...");
 
@@ -194,7 +193,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    private void expandItemsGroupHeader(IElement item)
+    private void expandGroupHeaderForItem(IElement item)
     {
         for(IElement groupHeader : this.content)
         {

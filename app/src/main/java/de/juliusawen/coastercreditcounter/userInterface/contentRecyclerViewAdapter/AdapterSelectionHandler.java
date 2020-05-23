@@ -22,7 +22,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     private boolean isSelectable = false;
     private boolean isMultipleSelection = false;
 
-    protected final Set<Class<? extends IElement>> relevantChildTypesInSortOrder = new LinkedHashSet<>();
+    protected final Set<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
 
     AdapterSelectionHandler()
@@ -97,9 +97,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         {
             if(this.isMultipleSelection)
             {
-                this.selectItem(element, false);
+                this.selectItem(element);
 
-                if(!this.relevantChildTypesInSortOrder.isEmpty())
+                if(!this.relevantChildTypes.isEmpty())
                 {
                     this.selectItems(this.getRelevantChildren(element));
                     this.selectParentIfAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
@@ -109,8 +109,8 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
             {
                 if(!element.isGroupHeader())
                 {
-                    this.deselectItem(getLastSelectedItem(), false);
-                    this.selectItem(element, false);
+                    this.deselectItem(this.getLastSelectedItem());
+                    this.selectItem(element);
                 }
                 else
                 {
@@ -120,11 +120,11 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
         else
         {
-            this.deselectItem(element, false);
+            this.deselectItem(element);
 
             if(this.isMultipleSelection)
             {
-                if(!this.relevantChildTypesInSortOrder.isEmpty())
+                if(!this.relevantChildTypes.isEmpty())
                 {
                     this.deselectItems(getRelevantChildren(element));
                     this.deselectParentIfNotAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
@@ -185,16 +185,13 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
         for(IElement item : super.content)
         {
-            this.selectItem(item, false);
+            this.selectItem(item);
 
-//            if(!this.expandedItems.contains(item))
-//            {
-//                List<IElement> relevantChildren = this.getRelevantChildren(item);
-//                if(!relevantChildren.isEmpty())
-//                {
-//                    this.selectItems(relevantChildren);
-//                }
-//            }
+            for(IElement releventChild : this.getRelevantChildren(item))
+            if(!this.content.contains(releventChild))
+            {
+                this.selectItem(releventChild);
+            }
         }
     }
 
@@ -202,11 +199,11 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         for(IElement element : elements)
         {
-            this.selectItem(element, false);
+            this.selectItem(element);
         }
     }
 
-    protected void selectItem(IElement element, boolean scrollToItem)
+    private void selectItem(IElement element)
     {
         super.restrictAccess(this.isSelectable);
 
@@ -235,11 +232,11 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         for(IElement element : elements)
         {
-            this.deselectItem(element, false);
+            this.deselectItem(element);
         }
     }
 
-    protected void deselectItem(IElement element, boolean scrollToItem)
+    private void deselectItem(IElement element)
     {
         super.restrictAccess(this.isSelectable);
 
@@ -255,7 +252,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
     }
 
-    protected boolean isAllContentSelected()
+    private boolean isAllContentSelected()
     {
         super.restrictAccess(this.isSelectable);
 
@@ -265,7 +262,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return items.isEmpty();
     }
 
-    protected boolean isAllContentDeselected()
+    private boolean isAllContentDeselected()
     {
         super.restrictAccess(this.isSelectable);
 
@@ -301,11 +298,31 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         return null;
     }
 
+    protected ArrayList<IElement> getRelevantChildren(IElement item)
+    {
+        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
+
+        for(IElement child : item.getChildren())
+        {
+            for(Class<? extends IElement> childType : this.relevantChildTypes)
+            {
+
+                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
+                {
+                    distinctRelevantChildren.add(child);
+                    break;
+                }
+            }
+        }
+
+        return distinctRelevantChildren;
+    }
+
     private void selectParentIfAllRelevantChildrenAreSelected(IElement parent)
     {
         if(parent != null && this.allRelevantChildrenAreSelected(parent))
         {
-            this.selectItem(parent, false);
+            this.selectItem(parent);
             Log.v(String.format("selected %s because all children are selected", parent));
         }
     }
@@ -314,7 +331,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         if(parent != null && !allRelevantChildrenAreSelected(parent))
         {
-            this.deselectItem(parent, false);
+            this.deselectItem(parent);
             Log.v(String.format("deselected %s because not all children are selected", parent));
         }
     }
@@ -331,24 +348,5 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         }
 
         return allRelevantChildrenAreSelected;
-    }
-
-    protected ArrayList<IElement> getRelevantChildren(IElement item)
-    {
-        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
-
-        for(IElement child : item.getChildren())
-        {
-            for(Class<? extends IElement> childType : this.relevantChildTypesInSortOrder)
-            {
-                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
-                {
-                    distinctRelevantChildren.add(child);
-                    break;
-                }
-            }
-        }
-
-        return distinctRelevantChildren;
     }
 }

@@ -102,6 +102,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         public boolean onLongClick(View view)
                         {
                             Log.e(String.format("%s long clicked", view.getTag()));
+                            groupCRVA(GroupType.MANUFACTURER);
                             return true;
                         }
                     })
@@ -111,6 +112,7 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         public void onClick(View view)
                         {
                             Log.e(String.format("%s clicked", view.getTag()));
+                            selectAllContent();
                         }
                     })
                     .addOnLongClickListenerForType(OnSiteAttraction.class, new View.OnLongClickListener()
@@ -118,8 +120,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         @Override
                         public boolean onLongClick(View view)
                         {
-                            Log.e(String.format("%s long clicked - grouping content by Manufacturer", view.getTag()));
-                            groupCRVA(GroupType.MANUFACTURER);
+                            Log.e(String.format("%s long clicked", view.getTag()));
+                            groupCRVA(GroupType.PARK);
                             return true;
                         }
                     })
@@ -128,8 +130,8 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
                         @Override
                         public boolean onLongClick(View view)
                         {
-                            Log.e(String.format("%s long clicked - grouping content by Park", view.getTag()));
-                            groupCRVA(GroupType.PARK);
+                            Log.e(String.format("%s long clicked", view.getTag()));
+
                             return true;
                         }
                     })
@@ -154,6 +156,11 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     private void groupCRVA(GroupType groupType)
     {
         this.contentRecyclerViewAdapter.groupContent(groupType);
+    }
+
+    private void selectAllContent()
+    {
+        this.contentRecyclerViewAdapter.selectAllContent();
     }
 
     @Override
