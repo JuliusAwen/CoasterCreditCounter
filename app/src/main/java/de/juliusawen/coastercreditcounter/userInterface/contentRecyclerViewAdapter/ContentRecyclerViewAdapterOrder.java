@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -35,14 +34,14 @@ public class ContentRecyclerViewAdapterOrder
     {
         Log.d(String.format(Locale.getDefault(), "initializing with [%d] Elements - instantiating dependencies...", content.size()));
         this.content = content;
-        this.configuration = new Configuration();
+        this.configuration = new Configuration(new Decoration());
         this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapter();
     }
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
     {
         ConfigurationPresetProvider.applyPreset(this.configuration, requestCode);
-        this.configuration.setDecoration(DecorationPresetProvider.createPresetDecoration(requestCode));
+        DecorationPresetProvider.applyPreset(this.configuration.getDecoration(), requestCode);
         return this;
     }
 
@@ -60,25 +59,15 @@ public class ContentRecyclerViewAdapterOrder
 
     public IContentRecyclerViewAdapter placeOrder()
     {
-        if(this.configuration.validate(!BuildConfig.DEBUG))
-        {
-            Log.wrap(LogLevel.VERBOSE,
-                    String.format("delivering ContentRecyclerViewAdapter with %s:\n\n%s\n\n%s",
-                            String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
-                            this.configuration,
-                            this.configuration.getDecoration()),
-                    '=', false);
+        Log.wrap(LogLevel.VERBOSE,
+                String.format("delivering ContentRecyclerViewAdapter with %s:\n\n%s\n\n%s",
+                        String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
+                        this.configuration,
+                        this.configuration.getDecoration()),
+                '=', false);
 
-            this.contentRecyclerViewAdapter.configure(this.configuration);
-            this.contentRecyclerViewAdapter.setContent(this.content);
-            return this.contentRecyclerViewAdapter;
-        }
-        else
-        {
-            throw new IllegalStateException(
-                    String.format("\nContentRecyclerViewAdapterConfiguration not valid:\n%s\n\n%s",
-                        this.configuration.isSelectable,
-                        this.configuration.validate(false)));
-        }
+        this.contentRecyclerViewAdapter.configure(this.configuration);
+        this.contentRecyclerViewAdapter.setContent(this.content);
+        return this.contentRecyclerViewAdapter;
     }
 }

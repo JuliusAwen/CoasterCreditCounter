@@ -19,8 +19,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 {
-    private boolean isExpandable = false;
-
+    boolean isExpandable = false;
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
     private final HashSet<IElement> expandedItems = new HashSet<>();
 
@@ -34,23 +33,8 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
-
-        this.isExpandable = configuration.isExpandable;
-
-        StringBuilder childTypes = new StringBuilder();
-        if(this.isExpandable)
-        {
-            super.relevantChildTypes.addAll(configuration.getChildTypesToExpand());
-
-            for(Class<? extends IElement> type : configuration.getChildTypesToExpand())
-            {
-                childTypes.append(String.format("\n[%s]", type.getSimpleName()));
-            }
-        }
-
-        Log.v(String.format("isExpandable[%S]%s", configuration.isDecorable, configuration.isExpandable
-                ? String.format("ChildTypes:%s", childTypes)
-                : childTypes));
+        this.isExpandable = !configuration.getRelevantChildTypes().isEmpty();
+        Log.v(String.format("isExpandable[%S]", this.isExpandable));
     }
 
     @Override
@@ -60,10 +44,11 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
         if(this.isExpandable)
         {
-            Log.v("grouping Content...");
+            Log.v("re-initializing generations by item...");
             this.generationByItem.clear();
             super.content = this.initializeItems(super.content, 0);
         }
+
     }
 
     private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
@@ -78,7 +63,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
             if(this.expandedItems.contains(item))
             {
-                ArrayList<IElement> relevantChildren = super.getRelevantChildren(item);
+                ArrayList<IElement> relevantChildren = super.fetchRelevantChildren(item);
                 Log.v(String.format(Locale.getDefault(), "item %s is expanded - adding [%d] children", item, relevantChildren.size()));
                 initializedItems.addAll(this.initializeItems(relevantChildren, generation + 1));
             }
@@ -97,7 +82,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             int generation = this.getGeneration(item);
             Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", item, position, generation));
 
-            if(!super.getRelevantChildren(item).isEmpty())
+            if(super.hasRelevantChildren(item))
             {
                 viewHolder.imageViewExpandToggle.setVisibility(View.VISIBLE);
 
@@ -141,26 +126,21 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return;
         }
 
-        if(!super.relevantChildTypes.isEmpty())
+        if(!this.expandedItems.contains(item))
         {
-            if(!this.expandedItems.contains(item))
-            {
-                this.expandItem(item, true);
-            }
-            else
-            {
-                this.collapseItem(item, true);
-            }
-
-            Log.v("expansion toggled");
+            this.expandItem(item, true);
         }
+        else
+        {
+            this.collapseItem(item, true);
+        }
+
+        Log.v("expansion toggled");
     }
 
     protected void expandAllContent()
     {
-        super.restrictAccess(this.isExpandable);
-
-        if(!super.content.isEmpty() && !this.isAllContentExpanded())
+        if(!this.isAllContentExpanded())
         {
             Log.d("expanding all items");
 
@@ -203,11 +183,9 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void expandItem(IElement item, boolean scrollToItem)
     {
-        super.restrictAccess(this.isExpandable);
-
         if(!this.expandedItems.contains(item))
         {
-            ArrayList<IElement> relevantChildren = super.getRelevantChildren(item);
+            ArrayList<IElement> relevantChildren = super.fetchRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
                 Log.v(String.format("expanding item %s...", item));
@@ -226,9 +204,8 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
                     Log.v(String.format(Locale.getDefault(), "added child %s at position [%d] - generation [%d]", child, position, generation));
                 }
 
-                if(scrollToItem)
+                if(scrollToItem) //scroll to item above expanded item (if any)
                 {
-                    //scroll to item above expanded item (if any)
                     position = super.getPosition(item);
                     if(position > 0)
                     {
@@ -259,15 +236,13 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected boolean isAllContentExpanded()
     {
-        super.restrictAccess(this.isExpandable);
-
         for(IElement item : this.content)
         {
-            for(IElement relevantChild : super.getRelevantChildren(item))
+            for(IElement relevantChild : super.fetchRelevantChildren(item))
             {
                 if(relevantChild.isLocation())
                 {
-                    List<IElement> relevantGrandchildren = super.getRelevantChildren(relevantChild);
+                    List<IElement> relevantGrandchildren = super.fetchRelevantChildren(relevantChild);
                     if(!relevantGrandchildren.isEmpty())
                     {
                         if(!this.expandedItems.contains(relevantChild))
@@ -291,9 +266,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void collapseAllContent()
     {
-        super.restrictAccess(this.isExpandable);
-
-        if(!this.content.isEmpty() && !this.isAllContentCollapsed())
+        if(!this.isAllContentCollapsed())
         {
             List<IElement> itemsToCollapse = new ArrayList<>(this.expandedItems);
 
@@ -314,11 +287,9 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void collapseItem(IElement item, boolean scrollToItem)
     {
-        super.restrictAccess(this.isExpandable);
-
         if(this.expandedItems.contains(item))
         {
-            List<IElement> relevantChildren = super.getRelevantChildren(item);
+            List<IElement> relevantChildren = super.fetchRelevantChildren(item);
             if(!relevantChildren.isEmpty())
             {
                 Log.v(String.format("collapsing item %s...", item));
@@ -352,8 +323,6 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected boolean isAllContentCollapsed()
     {
-        super.restrictAccess(this.isExpandable);
-
         return this.expandedItems.isEmpty();
     }
 }

@@ -11,12 +11,9 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 abstract class DecorationPresetProvider
 {
-    static Decoration createPresetDecoration(RequestCode requestCode)
+    static void applyPreset(Decoration decoration, RequestCode requestCode)
     {
         Log.v(String.format("creating for RequestCode[%s]...", requestCode));
-
-        Decoration decoration = new Decoration();
-
 
         switch(requestCode)
         {
@@ -41,7 +38,5 @@ abstract class DecorationPresetProvider
         decoration
                 .addTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
                 .addTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC);
-
-        return decoration;
     }
 }

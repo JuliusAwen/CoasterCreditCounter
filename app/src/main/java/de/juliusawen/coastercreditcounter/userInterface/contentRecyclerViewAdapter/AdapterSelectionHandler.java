@@ -3,11 +3,9 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
@@ -21,8 +19,6 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 {
     private boolean isSelectable = false;
     private boolean isMultipleSelection = false;
-
-    protected final Set<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
 
     AdapterSelectionHandler()
@@ -35,23 +31,16 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
-
-        this.isSelectable = configuration.isSelectable;
+        this.isSelectable = configuration.isSelecetable;
         this.isMultipleSelection = configuration.isMultipleSelection;
-
-        Log.v(String.format("isSelectable[%S], isMultipleSelection[%S]", configuration.isSelectable, configuration.isMultipleSelection));
+        Log.v(String.format("isSelectable[%S], isMultipleSelection[%S]", this.isSelectable, this.isMultipleSelection));
     }
 
     @Override
     protected void setContent(List<IElement> content)
     {
         super.setContent(content);
-
-        if(this.isSelectable)
-        {
-            Log.v("setting Content...");
-            this.selectedItemsInOrderOfSelection.clear();
-        }
+        this.selectedItemsInOrderOfSelection.clear();
     }
 
     @Override
@@ -59,18 +48,15 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         IElement item = super.bindViewHolderElement(viewHolder, position);
 
-        if(this.isSelectable)
-        {
-            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", item, position));
 
-            if(this.selectedItemsInOrderOfSelection.contains(item))
-            {
-                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
-            }
-            else
-            {
-                viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
-            }
+        if(this.selectedItemsInOrderOfSelection.contains(item))
+        {
+            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.selected_color));
+        }
+        else
+        {
+            viewHolder.itemView.setBackgroundColor(App.getContext().getColor(R.color.default_color));
         }
 
         return item;
@@ -81,7 +67,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         boolean isConsumed = super.handleOnClick(view, performExternalClick);
 
-        if(!isConsumed && this.isSelectable)
+        if(this.isSelectable && !isConsumed)
         {
             IElement selectedItem = super.fetchItem(view);
             this.toggleSelection(selectedItem);
@@ -99,9 +85,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
             {
                 this.selectItem(element);
 
-                if(!this.relevantChildTypes.isEmpty())
+                if(!super.relevantChildTypes.isEmpty())
                 {
-                    this.selectItems(this.getRelevantChildren(element));
+                    this.selectItems(super.fetchRelevantChildren(element));
                     this.selectParentIfAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
                 }
             }
@@ -124,9 +110,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
             if(this.isMultipleSelection)
             {
-                if(!this.relevantChildTypes.isEmpty())
+                if(!super.relevantChildTypes.isEmpty())
                 {
-                    this.deselectItems(getRelevantChildren(element));
+                    this.deselectItems(super.fetchRelevantChildren(element));
                     this.deselectParentIfNotAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
                 }
             }
@@ -151,7 +137,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
                 throw new IllegalStateException(message);
             }
 
-            return super.content.get(super.getPosition(item.getParent()));
+            return super.getItem(super.getPosition(item.getParent()));
         }
         else
         {
@@ -177,8 +163,6 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     protected void selectAllContent()
     {
-        super.restrictAccess(this.isSelectable);
-
         Log.d(String.format(Locale.getDefault(), "selecting all [%d] items...", super.getItemCount()));
 
         this.selectedItemsInOrderOfSelection.clear();
@@ -187,10 +171,10 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         {
             this.selectItem(item);
 
-            for(IElement releventChild : this.getRelevantChildren(item))
-            if(!this.content.contains(releventChild))
+            for(IElement relevantChild : super.fetchRelevantChildren(item))
+            if(!this.exists(relevantChild))
             {
-                this.selectItem(releventChild);
+                this.selectItem(relevantChild);
             }
         }
     }
@@ -219,8 +203,6 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     protected void deselectAllContent()
     {
-        super.restrictAccess(this.isSelectable);
-
         Log.v("deselecting content...");
         LinkedList<IElement> selectedItems = new LinkedList<>(this.selectedItemsInOrderOfSelection);
         this.deselectItems(selectedItems);
@@ -240,7 +222,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         {
             if(this.selectedItemsInOrderOfSelection.contains(element))
             {
-                selectedItemsInOrderOfSelection.remove(element);
+                this.selectedItemsInOrderOfSelection.remove(element);
                 Log.v(String.format("%s deselected", element));
             }
 
@@ -250,25 +232,18 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     protected boolean isAllContentSelected()
     {
-        super.restrictAccess(this.isSelectable);
-
         List<IElement> items = new ArrayList<>(super.content);
         items.removeAll(this.selectedItemsInOrderOfSelection);
-
         return items.isEmpty();
     }
 
     protected boolean isAllContentDeselected()
     {
-        super.restrictAccess(this.isSelectable);
-
         return this.selectedItemsInOrderOfSelection.isEmpty();
     }
 
     protected LinkedList<IElement> getSelectedItemsInOrderOfSelection()
     {
-        super.restrictAccess(this.isSelectable);
-
         LinkedList<IElement> selectedItems = new LinkedList<>();
 
         for(IElement item : this.selectedItemsInOrderOfSelection)
@@ -284,34 +259,12 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     protected IElement getLastSelectedItem()
     {
-        super.restrictAccess(this.isSelectable);
-
         if(!this.selectedItemsInOrderOfSelection.isEmpty())
         {
             return this.selectedItemsInOrderOfSelection.get(0);
         }
 
         return null;
-    }
-
-    protected ArrayList<IElement> getRelevantChildren(IElement item)
-    {
-        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
-
-        for(IElement child : item.getChildren())
-        {
-            for(Class<? extends IElement> childType : this.relevantChildTypes)
-            {
-
-                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
-                {
-                    distinctRelevantChildren.add(child);
-                    break;
-                }
-            }
-        }
-
-        return distinctRelevantChildren;
     }
 
     private void selectParentIfAllRelevantChildrenAreSelected(IElement parent)
@@ -325,7 +278,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 
     private void deselectParentIfNotAllRelevantChildrenAreSelected(IElement parent)
     {
-        if(parent != null && !allRelevantChildrenAreSelected(parent))
+        if(parent != null && !this.allRelevantChildrenAreSelected(parent))
         {
             this.deselectItem(parent);
             Log.v(String.format("deselected %s because not all children are selected", parent));
@@ -335,7 +288,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     private boolean allRelevantChildrenAreSelected(IElement parent)
     {
         boolean allRelevantChildrenAreSelected = false;
-        List<IElement> relevantChildren = this.getRelevantChildren(parent);
+        List<IElement> relevantChildren = super.fetchRelevantChildren(parent);
 
         if(parent != null && !relevantChildren.isEmpty())
         {

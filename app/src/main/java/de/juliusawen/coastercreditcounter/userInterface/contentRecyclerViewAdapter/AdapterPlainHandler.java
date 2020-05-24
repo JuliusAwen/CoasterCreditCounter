@@ -42,15 +42,14 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     {
         super.configure(configuration);
 
-        this.hasExternalOnClickListeners = configuration.hasExternalOnClickListeners;
-
-        if(this.hasExternalOnClickListeners)
+        if(!configuration.getOnClickListenersByType().isEmpty() || !configuration.getOnLongClickListenersByType().isEmpty())
         {
+            this.hasExternalOnClickListeners = true;
             this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
             this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
         }
 
-        Log.v(String.format(Locale.getDefault(), "set [%d] external OnClickListeners and [%d] external OnLongClickListeners",
+        Log.v(String.format(Locale.getDefault(), "has [%d] external OnClickListeners and [%d] external OnLongClickListeners",
                 configuration.getOnClickListenersByType().size(),
                 configuration.getOnLongClickListenersByType().size()));
     }
@@ -111,7 +110,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected boolean handleOnClick(View view, boolean performExternalClick)
     {
-        if(performExternalClick && this.hasExternalOnClickListeners)
+        if(this.hasExternalOnClickListeners && performExternalClick)
         {
             IElement element = this.fetchItem(view);
             View.OnClickListener externalOnClickListener = this.fetchExternalOnClickListener(element);

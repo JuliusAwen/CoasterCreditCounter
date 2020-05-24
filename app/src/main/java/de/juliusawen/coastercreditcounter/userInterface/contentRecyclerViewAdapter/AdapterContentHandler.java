@@ -4,8 +4,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -15,9 +17,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 {
     protected RecyclerView recyclerView;
     protected List<IElement> content = new ArrayList<>();
-    protected ArrayList<IElement> ungroupedContent = new ArrayList<>();
+
+    protected Set<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
 
     private GroupType groupType = GroupType.NONE;
+    protected ArrayList<IElement> ungroupedContent = new ArrayList<>();
     private final GroupHeaderProvider groupHeaderProvider;
 
     AdapterContentHandler()
@@ -29,8 +33,9 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected void configure(Configuration configuration)
     {
         this.groupType = configuration.getGroupType();
+        this.relevantChildTypes = configuration.getRelevantChildTypes();
 
-        Log.v(String.format("GroupType is [%s]", configuration.getGroupType()));
+        Log.v(String.format(Locale.getDefault(), "GroupType[%s], [%d] relevant child types", configuration.getGroupType(), configuration.getRelevantChildTypes().size()));
     }
 
     @Override
@@ -59,6 +64,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
         this.groupContent(this.groupType);
+    }
+
+    protected GroupType getGroupType()
+    {
+        return this.groupType;
     }
 
     protected void notifyContentChanged()
@@ -197,16 +207,28 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.scrollToItem(this.getItem(0));
     }
 
-    protected GroupType getGroupType()
+    protected boolean hasRelevantChildren(IElement element)
     {
-        return this.groupType;
+        return !this.fetchRelevantChildren(element).isEmpty();
     }
 
-    protected void restrictAccess(boolean accessAllowed)
+    protected ArrayList<IElement> fetchRelevantChildren(IElement item)
     {
-        if(!accessAllowed)
+        ArrayList<IElement> distinctRelevantChildren = new ArrayList<>();
+
+        for(IElement child : item.getChildren())
         {
-            throw new IllegalAccessError("Access denied");
+            for(Class<? extends IElement> childType : this.relevantChildTypes)
+            {
+
+                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
+                {
+                    distinctRelevantChildren.add(child);
+                    break;
+                }
+            }
         }
+
+        return distinctRelevantChildren;
     }
 }

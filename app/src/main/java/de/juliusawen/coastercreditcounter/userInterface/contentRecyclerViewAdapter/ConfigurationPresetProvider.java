@@ -8,7 +8,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 abstract class ConfigurationPresetProvider
 {
-    static Configuration applyPreset(Configuration configuration, RequestCode requestCode)
+    static void applyPreset(Configuration configuration, RequestCode requestCode)
     {
         Log.d(String.format("presetting Configuration for RequestCode[%s]...", requestCode));
 
@@ -16,27 +16,19 @@ abstract class ConfigurationPresetProvider
         {
             case NAVIGATE:
             {
-                configuration.isDecorable = true;
-                configuration.isSelectable = true;
+                configuration.isSelecetable = true;
                 configuration.isMultipleSelection = true;
-                configuration.isExpandable = true;
-
-                configuration.addChildTypeToExpand(IAttraction.class);
+                configuration.addRelevantChildType(IAttraction.class);
                 break;
             }
 
             case SHOW_LOCATIONS:
-                configuration.isDecorable = true;
-                configuration.isExpandable = true;
-
-                configuration.addChildTypeToExpand(Location.class);
-                configuration.addChildTypeToExpand(Park.class);
+                configuration.addRelevantChildType(Location.class);
+                configuration.addRelevantChildType(Park.class);
                 break;
 
             default:
                 break;
         }
-
-        return configuration;
     }
 }

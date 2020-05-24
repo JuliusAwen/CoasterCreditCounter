@@ -12,7 +12,6 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterDecorationHandler extends AdapterPlainHandler
 {
-    private boolean isDecorable;
     private Decoration decoration;
 
     AdapterDecorationHandler()
@@ -25,29 +24,19 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
     protected void configure(Configuration configuration)
     {
         super.configure(configuration);
-
-        this.isDecorable = configuration.isDecorable;
-
-        if(this.isDecorable)
-        {
-            this.decoration = configuration.getDecoration();
-        }
-
-        Log.v(String.format("isDecorable[%S]%s", configuration.isDecorable, configuration.isDecorable ? String.format("\n%s", configuration.getDecoration()) : ""));
+        this.decoration = configuration.getDecoration();
+        Log.v(configuration.getDecoration().toString());
     }
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
         IElement element = super.bindViewHolderElement(viewHolder, position);
 
-        if(this.isDecorable)
-        {
-            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
-            this.applyTypeface(element, viewHolder);
-            this.applySpecialStringRecource(element, viewHolder);
-            this.setDetails(element, viewHolder);
-        }
+        this.applyTypeface(element, viewHolder);
+        this.applySpecialStringRecource(element, viewHolder);
+        this.setDetails(element, viewHolder);
 
         return element;
     }

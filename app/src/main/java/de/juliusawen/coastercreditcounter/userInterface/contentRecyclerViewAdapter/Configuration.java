@@ -15,25 +15,22 @@ public class Configuration
 {
     private GroupType groupType = GroupType.NONE;
 
-    boolean hasExternalOnClickListeners = false;
     private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
-    boolean isDecorable = false;
     private Decoration decoration;
 
-    boolean isSelectable = false;
+    boolean isSelecetable = false;
     boolean isMultipleSelection = false;
 
-    boolean isExpandable = false;
-    private final LinkedHashSet<Class<? extends IElement>> childTypesToExpand = new LinkedHashSet<>();
+    private final LinkedHashSet<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
 
-    boolean isCountable = false;
-
-    Configuration()
+    Configuration(Decoration decoration)
     {
+        this.decoration = decoration;
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
+
 
     GroupType getGroupType()
     {
@@ -47,38 +44,6 @@ public class Configuration
     }
 
 
-    public Decoration getDecoration()
-    {
-        return this.decoration != null ? this.decoration : new Decoration();
-    }
-
-    public void setDecoration(Decoration decoration)
-    {
-        this.isDecorable = true;
-        this.decoration = decoration;
-        Log.v(String.format("\n%s", decoration));
-    }
-
-
-    LinkedHashSet<Class<? extends IElement>> getChildTypesToExpand()
-    {
-        return this.childTypesToExpand;
-    }
-
-    public void addchildTypesToExpand(LinkedHashSet<Class<? extends IElement>> childTypesToExpandInSortOrder)
-    {
-        this.isExpandable = true;
-        this.childTypesToExpand.addAll(childTypesToExpandInSortOrder);
-        Log.v(String.format(Locale.getDefault(), "added [%d] types to expand", childTypesToExpandInSortOrder.size()));
-    }
-
-    public void addChildTypeToExpand(Class<? extends IElement> childTypeToExpand)
-    {
-        this.isExpandable = true;
-        this.childTypesToExpand.add(childTypeToExpand);
-        Log.v(String.format("added [%s] as type to expand", childTypeToExpand));
-    }
-
     Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
     {
         return this.onClickListenersByType;
@@ -91,79 +56,79 @@ public class Configuration
 
     public void addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
-        this.hasExternalOnClickListeners = true;
         this.onClickListenersByType.put(type, onClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
     public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
-        this.hasExternalOnClickListeners = true;
         this.onLongClickListenersByType.put(type, onLongClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
-    public boolean validate(boolean tryFix)
+
+    public Decoration getDecoration()
     {
-        Log.v("validating...");
+        return this.decoration;
+    }
 
-        if(this.isDecorable && this.decoration == null)
-        {
-            Log.e("isDecorable but no Decoration is set");
-            if(!tryFix)
-            {
-                return false;
-            }
+    public void setDecoration(Decoration decoration)
+    {
+        this.decoration = decoration;
+    }
 
-            Log.w("setting isDecorable to FALSE");
-            this.isDecorable = false;
-        }
 
-        if(this.isMultipleSelection && !this.isSelectable)
-        {
-            Log.e("isMultipleSelection but not isSelectable");
-            if(!tryFix)
-            {
-                return false;
-            }
+    LinkedHashSet<Class<? extends IElement>> getRelevantChildTypes()
+    {
+        return this.relevantChildTypes;
+    }
 
-            Log.w("setting isMultipleSelection to FALSE");
-            this.isMultipleSelection = false;
-        }
+    public void addRelevantChildTypes(LinkedHashSet<Class<? extends IElement>> relevantChildTypes)
+    {
+        this.relevantChildTypes.addAll(relevantChildTypes);
+        Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types", relevantChildTypes.size()));
+    }
 
-        if(this.isExpandable && this.childTypesToExpand.isEmpty())
-        {
-            Log.e("isExpandable but no child types to expand are set");
-            if(!tryFix)
-            {
-                return false;
-            }
-
-            Log.w("setting isExpandable to FALSE");
-            this.isExpandable = false;
-        }
-
-        Log.d("valid");
-        return true;
+    public void addRelevantChildType(Class<? extends IElement> relevantChildType)
+    {
+        this.relevantChildTypes.add(relevantChildType);
+        Log.v(String.format("added [%s] as relevant child type", relevantChildType));
     }
 
     @Override
     public String toString()
     {
-        //Todo: add relevantChildTypes and CustomOnClickListeners
+        StringBuilder childTypesString = new StringBuilder();
+        for(Class<? extends IElement> type : this.getRelevantChildTypes())
+        {
+            childTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+        }
+
+        StringBuilder onClickListenerTypesString = new StringBuilder();
+        for(Class<? extends IElement> type : this.onClickListenersByType.keySet())
+        {
+            onClickListenerTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+        }
+
+        StringBuilder onLongClickListenerTypesString = new StringBuilder();
+        for(Class<? extends IElement> type : this.onLongClickListenersByType.keySet())
+        {
+            onLongClickListenerTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+        }
+
         return String.format(Locale.getDefault(),
-                "ContentRecyclerViewConfiguration:\n" +
-                        "  groupType[%s]\n" +
-                        "  isDecorable[%S]\n" +
-                        "  isSelectable[%S]" + (this.isSelectable ? String.format(" - isMultipleSelection[%S]", this.isMultipleSelection) :  "\n") +
-                        "  isExpandable[%S]" + (this.isExpandable ? String.format(Locale.getDefault(), " - [%d] child types\n", this.childTypesToExpand.size()) : "\n") +
-                        "  isCountable[%S]\n",
+                        "ContentRecyclerViewConfiguration:\n" +
+                        "    groupType[%s]\n" +
+                        "    isSelectable[%S], isMultipleSelection[%S]\n" +
+                        "    [%d] relevant child types\n%s"+
+                        "    [%d] types with OnClickListeners\n%s"+
+                        "    [%d] types with OnLongClickListeners\n%s",
 
                 this.groupType,
-                this.isDecorable,
-                this.isSelectable,
-                this.isExpandable,
-                this.isCountable
+                this.isSelecetable, this.isMultipleSelection,
+                this.relevantChildTypes.size(), childTypesString,
+                this.onClickListenersByType.size(), onClickListenerTypesString,
+                this.onLongClickListenersByType.size(), onLongClickListenerTypesString
         );
     }
 }

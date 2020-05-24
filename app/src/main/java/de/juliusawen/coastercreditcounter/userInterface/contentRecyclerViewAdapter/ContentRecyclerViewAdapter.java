@@ -29,7 +29,7 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     {
         Log.v("configuring...");
         super.configure(configuration);
-        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n\n%s", configuration, configuration.getDecoration()), '=', false);
+        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n%s", configuration, configuration.getDecoration()), '=', false);
     }
 
     @Override
