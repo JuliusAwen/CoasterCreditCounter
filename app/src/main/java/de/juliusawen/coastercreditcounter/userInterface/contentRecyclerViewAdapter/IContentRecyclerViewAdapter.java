@@ -19,6 +19,8 @@ public interface IContentRecyclerViewAdapter
     void notifyItemChanged(IElement element);
     void removeItem(IElement element);
 
+    void swapItems(IElement element1, IElement element2);
+
     void scrollToItem(IElement element);
 
     void groupContent(GroupType groupType);

@@ -8,13 +8,13 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
 
 public class SortElementsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
     public List<IElement> elementsToSort;
-    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
+//    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
+    public IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     public IElement selectedElement;
     public IElement defaultProperty;
@@ -29,7 +29,7 @@ public class SortElementsViewModel extends ViewModel implements IOptionsMenuButl
     @Override
     public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
-        return this.oldContentRecyclerViewAdapter;
+        return this.contentRecyclerViewAdapter;
     }
 
     @Override

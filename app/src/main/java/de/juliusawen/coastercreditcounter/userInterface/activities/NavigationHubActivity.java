@@ -38,7 +38,6 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class NavigationHubActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener
@@ -59,8 +58,6 @@ public class NavigationHubActivity extends BaseActivity implements AlertDialogFr
     {
         setContentView(R.layout.activity_navigation_hub);
     }
-
-    private IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     protected void create()
     {

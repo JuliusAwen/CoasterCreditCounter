@@ -96,6 +96,13 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     }
 
     @Override
+    public void swapItems(IElement element1, IElement element2)
+    {
+        Log.d(String.format("swapping %s and %s...", element1, element2));
+        super.swapItems(element1, element2);
+    }
+
+    @Override
     public void scrollToItem(IElement element)
     {
         Log.d(String.format("scrolling to %s...", element));

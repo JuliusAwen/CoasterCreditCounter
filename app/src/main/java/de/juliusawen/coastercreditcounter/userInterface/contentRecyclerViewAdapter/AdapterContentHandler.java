@@ -141,7 +141,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.content.remove(element);
     }
 
-    private void swapItems(IElement element1, IElement element2)
+    protected void swapItems(IElement element1, IElement element2)
     {
         if(!this.exists(element1))
         {

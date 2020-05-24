@@ -1,7 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -20,16 +18,13 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
 
 public class SortElementsActivity extends BaseActivity
 {
@@ -57,7 +52,7 @@ public class SortElementsActivity extends BaseActivity
             this.viewModel.elementsToSort = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
-        if(this.viewModel.oldContentRecyclerViewAdapter == null)
+        if(this.viewModel.contentRecyclerViewAdapter == null)
         {
             if(App.preferences.defaultPropertiesAlwaysAtTop() && this.viewModel.elementsToSort.get(0).isProperty())
             {
@@ -73,21 +68,15 @@ public class SortElementsActivity extends BaseActivity
                 }
             }
 
-            this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                    this.viewModel.elementsToSort,
-                    new HashSet<Class<? extends IElement>>(),
-                    false)
-                    .setTypefaceForContentType(this.viewModel.elementsToSort.get(0).getClass(), Typeface.BOLD)
-                    .setDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                    .setDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                    .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
+            this.viewModel.contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(this.viewModel.elementsToSort)
+                    .servePreset(this.viewModel.requestCode)
+                    .placeOrder();
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
+        recyclerView.setAdapter((RecyclerView.Adapter) this.viewModel.contentRecyclerViewAdapter);
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_sort_elements));
@@ -145,7 +134,7 @@ public class SortElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                viewModel.selectedElement = viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem();
+                viewModel.selectedElement = viewModel.contentRecyclerViewAdapter.getLastSelectedItem();
 
                 if(view.equals(frameLayoutDialogDown))
                 {
@@ -245,7 +234,7 @@ public class SortElementsActivity extends BaseActivity
             if(position < viewModel.elementsToSort.size() - 1)
             {
                 Log.v("swapping elements");
-                viewModel.oldContentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
+                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position + 1));
                 Collections.swap(viewModel.elementsToSort, position, position + 1);
             }
             else
@@ -269,7 +258,7 @@ public class SortElementsActivity extends BaseActivity
             {
                 Log.v("swapping elements");
 
-                viewModel.oldContentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
+                viewModel.contentRecyclerViewAdapter.swapItems(viewModel.elementsToSort.get(position), viewModel.elementsToSort.get(position - 1));
                 Collections.swap(viewModel.elementsToSort, position, position - 1);
             }
             else
@@ -301,9 +290,9 @@ public class SortElementsActivity extends BaseActivity
             Log.d(String.format(Locale.getDefault(), "returning [%d] Elements as result", this.viewModel.elementsToSort.size()));
             intent.putExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(this.viewModel.elementsToSort));
 
-            if(!this.viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
+            if(!this.viewModel.contentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
             {
-                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.contentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
             }
         }
 
