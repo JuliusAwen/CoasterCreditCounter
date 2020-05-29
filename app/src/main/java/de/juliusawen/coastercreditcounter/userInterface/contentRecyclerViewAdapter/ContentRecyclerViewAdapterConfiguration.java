@@ -11,38 +11,25 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-public class Configuration
+public class ContentRecyclerViewAdapterConfiguration
 {
-    private GroupType groupType = GroupType.NONE;
-
     private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
     private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
 
-    private Decoration decoration;
-
-    boolean isSelecetable = false;
-    boolean isMultipleSelection = false;
+    private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
 
     private final LinkedHashSet<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
 
-    Configuration(Decoration decoration)
+    private boolean isSelecetable = false;
+    private boolean isMultipleSelection = false;
+
+    private boolean useBottomSpacer = false;
+
+    public ContentRecyclerViewAdapterConfiguration(ContentRecyclerViewDecoration contentRecyclerViewDecoration)
     {
-        this.decoration = decoration;
+        this.contentRecyclerViewDecoration = contentRecyclerViewDecoration;
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
-
-
-    GroupType getGroupType()
-    {
-        return this.groupType;
-    }
-
-    public void setGroupType(GroupType groupType)
-    {
-        this.groupType = groupType;
-        Log.v(String.format("set GroupType[%s]", groupType));
-    }
-
 
     Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
     {
@@ -66,17 +53,35 @@ public class Configuration
         Log.v(String.format("for [%s]", type.getSimpleName()));
     }
 
-
-    public Decoration getDecoration()
+    public ContentRecyclerViewDecoration getDecoration()
     {
-        return this.decoration;
+        return this.contentRecyclerViewDecoration;
     }
 
-    public void setDecoration(Decoration decoration)
+    public void setContentRecyclerViewDecoration(ContentRecyclerViewDecoration contentRecyclerViewDecoration)
     {
-        this.decoration = decoration;
+        this.contentRecyclerViewDecoration = contentRecyclerViewDecoration;
     }
 
+    public boolean isSelecetable()
+    {
+        return this.isSelecetable;
+    }
+
+    public void setSelectable(boolean isSelecetable)
+    {
+        this.isSelecetable = isSelecetable;
+    }
+
+    public boolean isMultipleSelection()
+    {
+        return this.isMultipleSelection;
+    }
+
+    public void setMultipleSelection(boolean isMultipleSelection)
+    {
+        this.isMultipleSelection = isMultipleSelection;
+    }
 
     LinkedHashSet<Class<? extends IElement>> getRelevantChildTypes()
     {
@@ -93,6 +98,16 @@ public class Configuration
     {
         this.relevantChildTypes.add(relevantChildType);
         Log.v(String.format("added [%s] as relevant child type", relevantChildType));
+    }
+
+    public boolean useBottomSpacer()
+    {
+        return this.useBottomSpacer;
+    }
+
+    public void setBottomSpacer(boolean useBottomSpacer)
+    {
+        this.useBottomSpacer = useBottomSpacer;
     }
 
     @Override
@@ -118,13 +133,11 @@ public class Configuration
 
         return String.format(Locale.getDefault(),
                         "ContentRecyclerViewConfiguration:\n" +
-                        "    groupType[%s]\n" +
                         "    isSelectable[%S], isMultipleSelection[%S]\n" +
                         "    [%d] relevant child types\n%s"+
                         "    [%d] types with OnClickListeners\n%s"+
                         "    [%d] types with OnLongClickListeners\n%s",
 
-                this.groupType,
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
                 this.onClickListenersByType.size(), onClickListenerTypesString,

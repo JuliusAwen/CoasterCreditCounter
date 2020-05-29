@@ -1,5 +1,7 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
+import android.view.View;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -16,26 +18,84 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     protected RecyclerView recyclerView;
-    protected List<IElement> content = new ArrayList<>();
 
-    protected Set<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
+    protected List<IElement> content = new ArrayList<>();
+    protected ArrayList<IElement> ungroupedContent = new ArrayList<>();
+
+    private  ContentRecyclerViewAdapterConfiguration configuration;
 
     private GroupType groupType = GroupType.NONE;
-    protected ArrayList<IElement> ungroupedContent = new ArrayList<>();
     private final GroupHeaderProvider groupHeaderProvider;
 
+    @Deprecated
     AdapterContentHandler()
     {
         this.groupHeaderProvider = new GroupHeaderProvider();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    protected void configure(Configuration configuration)
+    AdapterContentHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
-        this.groupType = configuration.getGroupType();
-        this.relevantChildTypes = configuration.getRelevantChildTypes();
+        this.configuration = configuration;
+        this.groupHeaderProvider = new GroupHeaderProvider();
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
+    }
 
-        Log.v(String.format(Locale.getDefault(), "GroupType[%s], [%d] relevant child types", configuration.getGroupType(), configuration.getRelevantChildTypes().size()));
+    protected void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
+    {
+        this.configuration = configuration;
+
+        Log.v(String.format(Locale.getDefault(), "[%d] relevant child types", configuration.getRelevantChildTypes().size()));
+    }
+
+    protected ContentRecyclerViewDecoration getDecoration()
+    {
+        return this.configuration.getDecoration();
+    }
+
+    protected boolean isSelectable()
+    {
+        return this.configuration.isSelecetable();
+    }
+
+    protected boolean isMultipleSelection()
+    {
+        return this.configuration.isMultipleSelection();
+    }
+
+    protected boolean hasRelevantChildTypes()
+    {
+        return !this.getRelevantChildTypes().isEmpty();
+    }
+
+    protected LinkedHashSet<Class<? extends IElement>> getRelevantChildTypes()
+    {
+        return this.configuration.getRelevantChildTypes();
+    }
+
+    protected GroupType getGroupType()
+    {
+        return this.groupType;
+    }
+
+    protected boolean useBottomSpacer()
+    {
+        return this.configuration.useBottomSpacer();
+    }
+
+    protected boolean hasExternalOnClickListeners()
+    {
+        return !(this.configuration.getOnClickListenersByType().isEmpty() && this.configuration.getOnLongClickListenersByType().isEmpty());
+    }
+
+    protected Map<Class<? extends IElement>, View.OnClickListener> getExternalOnClickListenersByType()
+    {
+        return this.configuration.getOnClickListenersByType();
+    }
+
+    protected Map<Class<? extends IElement>, View.OnLongClickListener> getExternalOnLongClickListenersByType()
+    {
+        return this.configuration.getOnLongClickListenersByType();
     }
 
     @Override
@@ -63,17 +123,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
-        this.groupContent(this.groupType);
-    }
-
-    protected GroupType getGroupType()
-    {
-        return this.groupType;
-    }
-
-    protected void notifyContentChanged()
-    {
-        super.notifyDataSetChanged();
     }
 
     protected boolean exists(IElement element)
@@ -189,21 +238,25 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected void groupContent(GroupType groupType)
     {
-        Log.v("grouping Content...");
-        this.groupType = groupType;
+        if(groupType == null)
+        {
 
-        //        this.selectedItemsInOrderOfSelection.clear();
+            Log.w("GroupType is null - falling back to default GroupType.NONE");
+            groupType = GroupType.NONE;
+        }
+
+        this.groupType = groupType;
+        Log.d(String.format("GroupType[%s]...", this.groupType));
+
+
         //        if(App.preferences.expandLatestYearHeaderByDefault())
         //        {
         //            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
         //            this.expandedItems.add(latestSpecialGroupHeader);
         //        }
 
-        this.content = this.groupType == GroupType.NONE
-                ? new ArrayList<>(this.content)
-                : this.groupHeaderProvider.groupElements(this.ungroupedContent, this.groupType);
-
-        this.notifyContentChanged();
+        this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
+        super.notifyDataSetChanged();
         this.scrollToItem(this.getItem(0));
     }
 
@@ -218,7 +271,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         for(IElement child : item.getChildren())
         {
-            for(Class<? extends IElement> childType : this.relevantChildTypes)
+            for(Class<? extends IElement> childType : this.getRelevantChildTypes())
             {
 
                 if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))

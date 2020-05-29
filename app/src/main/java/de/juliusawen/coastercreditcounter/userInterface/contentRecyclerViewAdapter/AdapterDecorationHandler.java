@@ -12,20 +12,17 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterDecorationHandler extends AdapterPlainHandler
 {
-    private Decoration decoration;
-
+    @Deprecated
     AdapterDecorationHandler()
     {
         super();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    @Override
-    protected void configure(Configuration configuration)
+    AdapterDecorationHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
-        super.configure(configuration);
-        this.decoration = configuration.getDecoration();
-        Log.v(configuration.getDecoration().toString());
+        super(configuration);
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
@@ -43,12 +40,12 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
 
     private void applyTypeface(IElement item, ViewHolderElement viewHolder)
     {
-        viewHolder.textViewName.setTypeface(null, this.decoration.getTypeface(item));
+        viewHolder.textViewName.setTypeface(null, super.getDecoration().getTypeface(item));
     }
 
     private void applySpecialStringRecource(IElement item, ViewHolderElement viewHolder)
     {
-        String specialString = this.decoration.getSpecialString(item);
+        String specialString = super.getDecoration().getSpecialString(item);
         if(specialString != null)
         {
             viewHolder.textViewName.setText(specialString);
@@ -60,11 +57,11 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         viewHolder.textViewDetailAbove.setVisibility(View.GONE);
         viewHolder.textViewDetailBelow.setVisibility(View.GONE);
 
-        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = this.decoration.getDetailTypesByDetailDisplayMode(item);
+        Map<DetailDisplayMode, Set<DetailType>> detailTypesByDetailDisplayMode = super.getDecoration().getDetailTypesByDetailDisplayMode(item);
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE).size() > 0)
         {
-            viewHolder.textViewDetailAbove.setText(this.decoration.getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
+            viewHolder.textViewDetailAbove.setText(super.getDecoration().getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.ABOVE)));
             if(viewHolder.textViewDetailAbove.getText().length() != 0)
             {
                 viewHolder.textViewDetailAbove.setVisibility(View.VISIBLE);
@@ -73,7 +70,7 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
 
         if(detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW).size() > 0)
         {
-            viewHolder.textViewDetailBelow.setText(this.decoration.getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
+            viewHolder.textViewDetailBelow.setText(super.getDecoration().getSpannableDetailString(item, detailTypesByDetailDisplayMode.get(DetailDisplayMode.BELOW)));
             if(viewHolder.textViewDetailBelow.getText().length() != 0)
             {
                 viewHolder.textViewDetailBelow.setVisibility(View.VISIBLE);

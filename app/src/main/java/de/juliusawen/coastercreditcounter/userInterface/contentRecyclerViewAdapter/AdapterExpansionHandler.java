@@ -19,22 +19,25 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 {
-    boolean isExpandable = false;
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
     private final HashSet<IElement> expandedItems = new HashSet<>();
 
+    @Deprecated
     AdapterExpansionHandler()
     {
         super();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    @Override
-    protected void configure(Configuration configuration)
+    AdapterExpansionHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
-        super.configure(configuration);
-        this.isExpandable = !configuration.getRelevantChildTypes().isEmpty();
-        Log.v(String.format("isExpandable[%S]", this.isExpandable));
+        super(configuration);
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
+    }
+
+    private boolean isExpandable()
+    {
+        return super.hasRelevantChildTypes();
     }
 
     @Override
@@ -42,7 +45,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     {
         super.groupContent(groupType);
 
-        if(this.isExpandable)
+        if(this.isExpandable())
         {
             Log.v("re-initializing generations by item...");
             this.generationByItem.clear();
@@ -77,7 +80,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     {
         IElement item = super.bindViewHolderElement(viewHolder, position);
 
-        if(this.isExpandable)
+        if(this.isExpandable())
         {
             int generation = this.getGeneration(item);
             Log.v(String.format(Locale.getDefault(), "binding %s for position [%d] - generation [%d]...", item, position, generation));
@@ -120,7 +123,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
 
     protected void toggleExpansion(IElement item)
     {
-        if(!this.isExpandable)
+        if(!this.isExpandable())
         {
             Log.w(String.format("[%s] is not expandable", this.getClass().getSimpleName()));
             return;

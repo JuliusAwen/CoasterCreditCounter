@@ -7,9 +7,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -21,14 +19,10 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterPlainHandler extends AdapterContentHandler
 {
-    private boolean hasExternalOnClickListeners = false;
-
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
 
-    private final Map<Class<? extends IElement>, View.OnClickListener> externalOnClickListenersByType = new HashMap<>();
-    private final Map<Class<? extends IElement>, View.OnLongClickListener> externalOnLongClickListenersByType = new HashMap<>();
-
+    @Deprecated
     AdapterPlainHandler()
     {
         super();
@@ -37,21 +31,12 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    @Override
-    protected void configure(Configuration configuration)
+    AdapterPlainHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
-        super.configure(configuration);
-
-        if(!configuration.getOnClickListenersByType().isEmpty() || !configuration.getOnLongClickListenersByType().isEmpty())
-        {
-            this.hasExternalOnClickListeners = true;
-            this.externalOnClickListenersByType.putAll(configuration.getOnClickListenersByType());
-            this.externalOnLongClickListenersByType.putAll(configuration.getOnLongClickListenersByType());
-        }
-
-        Log.v(String.format(Locale.getDefault(), "has [%d] external OnClickListeners and [%d] external OnLongClickListeners",
-                configuration.getOnClickListenersByType().size(),
-                configuration.getOnLongClickListenersByType().size()));
+        super(configuration);
+        this.internalOnClickListener = this.getInternalOnClickListener();
+        this.internalOnLongClickListener = this.getInternalOnLongClickListener();
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -110,7 +95,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected boolean handleOnClick(View view, boolean performExternalClick)
     {
-        if(this.hasExternalOnClickListeners && performExternalClick)
+        if(super.hasExternalOnClickListeners() && performExternalClick)
         {
             IElement element = this.fetchItem(view);
             View.OnClickListener externalOnClickListener = this.fetchExternalOnClickListener(element);
@@ -125,17 +110,17 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     private View.OnClickListener fetchExternalOnClickListener(IElement item)
     {
-        if(this.externalOnClickListenersByType.containsKey(item.getClass()))
+        if(super.getExternalOnClickListenersByType().containsKey(item.getClass()))
         {
-            return this.externalOnClickListenersByType.get(item.getClass());
+            return super.getExternalOnClickListenersByType().get(item.getClass());
         }
         else
         {
-            for(Class<? extends IElement> type : this.externalOnClickListenersByType.keySet())
+            for(Class<? extends IElement> type : super.getExternalOnClickListenersByType().keySet())
             {
                 if(type.isAssignableFrom(item.getClass()))
                 {
-                    return this.externalOnClickListenersByType.get(type);
+                    return super.getExternalOnClickListenersByType().get(type);
                 }
             }
         }
@@ -145,7 +130,7 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     protected boolean handleOnLongClick(View view, boolean performExternalLongClick)
     {
-        if(performExternalLongClick && this.hasExternalOnClickListeners)
+        if(performExternalLongClick && super.hasExternalOnClickListeners())
         {
             IElement item = this.fetchItem(view);
             View.OnLongClickListener externalOnLongClickListener = fetchExternalOnLongClickListener(item);
@@ -160,17 +145,17 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
     private View.OnLongClickListener fetchExternalOnLongClickListener(IElement item)
     {
-        if(this.externalOnLongClickListenersByType.containsKey(item.getClass()))
+        if(super.getExternalOnLongClickListenersByType().containsKey(item.getClass()))
         {
-            return this.externalOnLongClickListenersByType.get(item.getClass());
+            return super.getExternalOnLongClickListenersByType().get(item.getClass());
         }
         else
         {
-            for(Class<? extends IElement> type : this.externalOnLongClickListenersByType.keySet())
+            for(Class<? extends IElement> type : super.getExternalOnLongClickListenersByType().keySet())
             {
                 if(type.isAssignableFrom(item.getClass()))
                 {
-                    return this.externalOnLongClickListenersByType.get(type);
+                    return super.getExternalOnLongClickListenersByType().get(type);
                 }
             }
         }

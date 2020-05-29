@@ -33,7 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterOrder;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowLocationsActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -62,24 +62,26 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     : App.content.getRootLocation();
         }
 
-        if(this.viewModel.contentRecyclerViewAdapter == null)
+        if(this.viewModel.adapterFacade == null)
         {
-            this.viewModel.contentRecyclerViewAdapter = new ContentRecyclerViewAdapterOrder(this.viewModel.currentLocation)
-                    .addOnClickListenerForType(Park.class, this.createOnParkClickListener())
-                    .addOnClickListenerForType(Location.class, this.createOnLocationClickListener())
-                    .addOnLongClickListenerForType(IElement.class, this.createOnLongClickListener())
-                    .servePreset(this.viewModel.requestCode)
-                    .placeOrder()
-                    .addBottomSpacer();
+            this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
+            this.viewModel.adapterFacade.setContent(this.viewModel.currentLocation);
+
+            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Park.class, this.createOnParkClickListener());
+            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Location.class, this.createOnLocationClickListener());
+//            this.viewModel.adapterUtilityWrapper.getConfiguration().addOnLongClickListenerByType(IElement.class, this.createOnLongClickListener());
+            this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IElement.class, this.createOnLongClickListenerTest());
+
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter((RecyclerView.Adapter) this.viewModel.contentRecyclerViewAdapter);
+        recyclerView.setAdapter(this.viewModel.adapterFacade.getAdapter());
 
         if(this.viewModel.currentLocation.isRootLocation())
         {
-            this.viewModel.contentRecyclerViewAdapter.expandItem(this.viewModel.currentLocation, false);
+            this.viewModel.adapterFacade.getAdapter().expandItem(this.viewModel.currentLocation, false);
         }
 
 
@@ -110,7 +112,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case CREATE_PARK:
                 {
                     this.updateContentRecyclerView();
-                    this.viewModel.contentRecyclerViewAdapter.expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
+                    this.viewModel.adapterFacade.getAdapter().expandItem(ResultFetcher.fetchResultElement(data).getParent(), true);
                     invalidateOptionsMenu();
                     break;
                 }
@@ -130,7 +132,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     if(selectedElementUuidString != null)
                     {
                         IElement selectedElement = App.content.getContentByUuid(UUID.fromString(selectedElementUuidString));
-                        this.viewModel.contentRecyclerViewAdapter.scrollToItem(selectedElement);
+                        this.viewModel.adapterFacade.getAdapter().scrollToItem(selectedElement);
                     }
                     else
                     {
@@ -144,7 +146,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 case EDIT_LOCATION:
                 case EDIT_PARK:
                 {
-                    this.viewModel.contentRecyclerViewAdapter.notifyItemChanged(ResultFetcher.fetchResultElement(data));
+                    this.viewModel.adapterFacade.getAdapter().notifyItemChanged(ResultFetcher.fetchResultElement(data));
                     break;
                 }
             }
@@ -189,12 +191,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
         if(enabled)
         {
-            this.viewModel.contentRecyclerViewAdapter.selectItem(this.viewModel.longClickedElement);
+            this.viewModel.adapterFacade.getAdapter().selectItem(this.viewModel.longClickedElement);
             super.setToolbarTitleAndSubtitle(getString(R.string.title_relocate), getString(R.string.subtitle_relocate_select_new_parent));
         }
         else
         {
-            this.viewModel.contentRecyclerViewAdapter.deselectItem(this.viewModel.longClickedElement);
+            this.viewModel.adapterFacade.getAdapter().deselectItem(this.viewModel.longClickedElement);
             super.setToolbarTitleAndSubtitle(getString(R.string.locations), "");
         }
 
@@ -219,8 +221,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         if(!this.viewModel.relocationModeEnabled)
         {
-            this.viewModel.contentRecyclerViewAdapter.toggleExpansion(element);
-            if(this.viewModel.contentRecyclerViewAdapter.isAllContentExpanded() || this.viewModel.contentRecyclerViewAdapter.isAllContentCollapsed())
+            this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
+            if(this.viewModel.adapterFacade.getAdapter().isAllContentExpanded() || this.viewModel.adapterFacade.getAdapter().isAllContentCollapsed())
             {
                 invalidateOptionsMenu();
             }
@@ -263,6 +265,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             public boolean onLongClick(View view)
             {
                 return handleOnLongClick(view);
+            }
+        };
+    }
+
+    @Deprecated
+    private View.OnLongClickListener createOnLongClickListenerTest()
+    {
+        return new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                viewModel.adapterFacade.applyDecorationPreset(RequestCode.NAVIGATE);
+                viewModel.adapterFacade.getAdapter().notifyDataSetChanged();
+                return true;
             }
         };
     }
@@ -515,6 +532,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private void updateContentRecyclerView()
     {
         Log.d("resetting content...");
-        this.viewModel.contentRecyclerViewAdapter.setContent(this.viewModel.currentLocation);
+        this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
     }
 }

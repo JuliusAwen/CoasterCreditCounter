@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
@@ -17,23 +16,19 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 {
-    private boolean isSelectable = false;
-    private boolean isMultipleSelection = false;
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
 
+    @Deprecated
     AdapterSelectionHandler()
     {
         super();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    @Override
-    protected void configure(Configuration configuration)
+    AdapterSelectionHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
-        super.configure(configuration);
-        this.isSelectable = configuration.isSelecetable;
-        this.isMultipleSelection = configuration.isMultipleSelection;
-        Log.v(String.format("isSelectable[%S], isMultipleSelection[%S]", this.isSelectable, this.isMultipleSelection));
+        super(configuration);
+        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
     @Override
@@ -67,7 +62,7 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         boolean isConsumed = super.handleOnClick(view, performExternalClick);
 
-        if(this.isSelectable && !isConsumed)
+        if(super.isSelectable() && !isConsumed)
         {
             IElement selectedItem = super.fetchItem(view);
             this.toggleSelection(selectedItem);
@@ -81,11 +76,11 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     {
         if(!this.selectedItemsInOrderOfSelection.contains(element))
         {
-            if(this.isMultipleSelection)
+            if(super.isMultipleSelection())
             {
                 this.selectItem(element);
 
-                if(!super.relevantChildTypes.isEmpty())
+                if(super.hasRelevantChildTypes())
                 {
                     this.selectItems(super.fetchRelevantChildren(element));
                     this.selectParentIfAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
@@ -108,9 +103,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
         {
             this.deselectItem(element);
 
-            if(this.isMultipleSelection)
+            if(super.isMultipleSelection())
             {
-                if(!super.relevantChildTypes.isEmpty())
+                if(super.hasRelevantChildTypes())
                 {
                     this.deselectItems(super.fetchRelevantChildren(element));
                     this.deselectParentIfNotAllRelevantChildrenAreSelected(this.getParentOfRelevantChild(element));
@@ -131,11 +126,6 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
                     String.format("********** IT HAPPENED! CRVA.getParentOfRelevantChild for item not being OrphanElement or Attraction was called! Class [%s]",
                             item.getClass().getSimpleName());
             Log.e(message);
-
-            if(BuildConfig.DEBUG)
-            {
-                throw new IllegalStateException(message);
-            }
 
             return super.getItem(super.getPosition(item.getParent()));
         }

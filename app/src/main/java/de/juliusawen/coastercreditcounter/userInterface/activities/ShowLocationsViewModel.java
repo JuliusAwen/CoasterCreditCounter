@@ -7,12 +7,13 @@ import java.util.List;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
 public class ShowLocationsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode;
-    public IContentRecyclerViewAdapter contentRecyclerViewAdapter;
+    public ContentRecyclerViewAdapterFacade adapterFacade;
     public IElement currentLocation;
 
     public IElement longClickedElement;
@@ -29,7 +30,7 @@ public class ShowLocationsViewModel extends ViewModel implements IOptionsMenuBut
     @Override
     public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
-        return this.contentRecyclerViewAdapter;
+        return this.adapterFacade.getAdapter();
     }
 
     @Override

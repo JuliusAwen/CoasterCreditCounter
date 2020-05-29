@@ -7,18 +7,18 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttrac
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-abstract class ConfigurationPresetProvider
+public abstract class ContentRecyclerViewConfigurationPresetProvider
 {
-    static void applyPreset(Configuration configuration, RequestCode requestCode)
+    public static void applyPreset(ContentRecyclerViewAdapterConfiguration configuration, RequestCode requestCode)
     {
-        Log.d(String.format("presetting Configuration for RequestCode[%s]...", requestCode));
+        Log.d(String.format("RequestCode[%s]...", requestCode));
 
         switch(requestCode)
         {
             case NAVIGATE:
             {
-                configuration.isSelecetable = true;
-                configuration.isMultipleSelection = true;
+                configuration.setSelectable(true);
+                configuration.setMultipleSelection(true);
                 configuration.addRelevantChildType(IAttraction.class);
                 break;
             }
@@ -36,8 +36,8 @@ abstract class ConfigurationPresetProvider
             case SORT_MANUFACTURERS:
             case SORT_MODELS:
             case SORT_STATUSES:
+                configuration.setSelectable(true);
                 configuration.addRelevantChildType(IElement.class);
-                configuration.isSelecetable = true;
                 break;
 
             default:

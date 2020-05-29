@@ -16,21 +16,30 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
-class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
+public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
 {
+    @Deprecated
     ContentRecyclerViewAdapter()
     {
         super();
         Log.frame(LogLevel.INFO, "instantiated", '#', true);
     }
 
+    public ContentRecyclerViewAdapter(ContentRecyclerViewAdapterConfiguration configuration)
+    {
+        super(configuration);
+        Log.frame(LogLevel.INFO, "instantiated", '#', true);
+    }
+
+    @Deprecated
     @Override
-    public void configure(Configuration configuration)
+    public void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
     {
         Log.v("configuring...");
-        super.configure(configuration);
+        super.setConfiguration(configuration);
         Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n%s", configuration, configuration.getDecoration()), '=', false);
     }
+
 
     @Override
     public void setContent(IElement element)
@@ -58,13 +67,6 @@ class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements ICon
     protected boolean handleOnLongClick(View view, boolean performExternalClick)
     {
         return super.handleOnLongClick(view, performExternalClick);
-    }
-
-    @Override
-    public void notifyContentChanged()
-    {
-        Log.d("notifying...");
-        super.notifyContentChanged();
     }
 
     @Override

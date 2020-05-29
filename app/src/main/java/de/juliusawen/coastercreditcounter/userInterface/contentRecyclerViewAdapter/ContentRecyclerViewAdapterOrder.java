@@ -14,7 +14,7 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 public class ContentRecyclerViewAdapterOrder
 {
     private List<IElement> content;
-    private Configuration configuration;
+    private ContentRecyclerViewAdapterConfiguration contentRecyclerViewAdapterConfiguration;
     private IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     public ContentRecyclerViewAdapterOrder(IElement element)
@@ -34,26 +34,26 @@ public class ContentRecyclerViewAdapterOrder
     {
         Log.d(String.format(Locale.getDefault(), "initializing with [%d] Elements - instantiating dependencies...", content.size()));
         this.content = content;
-        this.configuration = new Configuration(new Decoration());
+        this.contentRecyclerViewAdapterConfiguration = new ContentRecyclerViewAdapterConfiguration(new ContentRecyclerViewDecoration());
         this.contentRecyclerViewAdapter = new ContentRecyclerViewAdapter();
     }
 
     public ContentRecyclerViewAdapterOrder servePreset(RequestCode requestCode)
     {
-        ConfigurationPresetProvider.applyPreset(this.configuration, requestCode);
-        DecorationPresetProvider.applyPreset(this.configuration.getDecoration(), requestCode);
+        ContentRecyclerViewConfigurationPresetProvider.applyPreset(this.contentRecyclerViewAdapterConfiguration, requestCode);
+        ContentRecyclerViewDecorationPresetProvider.applyPreset(this.contentRecyclerViewAdapterConfiguration.getDecoration(), requestCode);
         return this;
     }
 
     public ContentRecyclerViewAdapterOrder addOnClickListenerForType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
-        this.configuration.addOnClickListenerByType(type, onClickListener);
+        this.contentRecyclerViewAdapterConfiguration.addOnClickListenerByType(type, onClickListener);
         return this;
     }
 
     public ContentRecyclerViewAdapterOrder addOnLongClickListenerForType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
-        this.configuration.addOnLongClickListenerByType(type, onLongClickListener);
+        this.contentRecyclerViewAdapterConfiguration.addOnLongClickListenerByType(type, onLongClickListener);
         return this;
     }
 
@@ -62,11 +62,11 @@ public class ContentRecyclerViewAdapterOrder
         Log.wrap(LogLevel.VERBOSE,
                 String.format("delivering ContentRecyclerViewAdapter with %s:\n\n%s\n\n%s",
                         String.format(Locale.getDefault(), "[%d] Elements", this.content.size()),
-                        this.configuration,
-                        this.configuration.getDecoration()),
+                        this.contentRecyclerViewAdapterConfiguration,
+                        this.contentRecyclerViewAdapterConfiguration.getDecoration()),
                 '=', false);
 
-        this.contentRecyclerViewAdapter.configure(this.configuration);
+        this.contentRecyclerViewAdapter.setConfiguration(this.contentRecyclerViewAdapterConfiguration);
         this.contentRecyclerViewAdapter.setContent(this.content);
         return this.contentRecyclerViewAdapter;
     }

@@ -46,7 +46,7 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.Configuration;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -1496,7 +1496,7 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     @Override
-    public void configure(Configuration configuration)
+    public void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
     {
         throw new IllegalAccessError();
     }
@@ -1514,12 +1514,6 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public void setContent(List<IElement> content)
     {
         this.setItems(content);
-    }
-
-    @Override
-    public void notifyContentChanged()
-    {
-        super.notifyDataSetChanged();
     }
 
     @Override
