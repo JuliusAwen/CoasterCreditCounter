@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
@@ -93,6 +94,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+                this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IProperty.class, this.createOnPropertySelectedListener());
             }
             else //ManageMode
             {
@@ -104,10 +106,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.propertyTypeToManage);
-                this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IProperty.class, super.createDefaultOnLongClickListener());
+                this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IProperty.class, this.createOnPropertyLongClickListener());
             }
 
-            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IElement.class, super.createDefaultOnClickListener());
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
         }
 
@@ -122,6 +123,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
         {
             this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
+            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IGroupHeader.class, this.createOnGroupHeaderClickListener());
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -273,43 +275,61 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void handleDefaultOnClick(View view)
+    private View.OnClickListener createOnGroupHeaderClickListener()
     {
-        Element element = (Element)view.getTag();
-
-        Log.i(String.format("%s clicked", element));
-
-        if(this.viewModel.isSelectionMode)
+        return new View.OnClickListener()
         {
-            if(element.isProperty())
+            @Override
+            public void onClick(View view)
             {
-                this.viewModel.propertyToReturn = element;
-                returnResult(RESULT_OK);
+                handleOnGroupHeaderClick(view);
             }
-        }
-        else
-        {
-            if(element.isGroupHeader())
-            {
-                this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
-            }
-        }
+        };
     }
 
-    @Override
-    protected boolean handleDefaultOnLongClick(View view)
+    private void handleOnGroupHeaderClick(View view)
+    {
+        Element element = (Element) view.getTag();
+        Log.i(String.format("%s clicked", element));
+        this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
+    }
+
+    private View.OnClickListener createOnPropertySelectedListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnPropertyClick(view);
+            }
+        };
+    }
+
+    private void handleOnPropertyClick(View view)
+    {
+        Element element = (Element) view.getTag();
+        Log.i(String.format("%s clicked", element));
+        this.viewModel.propertyToReturn = element;
+        returnResult(RESULT_OK);
+    }
+
+    private View.OnLongClickListener createOnPropertyLongClickListener()
+    {
+        return new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                return handleOnPropertyLongClick(view);
+            }
+        };
+    }
+
+    private boolean handleOnPropertyLongClick(View view)
     {
         this.viewModel.longClickedElement = (IElement) view.getTag();
         Log.i(String.format("%s long clicked", this.viewModel.longClickedElement));
-
-        if(!this.viewModel.longClickedElement.isProperty())
-        {
-            Log.w(String.format("unexpected type %s - IProperty expected", this.viewModel.longClickedElement));
-            return false;
-        }
-
-        boolean longClickedPropertyIsDefault = this.fetchPropertyType().cast(this.viewModel.longClickedElement).isDefault();
 
         PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
 
@@ -320,6 +340,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty());
         }
 
+        boolean longClickedPropertyIsDefault = this.fetchPropertyType().cast(this.viewModel.longClickedElement).isDefault();
         boolean isSetAsDefaultVisible = !this.viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE) && !this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL);
 
         popupMenuAgent
@@ -341,213 +362,246 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             case ASSIGN_TO_ATTRACTIONS:
             {
-                List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(OnSiteAttraction.class));
-                List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
-
-                switch(viewModel.propertyTypeToManage)
-                {
-                    case CREDIT_TYPE:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
-                        {
-                            if(attraction.getCreditType().equals(viewModel.longClickedElement))
-                            {
-                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-
-                                elementsToAssignTo.remove(attraction);
-                            }
-                        }
-
-                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS, elementsToAssignTo);
-                        break;
-                    }
-
-                    case CATEGORY:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
-                        {
-                            if(attraction.getCategory().equals(viewModel.longClickedElement))
-                            {
-                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-
-                                elementsToAssignTo.remove(attraction);
-                            }
-                        }
-
-                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS, elementsToAssignTo);
-                        break;
-                    }
-
-                    case MANUFACTURER:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
-                        {
-                            if(attraction.getManufacturer().equals(viewModel.longClickedElement))
-                            {
-                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-
-                                elementsToAssignTo.remove(attraction);
-                            }
-                        }
-
-                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS, elementsToAssignTo);
-                        break;
-                    }
-
-                    case MODEL:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
-                        {
-                            if(attraction.getModel().equals(viewModel.longClickedElement))
-                            {
-                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-
-                                elementsToAssignTo.remove(attraction);
-                            }
-                        }
-
-                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS, elementsToAssignTo);
-                        break;
-                    }
-
-                    case STATUS:
-                    {
-                        for(IAttraction attraction : possibleAttractionsToAssignTo)
-                        {
-                            if(attraction.getStatus().equals(viewModel.longClickedElement))
-                            {
-                                Log.v(String.format("<ASSIGN_TO_ATTRACTIONS>:: removing %s from pick list - %s is already assigned", attraction, viewModel.longClickedElement));
-
-                                elementsToAssignTo.remove(attraction);
-                            }
-                        }
-
-                        ActivityDistributor.startActivityPickForResult(this, RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS, elementsToAssignTo);
-                        break;
-                    }
-                }
-
+                this.handleAssignToAttractionsClicked();
                 break;
             }
 
             case EDIT_ELEMENT:
             {
-                switch(viewModel.propertyTypeToManage)
-                {
-                    case CREDIT_TYPE:
-                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_CREDIT_TYPE, viewModel.longClickedElement);
-                        break;
-
-                    case CATEGORY:
-                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_CATEGORY, viewModel.longClickedElement);
-                        break;
-
-                    case MANUFACTURER:
-                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_MANUFACTURER, viewModel.longClickedElement);
-                        break;
-
-                    case MODEL:
-                    {
-                        // for Model's default only name may be changed
-                        if(((Model) viewModel.longClickedElement).isDefault())
-                        {
-                            Intent intent = new Intent(this, EditSimpleElementActivity.class);
-                            intent.putExtra(Constants.EXTRA_HINT, getString(R.string.hint_edit_name, viewModel.longClickedElement.getName()));
-                            intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_edit_model));
-                            intent.putExtra(Constants.EXTRA_ELEMENT_UUID, viewModel.longClickedElement.getUuid().toString());
-                            intent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.EDIT_MODEL.ordinal());
-                            ActivityDistributor.startActivityViaIntent(this, intent);
-                        }
-                        else
-                        {
-                            ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_MODEL, viewModel.longClickedElement);
-                        }
-                        break;
-                    }
-
-                    case STATUS:
-                        ActivityDistributor.startActivityEditForResult(this, RequestCode.EDIT_STATUS, viewModel.longClickedElement);
-                        break;
-                }
+                this.handleEditElementClicked();
                 break;
             }
 
             case DELETE_ELEMENT:
             {
-                String alertDialogMessage;
-                if(viewModel.longClickedElement.hasChildren())
-                {
-                    String defaultName;
-
-                    switch(viewModel.propertyTypeToManage)
-                    {
-                        case CREDIT_TYPE:
-                            defaultName = CreditType.getDefault().getName();
-                            break;
-
-                        case CATEGORY:
-                            defaultName = Category.getDefault().getName();
-                            break;
-
-                        case MANUFACTURER:
-                            defaultName = Manufacturer.getDefault().getName();
-                            break;
-
-                        case MODEL:
-                            defaultName = Model.getDefault().getName();
-                            break;
-
-                        case STATUS:
-                            defaultName = Status.getDefault().getName();
-                            break;
-
-                        default:
-                            defaultName = getString(R.string.error_missing_text);
-                            break;
-                    }
-
-                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_children,
-                            viewModel.longClickedElement.getChildCount(),
-                            viewModel.longClickedElement.getName(),
-                            defaultName);
-                }
-                else
-                {
-                    alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_no_children, viewModel.longClickedElement.getName());
-                }
-
-                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                        R.drawable.warning,
-                        getString(R.string.alert_dialog_title_delete),
-                        alertDialogMessage,
-                        getString(R.string.text_accept),
-                        getString(R.string.text_cancel),
-                        RequestCode.DELETE,
-                        false);
-
-                alertDialogFragmentDelete.setCancelable(false);
-                alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                this.handleDeleteElementClicked();
                 break;
             }
 
             case SET_AS_DEFAULT:
             {
-                String alterDialogMessage = getString(R.string.alert_dialog_message_confirm_set_as_default, viewModel.longClickedElement.getName());
-
-                AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
-                        R.drawable.warning,
-                        getString(R.string.alert_dialog_title_set_as_default),
-                        alterDialogMessage,
-                        getString(R.string.text_accept),
-                        getString(R.string.text_cancel),
-                        RequestCode.SET_AS_DEFAULT,
-                        false);
-
-                alertDialogFragmentDelete.setCancelable(false);
-                alertDialogFragmentDelete.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+                this.handleSetAsDefaultClicked();
                 break;
             }
         }
+    }
+
+    private void handleAssignToAttractionsClicked()
+    {
+        List<IElement> elementsToAssignTo = new ArrayList<>(App.content.getContentOfType(OnSiteAttraction.class));
+        List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
+
+        RequestCode requestCode = null;
+        switch(this.viewModel.propertyTypeToManage)
+        {
+            case CREDIT_TYPE:
+            {
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
+                {
+                    if(attraction.getCreditType().equals(this.viewModel.longClickedElement))
+                    {
+                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
+                        elementsToAssignTo.remove(attraction);
+                    }
+                }
+
+                requestCode = RequestCode.ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS;
+                break;
+            }
+
+            case CATEGORY:
+            {
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
+                {
+                    if(attraction.getCategory().equals(this.viewModel.longClickedElement))
+                    {
+                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
+                        elementsToAssignTo.remove(attraction);
+                    }
+                }
+
+                requestCode = RequestCode.ASSIGN_CATEGORY_TO_ATTRACTIONS;
+                break;
+            }
+
+            case MANUFACTURER:
+            {
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
+                {
+                    if(attraction.getManufacturer().equals(this.viewModel.longClickedElement))
+                    {
+                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
+                        elementsToAssignTo.remove(attraction);
+                    }
+                }
+
+                requestCode = RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS;
+                break;
+            }
+
+            case MODEL:
+            {
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
+                {
+                    if(attraction.getModel().equals(this.viewModel.longClickedElement))
+                    {
+                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
+                        elementsToAssignTo.remove(attraction);
+                    }
+                }
+
+                requestCode = RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS;
+                break;
+            }
+
+            case STATUS:
+            {
+                for(IAttraction attraction : possibleAttractionsToAssignTo)
+                {
+                    if(attraction.getStatus().equals(this.viewModel.longClickedElement))
+                    {
+                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
+                        elementsToAssignTo.remove(attraction);
+                    }
+                }
+
+                requestCode = RequestCode.ASSIGN_STATUS_TO_ATTRACTIONS;
+                break;
+            }
+        }
+
+        if(requestCode == null)
+        {
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            return;
+        }
+
+        ActivityDistributor.startActivityPickForResult(this, requestCode, elementsToAssignTo);
+    }
+
+    private void handleEditElementClicked()
+    {
+        RequestCode requestCode = null;
+
+        switch(this.viewModel.propertyTypeToManage)
+        {
+            case CREDIT_TYPE:
+                requestCode = RequestCode.EDIT_CREDIT_TYPE;
+                break;
+
+            case CATEGORY:
+                requestCode = RequestCode.EDIT_CATEGORY;
+                break;
+
+            case MANUFACTURER:
+                requestCode = RequestCode.EDIT_MANUFACTURER;
+                break;
+
+            case MODEL:
+            {
+                // for Model's default only the name may be changed
+                if(((Model) this.viewModel.longClickedElement).isDefault())
+                {
+                    Intent intent = new Intent(this, EditSimpleElementActivity.class);
+                    intent.putExtra(Constants.EXTRA_HINT, getString(R.string.hint_edit_name, this.viewModel.longClickedElement.getName()));
+                    intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, getString(R.string.title_edit_model));
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.longClickedElement.getUuid().toString());
+                    intent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.EDIT_MODEL.ordinal());
+                    ActivityDistributor.startActivityViaIntent(this, intent);
+                }
+                else
+                {
+                    requestCode = RequestCode.EDIT_MODEL;
+                }
+                break;
+            }
+
+            case STATUS:
+                requestCode = RequestCode.EDIT_STATUS;
+                break;
+        }
+
+        if(requestCode == null)
+        {
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            return;
+        }
+
+        ActivityDistributor.startActivityEditForResult(this, requestCode, this.viewModel.longClickedElement);
+    }
+
+    private void handleDeleteElementClicked()
+    {
+        String alertDialogMessage;
+        if(this.viewModel.longClickedElement.hasChildren())
+        {
+            String defaultName;
+
+            switch(this.viewModel.propertyTypeToManage)
+            {
+                case CREDIT_TYPE:
+                    defaultName = CreditType.getDefault().getName();
+                    break;
+
+                case CATEGORY:
+                    defaultName = Category.getDefault().getName();
+                    break;
+
+                case MANUFACTURER:
+                    defaultName = Manufacturer.getDefault().getName();
+                    break;
+
+                case MODEL:
+                    defaultName = Model.getDefault().getName();
+                    break;
+
+                case STATUS:
+                    defaultName = Status.getDefault().getName();
+                    break;
+
+                default:
+                    defaultName = getString(R.string.error_missing_text);
+                    break;
+            }
+
+            alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_children,
+                    this.viewModel.longClickedElement.getChildCount(),
+                    this.viewModel.longClickedElement.getName(),
+                    defaultName);
+        }
+        else
+        {
+            alertDialogMessage = getString(R.string.alert_dialog_message_confirm_delete_property_has_no_children, this.viewModel.longClickedElement.getName());
+        }
+
+        AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                R.drawable.warning,
+                getString(R.string.alert_dialog_title_delete),
+                alertDialogMessage,
+                getString(R.string.text_accept),
+                getString(R.string.text_cancel),
+                RequestCode.DELETE,
+                false);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(this.getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
+    }
+
+    private void handleSetAsDefaultClicked()
+    {
+        String alterDialogMessage = getString(R.string.alert_dialog_message_confirm_set_as_default, this.viewModel.longClickedElement.getName());
+
+        AlertDialogFragment alertDialogFragmentDelete = AlertDialogFragment.newInstance(
+                R.drawable.warning,
+                getString(R.string.alert_dialog_title_set_as_default),
+                alterDialogMessage,
+                getString(R.string.text_accept),
+                getString(R.string.text_cancel),
+                RequestCode.SET_AS_DEFAULT,
+                false);
+
+        alertDialogFragmentDelete.setCancelable(false);
+        alertDialogFragmentDelete.show(this.getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
     }
 
     @Override
@@ -564,7 +618,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     ConfirmSnackbar.Show(
                             Snackbar.make(
                                     findViewById(android.R.id.content),
-                                    getString(R.string.action_confirm_delete_text, viewModel.longClickedElement.getName()),
+                                    getString(R.string.action_confirm_delete_text, this.viewModel.longClickedElement.getName()),
                                     Snackbar.LENGTH_LONG),
                             requestCode,
                             this);
@@ -667,57 +721,48 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             @Override
             public void onClick(View view)
             {
-                Log.i("FloatingActionButton clicked");
-
-                switch(viewModel.propertyTypeToManage)
-                {
-                    case CREDIT_TYPE:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CREDIT_TYPE);
-                        break;
-
-                    case CATEGORY:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_CATEGORY);
-                        break;
-
-                    case MANUFACTURER:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MANUFACTURER);
-                        break;
-
-                    case MODEL:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_MODEL);
-                        break;
-
-                    case STATUS:
-                        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, RequestCode.CREATE_STATUS);
-                        break;
-                }
+                handleOnFloatingActionButtonClick();
             }
         });
 
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
+    private void handleOnFloatingActionButtonClick()
     {
-        if(resetContent)
-        {
-            Log.d("resetting content...");
+        Log.i("FloatingActionButton clicked");
 
-            List<IElement> elements = App.content.getContentOfType(this.fetchPropertyType());
-
-            for(IElement element : elements)
-            {
-                element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-            }
-            this.viewModel.elements = elements;
-            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
-            invalidateOptionsMenu();
-        }
-        else
+        RequestCode requestCode = null;
+        switch(this.viewModel.propertyTypeToManage)
         {
-            Log.d("notifying data set changes...");
-            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
+            case CREDIT_TYPE:
+                requestCode = RequestCode.CREATE_CREDIT_TYPE;
+                break;
+
+            case CATEGORY:
+                requestCode = RequestCode.CREATE_CATEGORY;
+                break;
+
+            case MANUFACTURER:
+                requestCode = RequestCode.CREATE_MANUFACTURER;
+                break;
+
+            case MODEL:
+                requestCode = RequestCode.CREATE_MODEL;
+                break;
+
+            case STATUS:
+                requestCode = RequestCode.CREATE_STATUS;
+                break;
         }
+
+        if(requestCode == null)
+        {
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            return;
+        }
+
+        ActivityDistributor.startActivityCreateForResult(ManagePropertiesActivity.this, requestCode);
     }
 
     private Class<? extends IProperty> fetchPropertyType()
@@ -741,6 +786,29 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
             default:
                 return null;
+        }
+    }
+
+    private void updateContentRecyclerView(boolean resetContent)
+    {
+        if(resetContent)
+        {
+            Log.d("resetting content...");
+
+            List<IElement> elements = App.content.getContentOfType(this.fetchPropertyType());
+
+            for(IElement element : elements)
+            {
+                element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
+            }
+            this.viewModel.elements = elements;
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
+            invalidateOptionsMenu();
+        }
+        else
+        {
+            Log.d("notifying data set changes...");
+            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
         }
     }
 

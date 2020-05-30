@@ -100,7 +100,7 @@ public class OptionsMenuButler
                     groupByCategoryVisible = true;
                     groupByManufacturerVisible = true;
 
-                    expandAndCollapseAllVisible = this.getElements().size() > 1;
+                    expandAndCollapseAllVisible = this.getElements().size() > 1 && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.NONE;
                     break;
                 }
 
