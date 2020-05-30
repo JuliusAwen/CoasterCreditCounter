@@ -65,7 +65,7 @@ public class VisitedAttraction extends Attraction
     @Override
     public int getUntracktedRideCount()
     {
-        Log.e(String.format("%s can not have UntracktedRideCount - returning OnSiteAttraction's UntrackedRideDCount", this));
+        Log.e(String.format("%s cannot have UntracktedRideCount - returning OnSiteAttraction's UntrackedRideDCount", this));
         return this.getOnSiteAttraction().getUntracktedRideCount();
     }
 

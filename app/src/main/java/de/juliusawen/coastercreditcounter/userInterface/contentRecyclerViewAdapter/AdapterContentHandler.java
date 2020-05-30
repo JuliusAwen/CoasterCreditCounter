@@ -171,7 +171,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(!this.exists(element))
         {
-            Log.w(String.format("can not notify - %s does not exist in content", element));
+            Log.w(String.format("cannot notify - %s does not exist in content", element));
             return;
         }
 
@@ -182,7 +182,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(!this.exists(element))
         {
-            Log.w(String.format("can not remove - %s does not exist in content", element));
+            Log.w(String.format("cannot remove - %s does not exist in content", element));
             return;
         }
 
@@ -194,13 +194,13 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(!this.exists(element1))
         {
-            Log.w(String.format("can not swap - %s does not exist in content", element1));
+            Log.w(String.format("cannot swap - %s does not exist in content", element1));
             return;
         }
 
         if(!this.exists(element2))
         {
-            Log.w(String.format("can not swap - %s does not exist in content", element2));
+            Log.w(String.format("cannot swap - %s does not exist in content", element2));
             return;
         }
 
@@ -216,19 +216,19 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(this.content.isEmpty())
         {
-            Log.w("can not scroll - Content is empty");
+            Log.w("cannot scroll - Content is empty");
             return;
         }
 
         if(!this.exists(element))
         {
-            Log.w(String.format("can not scroll - %s does not exist in Content", element));
+            Log.w(String.format("cannot scroll - %s does not exist in Content", element));
             return;
         }
 
         if(this.recyclerView == null)
         {
-            Log.w("can not scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
+            Log.w("cannot scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
             return;
         }
 
