@@ -180,9 +180,7 @@ public abstract class Element implements IElement
     {
         if(child.equals(this))
         {
-            String message = "Element cannot be it's own child";
-            Log.e("Element cannot be it's own child");
-            throw new IllegalStateException(message);
+            throw new IllegalStateException("Element cannot be it's own child");
         }
 
         this.getChildren().add(child);

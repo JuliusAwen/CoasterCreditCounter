@@ -33,4 +33,10 @@ public class ShowParkSharedViewModel extends OptionsMenuButlerCompatibleBaseView
     {
         return this.oldContentRecyclerViewAdapter;
     }
+
+    @Override
+    public IElement getElement()
+    {
+        return this.park;
+    }
 }
