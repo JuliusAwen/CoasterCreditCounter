@@ -2,16 +2,13 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.net.Uri;
 
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
 
-public class NavigationHubViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class NavigationHubViewModel extends OptionsMenuButlerCompatibleBaseViewModel
 {
     public RequestCode requestCode = RequestCode.NAVIGATE;
     public List<IElement> currentVisits;
@@ -32,12 +29,6 @@ public class NavigationHubViewModel extends ViewModel implements IOptionsMenuBut
     }
 
     @Override
-    public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
-    {
-        return null;
-    }
-
-    @Override
     public List<IElement> getElements()
     {
         return this.currentVisits;
@@ -54,11 +45,5 @@ public class NavigationHubViewModel extends ViewModel implements IOptionsMenuBut
         {
             throw new IllegalArgumentException("NavigationHubActivityViewModel.setElements:: elements are not Visits");
         }
-    }
-
-    @Override
-    public IElement getElement()
-    {
-        return null;
     }
 }

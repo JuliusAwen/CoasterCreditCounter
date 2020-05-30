@@ -91,7 +91,14 @@ public class ContentRecyclerViewAdapterConfiguration
     public void addRelevantChildTypes(LinkedHashSet<Class<? extends IElement>> relevantChildTypes)
     {
         this.relevantChildTypes.addAll(relevantChildTypes);
-        Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types", relevantChildTypes.size()));
+
+        StringBuilder relevantChildTypesString = new StringBuilder();
+        for(Class<? extends IElement> type : relevantChildTypes)
+        {
+            relevantChildTypesString.append(String.format(" [%s]", type.getSimpleName()));
+        }
+
+        Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types:%s", relevantChildTypes.size(), relevantChildTypesString));
     }
 
     public void addRelevantChildType(Class<? extends IElement> relevantChildType)

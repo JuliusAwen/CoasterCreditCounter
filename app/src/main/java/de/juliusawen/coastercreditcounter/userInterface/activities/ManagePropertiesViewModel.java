@@ -1,20 +1,20 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
 
-public class ManagePropertiesViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class ManagePropertiesViewModel extends OptionsMenuButlerCompatibleBaseViewModel
 {
     public RequestCode requestCode;
-    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
+    public ContentRecyclerViewAdapterFacade adapterFacade;
+
     public List<IElement> elements;
 
     public PropertyType propertyTypeToManage;
@@ -32,7 +32,13 @@ public class ManagePropertiesViewModel extends ViewModel implements IOptionsMenu
     @Override
     public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
-        return this.oldContentRecyclerViewAdapter;
+        return this.adapterFacade.getAdapter();
+    }
+
+    @Override
+    public ContentRecyclerViewAdapterConfiguration getContentRecyclerViewAdapterConfiguration()
+    {
+        return this.adapterFacade.getConfiguration();
     }
 
     @Override
@@ -45,11 +51,5 @@ public class ManagePropertiesViewModel extends ViewModel implements IOptionsMenu
     public void setElements(List<IElement> elements)
     {
         this.elements = elements;
-    }
-
-    @Override
-    public IElement getElement()
-    {
-        return null;
     }
 }

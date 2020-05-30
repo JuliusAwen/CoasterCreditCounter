@@ -33,6 +33,7 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
@@ -65,19 +66,18 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.adapterFacade == null)
         {
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
-            this.viewModel.adapterFacade.setContent(this.viewModel.currentLocation);
 
             this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Park.class, this.createOnParkClickListener());
             this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Location.class, this.createOnLocationClickListener());
-//            this.viewModel.adapterUtilityWrapper.getConfiguration().addOnLongClickListenerByType(IElement.class, this.createOnLongClickListener());
-            this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IElement.class, this.createOnLongClickListenerTest());
+            this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IElement.class, super.createDefaultOnLongClickListener());
 
             this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.adapterFacade.getAdapter());
+        recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
 
         if(this.viewModel.currentLocation.isRootLocation())
         {
@@ -257,34 +257,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    private View.OnLongClickListener createOnLongClickListener()
-    {
-        return new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                return handleOnLongClick(view);
-            }
-        };
-    }
-
-    @Deprecated
-    private View.OnLongClickListener createOnLongClickListenerTest()
-    {
-        return new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                viewModel.adapterFacade.applyDecorationPreset(RequestCode.NAVIGATE);
-                viewModel.adapterFacade.getAdapter().notifyDataSetChanged();
-                return true;
-            }
-        };
-    }
-
-    private boolean handleOnLongClick(View view)
+    @Override
+    protected boolean handleDefaultOnLongClick(View view)
     {
         this.viewModel.longClickedElement = (Element) view.getTag();
         Log.i(String.format("%s long clicked", this.viewModel.longClickedElement));

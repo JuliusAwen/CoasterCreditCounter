@@ -456,9 +456,8 @@ public abstract class SortTool
 
     public static List<IElement> sortDefaultPropertyToTopAccordingToPreferences(List<IElement> elements)
     {
-        if(!elements.get(0).isProperty())
+        if(!elements.isEmpty() && !elements.get(0).isProperty())
         {
-            Log.v("no Property in list");
             return elements;
         }
 

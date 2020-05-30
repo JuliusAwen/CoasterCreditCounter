@@ -1,15 +1,10 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import androidx.lifecycle.ViewModel;
-
-import java.util.List;
-
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
 
-public class DeveloperOptionsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class DeveloperOptionsViewModel extends OptionsMenuButlerCompatibleBaseViewModel implements IOptionsMenuButlerCompatibleViewModel
 {
     public RequestCode requestCode = RequestCode.DEVELOPER_OPTIONS;
 
@@ -19,26 +14,5 @@ public class DeveloperOptionsViewModel extends ViewModel implements IOptionsMenu
     public RequestCode getRequestCode()
     {
         return this.requestCode;
-    }
-
-    @Override
-    public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
-    {
-        return null;
-    }
-
-    @Override
-    public List<IElement> getElements()
-    {
-        return null;
-    }
-
-    @Override
-    public void setElements(List<IElement> elements) {}
-
-    @Override
-    public IElement getElement()
-    {
-        return null;
     }
 }

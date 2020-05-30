@@ -1,16 +1,13 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import androidx.lifecycle.ViewModel;
-
-import java.util.List;
-
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-public class ShowLocationsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class ShowLocationsViewModel extends OptionsMenuButlerCompatibleBaseViewModel
 {
     public RequestCode requestCode;
     public ContentRecyclerViewAdapterFacade adapterFacade;
@@ -34,13 +31,10 @@ public class ShowLocationsViewModel extends ViewModel implements IOptionsMenuBut
     }
 
     @Override
-    public List<IElement> getElements()
+    public ContentRecyclerViewAdapterConfiguration getContentRecyclerViewAdapterConfiguration()
     {
-        return null;
+        return this.adapterFacade.getConfiguration();
     }
-
-    @Override
-    public void setElements(List<IElement> elements) {}
 
     @Override
     public IElement getElement()

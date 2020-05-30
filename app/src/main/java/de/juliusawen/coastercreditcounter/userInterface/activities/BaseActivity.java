@@ -52,6 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     private BaseActivityViewModel viewModel;
 
+    // region ActivityLifecycle
+
     @Override
     protected final void onCreate(Bundle savedInstanceState)
     {
@@ -131,6 +133,24 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     protected void pause() {}
 
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
+
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '-', false);
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // endregion ActivityLifecycle
+
+    // region AppInitaialization
+
     private void startAppInitialization()
     {
         //Todo: introduce SplashScreen
@@ -185,6 +205,31 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
+    protected void showProgressBar(boolean show)
+    {
+        View rootView = findViewById(android.R.id.content);
+        View progressBar = rootView.findViewById(R.id.linearLayoutProgressBar);
+
+        if(progressBar == null)
+        {
+            progressBar = getLayoutInflater().inflate(R.layout.layout_progress_bar, (ViewGroup)rootView, false);
+            ((ViewGroup)rootView).addView(progressBar);
+        }
+
+        if(show)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    // endregion AppInitaialization
+
+    //region OptionsMenu
+
     protected void setOptionsMenuButlerViewModel(IOptionsMenuButlerCompatibleViewModel viewModel)
     {
         this.viewModel.optionsMenuButler.setViewModel(viewModel);
@@ -234,6 +279,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         Log.e(String.format("[%s] clicked - unhandled", item));
     }
 
+    //endregion OptionsMenu
+
+    // region HelpOverlayFragment
 
     @Override
     public void onHelpOverlayFragmentInteraction(View view)
@@ -336,6 +384,28 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             Log.e("HelpOverlayFragment not found");
         }
     }
+
+    protected void showFragmentFadeIn(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .show(fragment)
+                .commit();
+    }
+
+    protected void hideFragmentFadeOut(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .hide(fragment)
+                .commit();
+    }
+
+    // endregion HelpOverlayFragment
+
+    // region Toolbar
 
     protected void createToolbar()
     {
@@ -442,6 +512,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         });
     }
 
+    // endregion Toolbar
+
+    // region FloatingActionButton
+
     public void createFloatingActionButton()
     {
         Log.d("creating...");
@@ -512,37 +586,50 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    protected void showFragmentFadeIn(Fragment fragment)
-    {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .show(fragment)
-                .commit();
-    }
+    // endregion FloatingActionButton
 
-    protected void hideFragmentFadeOut(Fragment fragment)
-    {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .hide(fragment)
-                .commit();
-    }
+    // region ContentRecyclerViewAdapter
 
-    public boolean onKeyDown(int keyCode, KeyEvent event)
+    protected View.OnClickListener createDefaultOnClickListener()
     {
-        Log.i(String.format("<%s> pressed", StringTool.keyCodeToString(keyCode)));
-
-        if(keyCode == KeyEvent.KEYCODE_BACK)
+        return new View.OnClickListener()
         {
-            Log.frame(LogLevel.INFO, String.format("finishing [%s]", this.getClass().getSimpleName()), '-', false);
-            finish();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
+            @Override
+            public void onClick(View view)
+            {
+                Log.v("OnClick registered");
+                handleDefaultOnClick(view);
+            }
+        };
     }
+
+    protected void handleDefaultOnClick(View view)
+    {
+        Log.w(String.format("[%s] does not override method - unhandled", this.getClass().getSimpleName()));
+    }
+
+    protected View.OnLongClickListener createDefaultOnLongClickListener()
+    {
+        return new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View view)
+            {
+                Log.v("OnLongClick registered");
+                return handleDefaultOnLongClick(view);
+            }
+        };
+    }
+
+    protected boolean handleDefaultOnLongClick(View view)
+    {
+        Log.w(String.format("[%s] does not override method - unhandled", this.getClass().getSimpleName()));
+        return false;
+    }
+
+    // endregion ContentRecyclerViewAdapter
+
+    // region Statistics
 
     protected void getStatistics(StatisticType statisticType)
     {
@@ -592,26 +679,9 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         Log.e(String.format("[%s] does not override decorateStatistics()", this.getClass().getSimpleName()));
     }
 
-    protected void showProgressBar(boolean show)
-    {
-        View rootView = findViewById(android.R.id.content);
-        View progressBar = rootView.findViewById(R.id.linearLayoutProgressBar);
+    // endregion Statistics
 
-        if(progressBar == null)
-        {
-            progressBar = getLayoutInflater().inflate(R.layout.layout_progress_bar, (ViewGroup)rootView, false);
-            ((ViewGroup)rootView).addView(progressBar);
-        }
-
-        if(show)
-        {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
+    // region Persistency
 
     protected void markForCreation(IElement element)
     {
@@ -720,4 +790,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             Log.v("persistence is synchronous");
         }
     }
+
+    // endregion Persistency
 }

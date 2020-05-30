@@ -143,9 +143,9 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    public ContentRecyclerViewDecoration addSpecialStringResourceForType(Class<? extends IElement> contentType, int stringResource)
+    public ContentRecyclerViewDecoration addSpecialStringResourceForContentType(Class<? extends IElement> contentType, int stringResource)
     {
-        Log.v(String.format(Locale.getDefault(), "added StringResource[%d (%s)] for [%s]", stringResource, StringTool.getString(stringResource), contentType.getSimpleName()));
+        Log.v(String.format("added StringResource[%s] for [%s]", StringTool.getString(stringResource), contentType.getSimpleName()));
         this.specialStringResourcesByContentType.put(contentType, stringResource);
         return this;
     }
@@ -188,7 +188,12 @@ public class ContentRecyclerViewDecoration
                     specialString = App.getContext().getString(this.specialStringResourcesByContentType.get(IProperty.class), element.getName());
                 }
 
-                Log.v(String.format("SpecialString [%s] found for [%s]", specialString, element));
+                if(specialString.isEmpty())
+                {
+                    return null;
+                }
+
+                Log.v(String.format("SpecialString [%s] found for %s", specialString, element));
                 return specialString;
             }
         }

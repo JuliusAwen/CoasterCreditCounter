@@ -1,9 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class ContentRecyclerViewAdapterFacade
@@ -12,19 +9,10 @@ public class ContentRecyclerViewAdapterFacade
     private ContentRecyclerViewAdapterConfiguration configuration;
     private ContentRecyclerViewAdapter adapter;
 
-    private List<IElement> content = new ArrayList<>();
-
     public ContentRecyclerViewAdapterFacade()
     {
         this.decoration = new ContentRecyclerViewDecoration();
         this.configuration = new ContentRecyclerViewAdapterConfiguration(this.decoration);
-    }
-
-    public void createAdapter(ContentRecyclerViewAdapterConfiguration configuration)
-    {
-        this.configuration = configuration;
-        this.decoration = configuration.getDecoration();
-        this.adapter = new ContentRecyclerViewAdapter(configuration);
     }
 
     public void createDefaultAdapter()
@@ -34,10 +22,16 @@ public class ContentRecyclerViewAdapterFacade
 
     public void createPreconfiguredAdapter(RequestCode requestCode)
     {
-        ContentRecyclerViewConfigurationPresetProvider.applyPreset(this.configuration, requestCode);
-        ContentRecyclerViewDecorationPresetProvider.applyPreset(this.decoration, requestCode);
+        ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
-        this.adapter.setContent(this.content);
+    }
+
+    public void createPreconfiguredAdapter(RequestCode requestCode, PropertyType propertyType)
+    {
+        ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, propertyType);
+        this.adapter = new ContentRecyclerViewAdapter(this.configuration);
     }
 
     public ContentRecyclerViewDecoration getDecoration()
@@ -50,34 +44,34 @@ public class ContentRecyclerViewAdapterFacade
         return this.configuration;
     }
 
-    public ContentRecyclerViewAdapter getAdapter()
+    public IContentRecyclerViewAdapter getAdapter()
     {
         return this.adapter;
     }
 
-    public void setContent(IElement element)
-    {
-        List<IElement> content = new ArrayList<>();
-        content.add(element);
-        this.setContent(content);
-    }
-
-    public void setContent(List<IElement> content)
-    {
-        this.content = content;
-        if(this.adapter != null)
-        {
-            this.adapter.setContent(content);
-        }
-    }
-
     public void applyDecorationPreset(RequestCode requestCode)
     {
-        ContentRecyclerViewDecorationPresetProvider.applyPreset(this.decoration, requestCode);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
 
         if(this.adapter != null)
         {
             this.adapter.notifyDataSetChanged();
         }
+    }
+
+    public void applyDecorationPreset(RequestCode requestCode, PropertyType propertyType)
+    {
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, propertyType);
+
+        if(this.adapter != null)
+        {
+            this.adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void setDetailModesAndGroupContent(RequestCode requestCode, GroupType groupType)
+    {
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
+        this.adapter.groupContent(groupType);
     }
 }

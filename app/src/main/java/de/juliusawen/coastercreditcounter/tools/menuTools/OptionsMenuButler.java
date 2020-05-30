@@ -17,6 +17,7 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewDecorationPresetProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
@@ -139,8 +140,6 @@ public class OptionsMenuButler
                 {
                     sortVisible = true;
                     sortEnabled = App.preferences.defaultPropertiesAlwaysAtTop() ? this.getElements().size() > 2 : this.getElements().size() > 1;
-
-                    expandAndCollapseAllVisible = this.anyElementHasChildren();
                     break;
                 }
 
@@ -472,8 +471,54 @@ public class OptionsMenuButler
                         return true;
                 }
 
-                OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.STATUS);
                 return true;
+            }
+            else
+            {
+                GroupType groupType = null;
+                switch(optionsItem)
+                {
+                    case GROUP_BY_NONE:
+                        groupType = GroupType.NONE;
+                        break;
+
+                    case GROUP_BY_PARK:
+                        groupType = GroupType.PARK;
+                        break;
+
+                    case GROUP_BY_CREDIT_TYPE:
+                        groupType = GroupType.CREDIT_TYPE;
+                        break;
+
+                    case GROUP_BY_CATEGORY:
+                        groupType = GroupType.CATEGORY;
+                        break;
+
+                    case GROUP_BY_MANUFACTURER:
+                        groupType = GroupType.MANUFACTURER;
+                        break;
+
+                    case GROUP_BY_MODEL:
+                        groupType = GroupType.MODEL;
+                        break;
+
+                    case GROUP_BY_STATUS:
+                        groupType = GroupType.STATUS;
+                        break;
+                }
+
+                if(groupType != null)
+                {
+                    ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(
+                            this.viewModel.getContentRecyclerViewAdapterConfiguration().getDecoration(),
+                            this.getRequestCode(),
+                            GroupType.NONE
+                    );
+
+                    contentRecyclerViewAdapter.groupContent(groupType);
+
+                    return true;
+                }
             }
         }
 
@@ -1019,11 +1064,6 @@ public class OptionsMenuButler
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
-
-            case MANAGE_CREDIT_TYPES:
-            case MANAGE_CATEGORIES:
-            case MANAGE_MANUFACTURERS:
-            case MANAGE_STATUSES:
 
             case SHOW_LOCATIONS:
             case SHOW_VISIT:

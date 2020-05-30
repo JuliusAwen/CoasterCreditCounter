@@ -40,6 +40,12 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
         Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n%s", configuration, configuration.getDecoration()), '=', false);
     }
 
+    @Override
+    public void notifySomethingChanged()
+    {
+        super.notifyDataSetChanged();
+    }
+
 
     @Override
     public void setContent(IElement element)
@@ -289,7 +295,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
         ItemViewType itemViewType = ItemViewType.getValue(viewHolder.getItemViewType());
-        Log.v(String.format(Locale.getDefault(), "binding ViewType[%s] for position[%d]...", itemViewType, position));
+        Log.wrap(LogLevel.VERBOSE, String.format(Locale.getDefault(), "binding ViewType[%s] for position[%d]...", itemViewType, position), '+', true);
 
         switch (itemViewType)
         {

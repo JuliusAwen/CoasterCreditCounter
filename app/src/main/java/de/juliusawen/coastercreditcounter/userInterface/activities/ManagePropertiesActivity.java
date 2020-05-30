@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -51,13 +49,9 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewStyler;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ManagePropertiesActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -78,94 +72,56 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
         }
 
-        if(this.viewModel.propertyTypeToManage == null)
-        {
-            this.viewModel.propertyTypeToManage = PropertyType.values()[getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1)];
-        }
-
         this.viewModel.isSelectionMode = this.viewModel.requestCode == RequestCode.PICK_CREDIT_TYPE
                 || this.viewModel.requestCode == RequestCode.PICK_CATEGORY
                 || this.viewModel.requestCode == RequestCode.PICK_MANUFACTURER
                 || this.viewModel.requestCode == RequestCode.PICK_MODEL
                 || this.viewModel.requestCode == RequestCode.PICK_STATUS;
 
-
-        if(this.viewModel.isSelectionMode)
+        if(this.viewModel.propertyTypeToManage == null)
         {
-            this.viewModel.elements = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
-            this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
-
-            if(this.viewModel.oldContentRecyclerViewAdapter == null)
-            {
-                this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                        this.viewModel.elements,
-                        this.getPropertyType(),
-                        false)
-                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD);
-            }
+            this.viewModel.propertyTypeToManage = PropertyType.getValue(getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1));
         }
-        else //ManageMode
+
+        if(this.viewModel.adapterFacade == null)
         {
-            if(this.viewModel.oldContentRecyclerViewAdapter == null)
+            this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
+
+            if(this.viewModel.isSelectionMode)
             {
-                this.viewModel.elements = App.content.getContentOfType(this.getPropertyType());
+                this.viewModel.elements = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
+                this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
+
+                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+            }
+            else //ManageMode
+            {
+                this.viewModel.elements = App.content.getContentOfType(this.fetchPropertyType());
                 for(IElement element : this.viewModel.elements)
                 {
+                    Log.d(String.format("Sorting %s's children", element));
                     SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING);
                 }
 
-                HashSet<Class<? extends IElement>> childTypesToExpand = new HashSet<>();
-                childTypesToExpand.add(Model.class); // Models can be grouped - so the GroupHeaders<Model> must be expandable
-                childTypesToExpand.add(Attraction.class);
-                this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.elements, childTypesToExpand)
-                        .setTypefaceForContentType(this.getPropertyType(), Typeface.BOLD)
-                        .setSpecialStringResourceForType(IProperty.class, R.string.substitute_properties_default_postfix);
-
-                switch(this.viewModel.propertyTypeToManage)
-                {
-                    case CREDIT_TYPE:
-                    case STATUS:
-                    {
-                        this.viewModel.oldContentRecyclerViewAdapter
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                        break;
-                    }
-
-                    case CATEGORY:
-                    {
-                        this.viewModel.oldContentRecyclerViewAdapter
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
-                        break;
-                    }
-
-                    case MANUFACTURER:
-                    {
-                        this.viewModel.oldContentRecyclerViewAdapter
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .setDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
-                        break;
-                    }
-                }
+                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.propertyTypeToManage);
+                this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IProperty.class, super.createDefaultOnLongClickListener());
             }
+
+            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IElement.class, super.createDefaultOnClickListener());
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
         }
 
-        if(this.viewModel.oldContentRecyclerViewAdapter != null)
+
+        if(this.viewModel.adapterFacade.getAdapter() != null)
         {
-            this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener());
             RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
+            recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
         }
 
         if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
         {
-            OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.oldContentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.MANUFACTURER);
+            this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -201,7 +157,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_STATUS:
             {
                 this.viewModel.propertyToReturn = resultElement;
-                updateContentRecyclerView(true);
+                this.updateContentRecyclerView(true);
                 break;
             }
 
@@ -211,7 +167,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case EDIT_MODEL:
             case EDIT_STATUS:
             {
-                updateContentRecyclerView(false);
+                this.updateContentRecyclerView(false);
                 break;
             }
 
@@ -223,7 +179,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                 App.content.reorderElements(resultElements);
-                updateContentRecyclerView(true).scrollToItem(resultElement);
+                this.updateContentRecyclerView(true);
+                this.viewModel.adapterFacade.getAdapter().scrollToItem(resultElement);
                 super.markForUpdate(resultElements);
                 break;
             }
@@ -265,7 +222,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
                 Log.d(String.format(Locale.getDefault(), "<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions", this.viewModel.longClickedElement, resultElements.size()));
-                updateContentRecyclerView(true);
+                this.updateContentRecyclerView(true);
             }
         }
     }
@@ -316,90 +273,65 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         return super.onKeyDown(keyCode, event);
     }
 
-    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewAdapterOnClickListener()
+    @Override
+    protected void handleDefaultOnClick(View view)
     {
-        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
+        Element element = (Element)view.getTag();
+
+        Log.i(String.format("%s clicked", element));
+
+        if(this.viewModel.isSelectionMode)
         {
-            @Override
-            public void onClick(View view)
+            if(element.isProperty())
             {
-                Element element = (Element)view.getTag();
-
-                Log.i(String.format("%s clicked", element));
-
-                if(viewModel.isSelectionMode && element.isProperty())
-                {
-                    viewModel.propertyToReturn = element;
-                    returnResult(RESULT_OK);
-                }
-                else if(element.hasChildren())
-                {
-                    viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
-                }
-                else if(element.isAttraction())
-                {
-                    ActivityDistributor.startActivityShow(ManagePropertiesActivity.this, RequestCode.SHOW_ATTRACTION, element);
-                }
+                this.viewModel.propertyToReturn = element;
+                returnResult(RESULT_OK);
             }
-
-            @Override
-            public boolean onLongClick(final View view)
+        }
+        else
+        {
+            if(element.isGroupHeader())
             {
-                viewModel.longClickedElement = (IElement)view.getTag();
-
-                if(viewModel.longClickedElement.isProperty())
-                {
-                    boolean longClickedPropertyIsDefault = false;
-
-                    switch(viewModel.propertyTypeToManage)
-                    {
-                        case CREDIT_TYPE:
-                            longClickedPropertyIsDefault = ((CreditType) viewModel.longClickedElement).isDefault();
-                            break;
-
-                        case CATEGORY:
-                            longClickedPropertyIsDefault = ((Category) viewModel.longClickedElement).isDefault();
-                            break;
-
-                        case MANUFACTURER:
-                            longClickedPropertyIsDefault = ((Manufacturer) viewModel.longClickedElement).isDefault();
-                            break;
-
-                        case MODEL:
-                            longClickedPropertyIsDefault = ((Model) viewModel.longClickedElement).isDefault();
-                            break;
-
-                        case STATUS:
-                            longClickedPropertyIsDefault = ((Status) viewModel.longClickedElement).isDefault();
-                            break;
-                    }
-
-                    Log.i(String.format("%s long clicked", viewModel.longClickedElement));
-
-
-                    PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
-
-                    if(!viewModel.isSelectionMode)
-                    {
-                        popupMenuAgent
-                                .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
-                                .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty());
-                    }
-
-                    boolean isSetAsDefaultVisible = !viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE) && !viewModel.propertyTypeToManage.equals(PropertyType.MODEL);
-
-                    popupMenuAgent
-                            .add(PopupItem.EDIT_ELEMENT)
-                            .add(PopupItem.DELETE_ELEMENT)
-                            .add(PopupItem.SET_AS_DEFAULT)
-                            .setEnabled(PopupItem.DELETE_ELEMENT, !longClickedPropertyIsDefault)
-                            .setEnabled(PopupItem.SET_AS_DEFAULT, !longClickedPropertyIsDefault)
-                            .setVisible(PopupItem.SET_AS_DEFAULT, isSetAsDefaultVisible)
-                            .show(ManagePropertiesActivity.this, view);
-                }
-                return true;
+                this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
             }
-        };
+        }
+    }
+
+    @Override
+    protected boolean handleDefaultOnLongClick(View view)
+    {
+        this.viewModel.longClickedElement = (IElement) view.getTag();
+        Log.i(String.format("%s long clicked", this.viewModel.longClickedElement));
+
+        if(!this.viewModel.longClickedElement.isProperty())
+        {
+            Log.w(String.format("unexpected type %s - IProperty expected", this.viewModel.longClickedElement));
+            return false;
+        }
+
+        boolean longClickedPropertyIsDefault = this.fetchPropertyType().cast(this.viewModel.longClickedElement).isDefault();
+
+        PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
+
+        if(!this.viewModel.isSelectionMode && this.viewModel.propertyTypeToManage != PropertyType.MODEL)
+        {
+            popupMenuAgent
+                    .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
+                    .setEnabled(PopupItem.ASSIGN_TO_ATTRACTIONS, !App.content.getContentAsType(IAttraction.class).isEmpty());
+        }
+
+        boolean isSetAsDefaultVisible = !this.viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE) && !this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL);
+
+        popupMenuAgent
+                .add(PopupItem.EDIT_ELEMENT)
+                .add(PopupItem.DELETE_ELEMENT)
+                .add(PopupItem.SET_AS_DEFAULT)
+                .setEnabled(PopupItem.DELETE_ELEMENT, !longClickedPropertyIsDefault)
+                .setEnabled(PopupItem.SET_AS_DEFAULT, !longClickedPropertyIsDefault)
+                .setVisible(PopupItem.SET_AS_DEFAULT, isSetAsDefaultVisible)
+                .show(ManagePropertiesActivity.this, view);
+
+        return true;
     }
 
     @Override
@@ -765,32 +697,30 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         super.setFloatingActionButtonVisibility(true);
     }
 
-    private OLD_ContentRecyclerViewAdapter updateContentRecyclerView(boolean resetContent)
+    private void updateContentRecyclerView(boolean resetContent)
     {
         if(resetContent)
         {
             Log.d("resetting content...");
 
-            List<IElement> elements = App.content.getContentOfType(this.getPropertyType());
+            List<IElement> elements = App.content.getContentOfType(this.fetchPropertyType());
 
             for(IElement element : elements)
             {
                 element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
             }
             this.viewModel.elements = elements;
-            this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.elements);
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
             invalidateOptionsMenu();
         }
         else
         {
             Log.d("notifying data set changes...");
-            this.viewModel.oldContentRecyclerViewAdapter.notifyDataSetChanged();
+            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
         }
-
-        return this.viewModel.oldContentRecyclerViewAdapter;
     }
 
-    private Class<? extends IProperty> getPropertyType()
+    private Class<? extends IProperty> fetchPropertyType()
     {
         switch(this.viewModel.propertyTypeToManage)
         {

@@ -44,7 +44,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
     {
         this.configuration = configuration;
-
         Log.v(String.format(Locale.getDefault(), "[%d] relevant child types", configuration.getRelevantChildTypes().size()));
     }
 
@@ -119,10 +118,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected void setContent(List<IElement> content)
     {
-        Log.d("setting Content...");
+        Log.v(String.format(Locale.getDefault(), "setting [%d] items...", content.size()));
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
+        this.groupContent(this.groupType);
     }
 
     protected boolean exists(IElement element)
@@ -240,7 +240,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(groupType == null)
         {
-
             Log.w("GroupType is null - falling back to default GroupType.NONE");
             groupType = GroupType.NONE;
         }

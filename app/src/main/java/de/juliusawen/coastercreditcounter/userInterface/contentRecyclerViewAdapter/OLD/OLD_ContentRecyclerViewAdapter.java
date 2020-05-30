@@ -1502,6 +1502,12 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     @Override
+    public void notifySomethingChanged()
+    {
+        super.notifyDataSetChanged();
+    }
+
+    @Override
     public void setContent(IElement element)
     {
         List<IElement> content = new ArrayList<>();

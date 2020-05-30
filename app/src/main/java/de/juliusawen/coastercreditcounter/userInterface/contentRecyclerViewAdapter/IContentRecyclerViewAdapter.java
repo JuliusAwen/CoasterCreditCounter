@@ -9,6 +9,8 @@ public interface IContentRecyclerViewAdapter
 {
     void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration); //Todo: remove and handle via constructor (deprecated)
 
+    void notifySomethingChanged();
+
     void setContent(List<IElement> content);
     void setContent(IElement element);
 

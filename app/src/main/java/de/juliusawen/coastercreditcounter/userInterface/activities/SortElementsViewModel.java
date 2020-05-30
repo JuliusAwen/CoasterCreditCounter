@@ -1,19 +1,16 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-public class SortElementsViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class SortElementsViewModel extends OptionsMenuButlerCompatibleBaseViewModel
 {
     public RequestCode requestCode;
     public List<IElement> elementsToSort;
-//    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
     public IContentRecyclerViewAdapter contentRecyclerViewAdapter;
 
     public IElement selectedElement;
@@ -42,11 +39,5 @@ public class SortElementsViewModel extends ViewModel implements IOptionsMenuButl
     public void setElements(List<IElement> elements)
     {
         this.elementsToSort = elements;
-    }
-
-    @Override
-    public IElement getElement()
-    {
-        return null;
     }
 }
