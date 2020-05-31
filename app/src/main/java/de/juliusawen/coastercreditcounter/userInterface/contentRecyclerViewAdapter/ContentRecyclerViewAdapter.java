@@ -120,7 +120,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void groupContent(GroupType groupType)
     {
-        Log.d(String.format("grouping by GroupType[%s]...", groupType));
+        Log.d(String.format("grouping by %s...", groupType));
         super.groupContent(groupType);
     }
 

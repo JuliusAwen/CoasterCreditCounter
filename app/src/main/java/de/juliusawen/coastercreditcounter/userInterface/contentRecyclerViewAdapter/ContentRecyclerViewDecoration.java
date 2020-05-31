@@ -152,7 +152,7 @@ public class ContentRecyclerViewDecoration
 
     public ContentRecyclerViewDecoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
-        Log.v(String.format("added DetailType[%s] and DetailDisplayMode[%s] for [%s]", detailType, detailDisplayMode, contentType.getSimpleName()));
+        Log.v(String.format("added %s and %s for [%s]", detailType, detailDisplayMode, contentType.getSimpleName()));
         this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);
         return this;
     }
@@ -360,12 +360,12 @@ public class ContentRecyclerViewDecoration
                 }
 
                 default:
-                    throw new IllegalStateException(String.format("no DetailType[%s] for %s found", DetailType.getValue(detailType.ordinal()), element));
+                    throw new IllegalStateException(String.format("%s for %s not found", DetailType.getValue(detailType.ordinal()), element));
             }
         }
 
         String orderedDetailString = this.getOrderedDetailString(detailSubStringsByDetailType);
-        Log.v(String.format("DetailString [%s] built for %s", orderedDetailString, element));
+        Log.v(String.format("DetailString[%s] built for %s", orderedDetailString, element));
 
         return StringTool.buildSpannableStringWithTypefaces(orderedDetailString, typefacesByDetailSubString);
     }
@@ -440,10 +440,7 @@ public class ContentRecyclerViewDecoration
                 }
                 else
                 {
-                    string.append(String.format("\n%sContentType[%s]: Typeface[%s]",
-                            this.getIntend(lenght),
-                            contentType.getSimpleName(),
-                            StringTool.typefaceToString(this.typefacesByContentType.get(contentType))));
+                    string.append(String.format("\n%s%s: %s", this.getIntend(lenght), contentType.getSimpleName(), StringTool.typefaceToString(this.typefacesByContentType.get(contentType))));
                 }
             }
         }
@@ -466,10 +463,7 @@ public class ContentRecyclerViewDecoration
                 }
                 else
                 {
-                    string.append(String.format("\n%sDetailType[%s]: Typeface[%s]",
-                            this.getIntend(lenght),
-                            detailType,
-                            StringTool.typefaceToString(this.typefacesByDetailType.get(detailType))));
+                    string.append(String.format("\n%s%s: %s", this.getIntend(lenght), detailType, StringTool.typefaceToString(this.typefacesByDetailType.get(detailType))));
                 }
             }
         }
@@ -485,13 +479,13 @@ public class ContentRecyclerViewDecoration
                     || !this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW).isEmpty())
             {
                 none = false;
-                string.append(String.format("\n%sDetailType[%s]", this.getIntend(lenght), detailType));
+                string.append(String.format("\n%s%s", this.getIntend(lenght), detailType));
                 lenght += 4;
                 for(DetailDisplayMode detailDisplayMode : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).keySet())
                 {
                     if(!this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).isEmpty())
                     {
-                        string.append(String.format("\n%sDetailDisplayMode[%s]", this.getIntend(lenght), detailDisplayMode));
+                        string.append(String.format("\n%s%s", this.getIntend(lenght), detailDisplayMode));
                         lenght += 4;
                         for(Class<? extends IElement> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode))
                         {

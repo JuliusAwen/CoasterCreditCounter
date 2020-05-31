@@ -20,12 +20,10 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
@@ -94,7 +92,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
-                this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IProperty.class, this.createOnPropertySelectedListener());
+                this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(ElementType.IPROPERTY.getType(), super.createOnElementTypeClickListener(ElementType.IPROPERTY));
             }
             else //ManageMode
             {
@@ -106,7 +104,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
-                this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IProperty.class, this.createOnPropertyLongClickListener());
+                this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(ElementType.IPROPERTY.getType(), super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
             }
 
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
@@ -123,7 +121,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.typeToManage == ElementType.MODEL)
         {
             this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
-            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IGroupHeader.class, this.createOnGroupHeaderClickListener());
+            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(ElementType.IGROUP_HEADER.getType(), super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -275,61 +273,44 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         return super.onKeyDown(keyCode, event);
     }
 
-    private View.OnClickListener createOnGroupHeaderClickListener()
+    @Override
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
     {
-        return new View.OnClickListener()
+        IElement element = (IElement) view.getTag();
+        switch(elementType)
         {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnGroupHeaderClick(view);
-            }
-        };
+            case IPROPERTY:
+                this.handleOnPropertyClick(element);
+                break;
+
+            case IGROUP_HEADER:
+                this.handleOnGroupHeaderClick(element);
+                break;
+
+            default:
+                super.handleOnElementTypeClick(elementType, view);
+                break;
+        }
     }
 
-    private void handleOnGroupHeaderClick(View view)
+    private void handleOnGroupHeaderClick(IElement element)
     {
-        Element element = (Element) view.getTag();
-        Log.i(String.format("%s clicked", element));
         this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
     }
 
-    private View.OnClickListener createOnPropertySelectedListener()
+    private void handleOnPropertyClick(IElement element)
     {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnPropertyClick(view);
-            }
-        };
-    }
-
-    private void handleOnPropertyClick(View view)
-    {
-        Element element = (Element) view.getTag();
-        Log.i(String.format("%s clicked", element));
         this.viewModel.propertyToReturn = element;
         returnResult(RESULT_OK);
     }
 
-    private View.OnLongClickListener createOnPropertyLongClickListener()
+    @Override
+    protected boolean handleOnElementTypeLongClick(ElementType elementType, View view)
     {
-        return new View.OnLongClickListener()
+        if(elementType != ElementType.IPROPERTY)
         {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                return handleOnPropertyLongClick(view);
-            }
-        };
-    }
-
-    private boolean handleOnPropertyLongClick(View view)
-    {
-        this.viewModel.longClickedElement = (IElement) view.getTag();
-        Log.i(String.format("%s long clicked", this.viewModel.longClickedElement));
+            return super.handleOnElementTypeLongClick(elementType, view);
+        }
 
         PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
 
@@ -472,7 +453,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
+            Log.e(String.format("not able to determine RequestCode for %s", this.viewModel.typeToManage));
             return;
         }
 
@@ -523,7 +504,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
+            Log.e(String.format("not able to determine RequestCode for %s", this.viewModel.typeToManage));
             return;
         }
 
@@ -758,7 +739,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
+            Log.e(String.format("not able to determine RequestCode for %s", this.viewModel.typeToManage));
             return;
         }
 

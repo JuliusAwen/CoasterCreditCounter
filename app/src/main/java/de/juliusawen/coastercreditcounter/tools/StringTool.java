@@ -140,16 +140,16 @@ public abstract class StringTool
         switch(typeface)
         {
             case 0:
-                return "NORMAL";
+                return "Typeface[NORMAL]";
 
             case 1:
-                return "BOLD";
+                return "Typeface[BOLD]";
 
             case 2:
-                return "ITALIC";
+                return "Typeface[ITALIC]";
 
             case 3:
-                return "BOLD_ITALIC";
+                return "Typeface[BOLD_ITALIC]";
 
             default:
                 Log.e(String.format(Locale.getDefault(), "unknown Typeface[%d]", typeface));

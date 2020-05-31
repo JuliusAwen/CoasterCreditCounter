@@ -20,4 +20,9 @@ public enum DetailDisplayMode
             return values()[0];
         }
     }
+
+    public String toString()
+    {
+        return String.format("DetailDisplayMode[%s]", this.name());
+    }
 }

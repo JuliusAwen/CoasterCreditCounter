@@ -41,16 +41,18 @@ public class ContentRecyclerViewAdapterConfiguration
         return this.onLongClickListenersByType;
     }
 
-    public void addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
+    public ContentRecyclerViewAdapterConfiguration addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
     {
         this.onClickListenersByType.put(type, onClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
+        return this;
     }
 
-    public void addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
+    public ContentRecyclerViewAdapterConfiguration addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
     {
         this.onLongClickListenersByType.put(type, onLongClickListener);
         Log.v(String.format("for [%s]", type.getSimpleName()));
+        return this;
     }
 
     public ContentRecyclerViewDecoration getDecoration()

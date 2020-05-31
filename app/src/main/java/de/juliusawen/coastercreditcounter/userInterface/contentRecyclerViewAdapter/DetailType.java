@@ -25,4 +25,9 @@ public enum DetailType
             return values()[0];
         }
     }
+
+    public String toString()
+    {
+        return String.format("DetailType[%s]", this.name());
+    }
 }

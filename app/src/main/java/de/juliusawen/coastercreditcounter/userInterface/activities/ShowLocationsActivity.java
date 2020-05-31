@@ -20,8 +20,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -67,9 +66,10 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         {
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
 
-            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Park.class, this.createOnParkClickListener());
-            this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(Location.class, this.createOnLocationClickListener());
-            this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IElement.class, super.createDefaultOnLongClickListener());
+            this.viewModel.adapterFacade.getConfiguration()
+                    .addOnClickListenerByType(ElementType.LOCATION.getType(), super.createOnElementTypeClickListener(ElementType.LOCATION))
+                    .addOnClickListenerByType(ElementType.PARK.getType(), super.createOnElementTypeClickListener(ElementType.PARK))
+                    .addOnLongClickListenerByType(ElementType.IELEMENT.getType(), super.createOnElementTypeLongClickListener(ElementType.IELEMENT));
 
             this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
@@ -205,16 +205,23 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         Log.d(String.format("selection mode enabled[%S]", enabled));
     }
 
-    private View.OnClickListener createOnLocationClickListener()
+    @Override
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
     {
-        return new View.OnClickListener()
+        IElement element = (IElement) view.getTag();
+        switch(elementType)
         {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnLocationClick((IElement) view.getTag());
-            }
-        };
+            case LOCATION:
+                this.handleOnLocationClick(element);
+                break;
+
+            case PARK:
+                this.handleOnParkClick(element);
+                break;
+
+            default:
+                super.handleOnElementTypeClick(elementType, view);
+        }
     }
 
     private void handleOnLocationClick(IElement element)
@@ -233,18 +240,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         }
     }
 
-    private View.OnClickListener createOnParkClickListener()
-    {
-        return new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                handleOnParkClick((IElement) view.getTag());
-            }
-        };
-    }
-
     private void handleOnParkClick(IElement element)
     {
         if(!this.viewModel.relocationModeEnabled)
@@ -258,23 +253,27 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     }
 
     @Override
-    protected boolean handleDefaultOnLongClick(View view)
+    protected boolean handleOnElementTypeLongClick(ElementType elementType, View view)
     {
+        if(elementType != ElementType.IELEMENT)
+        {
+            return super.handleOnElementTypeLongClick(elementType, view);
+        }
+
         this.viewModel.longClickedElement = (Element) view.getTag();
-        Log.i(String.format("%s long clicked", this.viewModel.longClickedElement));
 
         if(!this.viewModel.relocationModeEnabled)
         {
             boolean isLocation = this.viewModel.longClickedElement.isLocation();
-            boolean sortLocationsEnabled = isLocation && this.viewModel.longClickedElement.getChildrenOfType(Location.class).size() > 1;
-            boolean sortParksEnabled = isLocation && this.viewModel.longClickedElement.getChildrenOfType(Park.class).size() > 1;
+            boolean sortLocationsEnabled = isLocation && this.viewModel.longClickedElement.getChildrenOfType(ElementType.LOCATION.getType()).size() > 1;
+            boolean sortParksEnabled = isLocation && this.viewModel.longClickedElement.getChildrenOfType(ElementType.PARK.getType()).size() > 1;
 
-            int locationsCount = App.content.getContentOfType(Location.class).size();
+            int locationsCount = App.content.getContentOfType(ElementType.LOCATION.getType()).size();
 
             boolean relocateEnabled = !this.viewModel.longClickedElement.isRootLocation()
                     && (this.viewModel.longClickedElement.isLocation()
-                        ? (locationsCount - 1) > 1
-                        : locationsCount > 1);
+                    ? (locationsCount - 1) > 1
+                    : locationsCount > 1);
 
             PopupMenuAgent.getMenu()
                     .add(PopupItem.ADD)
@@ -314,14 +313,14 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_LOCATIONS,
-                        this.viewModel.longClickedElement.getChildrenOfType(Location.class));
+                        this.viewModel.longClickedElement.getChildrenOfType(ElementType.LOCATION.getType()));
                 break;
 
             case SORT_PARKS:
                 ActivityDistributor.startActivitySortForResult(
                         ShowLocationsActivity.this,
                         RequestCode.SORT_PARKS,
-                        this.viewModel.longClickedElement.getChildrenOfType(Park.class));
+                        this.viewModel.longClickedElement.getChildrenOfType(ElementType.PARK.getType()));
                 break;
 
             case ADD_LOCATION:

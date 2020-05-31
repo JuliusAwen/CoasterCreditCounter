@@ -27,6 +27,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.IStatistic;
 import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticType;
 import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
@@ -588,52 +589,70 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     // endregion FloatingActionButton
 
-    // region ContentRecyclerViewAdapter
+    // region ContentRecyclerViewAdapterOnClickListener
 
-
-
-
-
-
-
-    protected View.OnClickListener createDefaultOnClickListener()
+    protected View.OnClickListener createOnElementTypeClickListener(ElementType elementType)
     {
-        return new View.OnClickListener()
+        Log.v(String.format("%s", elementType));
+        return new OnElementTypeClickListener(elementType, this);
+    }
+
+    private static class OnElementTypeClickListener implements View.OnClickListener
+    {
+        private final ElementType elementType;
+        private final BaseActivity baseActivity;
+
+        protected OnElementTypeClickListener(ElementType elementType, BaseActivity baseActivity)
         {
-            @Override
-            public void onClick(View view)
-            {
-                Log.v("OnClick registered");
-                handleDefaultOnClick(view);
-            }
-        };
-    }
+            this.elementType = elementType;
+            this.baseActivity = baseActivity;
+        }
 
-    protected void handleDefaultOnClick(View view)
-    {
-        Log.w(String.format("[%s] does not override method - unhandled", this.getClass().getSimpleName()));
-    }
-
-    protected View.OnLongClickListener createDefaultOnLongClickListener()
-    {
-        return new View.OnLongClickListener()
+        @Override
+        public void onClick(View view)
         {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                Log.v("OnLongClick registered");
-                return handleDefaultOnLongClick(view);
-            }
-        };
+            Log.i(String.format("%s %s clicked", this.elementType, view.getTag()));
+            this.baseActivity.handleOnElementTypeClick(this.elementType, view);
+        }
     }
 
-    protected boolean handleDefaultOnLongClick(View view)
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
     {
-        Log.w(String.format("[%s] does not override method - unhandled", this.getClass().getSimpleName()));
+        Log.e(String.format("unhandled click on %s", elementType));
+    }
+
+    protected View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType)
+    {
+        Log.v(String.format("%s", elementType));
+        return new OnElementTypeLongClickListener(elementType, this);
+    }
+
+    private static class OnElementTypeLongClickListener implements View.OnLongClickListener
+    {
+        private final ElementType elementType;
+        private final BaseActivity baseActivity;
+
+        protected OnElementTypeLongClickListener(ElementType elementType, BaseActivity baseActivity)
+        {
+            this.elementType = elementType;
+            this.baseActivity = baseActivity;
+        }
+
+        @Override
+        public boolean onLongClick(View view)
+        {
+            Log.i(String.format("%s %s long clicked", this.elementType, view.getTag()));
+            return this.baseActivity.handleOnElementTypeLongClick(this.elementType, view);
+        }
+    }
+
+    protected boolean handleOnElementTypeLongClick(ElementType elementType, View view)
+    {
+        Log.e(String.format("unhandled long click on %s", elementType));
         return false;
     }
 
-    // endregion ContentRecyclerViewAdapter
+    // endregion ContentRecyclerViewAdapterOnClickListener
 
     // region Statistics
 
