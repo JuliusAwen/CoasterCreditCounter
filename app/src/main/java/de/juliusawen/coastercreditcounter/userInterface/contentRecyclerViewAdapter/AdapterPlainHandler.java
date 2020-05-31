@@ -12,6 +12,7 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -21,15 +22,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 {
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
-
-    @Deprecated
-    AdapterPlainHandler()
-    {
-        super();
-        this.internalOnClickListener = this.getInternalOnClickListener();
-        this.internalOnLongClickListener = this.getInternalOnLongClickListener();
-        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
 
     AdapterPlainHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
@@ -116,11 +108,11 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         }
         else
         {
-            for(Class<? extends IElement> type : super.getExternalOnClickListenersByType().keySet())
+            for(ElementType elementType : super.getExternalOnClickListenersByType().keySet())
             {
-                if(type.isAssignableFrom(item.getClass()))
+                if(elementType.getType().isAssignableFrom(item.getClass()))
                 {
-                    return super.getExternalOnClickListenersByType().get(type);
+                    return super.getExternalOnClickListenersByType().get(elementType);
                 }
             }
         }
@@ -151,11 +143,11 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         }
         else
         {
-            for(Class<? extends IElement> type : super.getExternalOnLongClickListenersByType().keySet())
+            for(ElementType elementType : super.getExternalOnLongClickListenersByType().keySet())
             {
-                if(type.isAssignableFrom(item.getClass()))
+                if(elementType.getType().isAssignableFrom(item.getClass()))
                 {
-                    return super.getExternalOnLongClickListenersByType().get(type);
+                    return super.getExternalOnLongClickListenersByType().get(elementType);
                 }
             }
         }

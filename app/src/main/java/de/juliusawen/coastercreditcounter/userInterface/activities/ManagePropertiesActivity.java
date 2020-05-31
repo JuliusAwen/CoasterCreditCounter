@@ -92,7 +92,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
-                this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(ElementType.IPROPERTY.getType(), super.createOnElementTypeClickListener(ElementType.IPROPERTY));
+                this.viewModel.adapterFacade.getConfiguration().addOnElementTypeClickListener(ElementType.IPROPERTY, super.createOnElementTypeClickListener(ElementType.IPROPERTY));
             }
             else //ManageMode
             {
@@ -105,7 +105,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
                 this.viewModel.adapterFacade.getConfiguration()
-                        .addOnLongClickListenerByType(ElementType.IPROPERTY.getType(), super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
+                        .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
             }
 
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
@@ -123,7 +123,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
             this.viewModel.adapterFacade.getConfiguration()
-                    .addOnClickListenerByType(ElementType.IGROUP_HEADER.getType(), super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
+                    .addOnElementTypeClickListener(ElementType.IGROUP_HEADER, super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -142,7 +142,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode != RESULT_OK)
         {

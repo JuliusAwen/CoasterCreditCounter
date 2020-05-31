@@ -67,12 +67,12 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
 
             this.viewModel.adapterFacade.getConfiguration()
-                    .addOnClickListenerByType(ElementType.LOCATION.getType(), super.createOnElementTypeClickListener(ElementType.LOCATION))
-                    .addOnClickListenerByType(ElementType.PARK.getType(), super.createOnElementTypeClickListener(ElementType.PARK))
-                    .addOnLongClickListenerByType(ElementType.IELEMENT.getType(), super.createOnElementTypeLongClickListener(ElementType.IELEMENT));
+                    .addOnElementTypeClickListener(ElementType.LOCATION, super.createOnElementTypeClickListener(ElementType.LOCATION))
+                    .addOnElementTypeClickListener(ElementType.PARK, super.createOnElementTypeClickListener(ElementType.PARK))
+                    .addOnElementTypeLongClickListener(ElementType.IELEMENT, super.createOnElementTypeLongClickListener(ElementType.IELEMENT));
 
-            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
-            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode)
+                    .setContent(this.viewModel.currentLocation);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
@@ -102,7 +102,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {

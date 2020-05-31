@@ -43,6 +43,10 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                         .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                 break;
             }
+
+            default:
+                Log.v(String.format("no preset found for %s and %s", requestCode, elementType));
+                break;
         }
     }
 
@@ -181,6 +185,10 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                                 .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
                                 .addTypefaceForElementType(ElementType.STATUS, Typeface.BOLD);
                         break;
+
+                    default:
+                        Log.v(String.format("no preset found for %s and %s", requestCode, groupType));
+                        break;
                 }
 
                 decoration.addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
@@ -190,7 +198,7 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
 
     public static void applyDecorationPreset(ContentRecyclerViewDecoration decoration, RequestCode requestCode)
     {
-        Log.d(String.format("RequestCode[%s]...", requestCode));
+        Log.d(String.format("%s...", requestCode));
 
         decoration.resetStyles();
 
@@ -212,6 +220,24 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
 
             case SORT_LOCATIONS:
             case SORT_PARKS:
+            {
+                decoration
+                        .addTypefaceForElementType(ElementType.IELEMENT, Typeface.BOLD);
+                break;
+            }
+
+            case MANAGE_CREDIT_TYPES:
+            case MANAGE_CATEGORIES:
+            case MANAGE_MANUFACTURERS:
+            case MANAGE_MODELS:
+            case MANAGE_STATUSES:
+
+            case PICK_CREDIT_TYPE:
+            case PICK_CATEGORY:
+            case PICK_MANUFACTURER:
+            case PICK_MODEL:
+            case PICK_STATUS:
+
             case SORT_ATTRACTIONS:
             case SORT_CREDIT_TYPES:
             case SORT_CATEGORIES:
@@ -220,30 +246,14 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case SORT_STATUSES:
             {
                 decoration
-                        .addTypefaceForElementType(ElementType.IELEMENT, Typeface.BOLD)
-                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                        .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
-                break;
-            }
-
-            case PICK_CREDIT_TYPE:
-            case PICK_CATEGORY:
-            case PICK_MANUFACTURER:
-            case PICK_MODEL:
-            case PICK_STATUS:
-            case MANAGE_CREDIT_TYPES:
-            case MANAGE_CATEGORIES:
-            case MANAGE_MANUFACTURERS:
-            case MANAGE_MODELS:
-            case MANAGE_STATUSES:
-            {
-                decoration
                         .addTypefaceForElementType(ElementType.IPROPERTY, Typeface.BOLD)
                         .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
                 break;
             }
+
+            default:
+                Log.v(String.format("no preset found for %s", requestCode));
+                break;
         }
 
         decoration

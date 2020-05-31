@@ -95,4 +95,9 @@ public enum RequestCode
             return values()[0];
         }
     }
+
+    public String toString()
+    {
+        return String.format("RequestCode[%s]", this.name());
+    }
 }

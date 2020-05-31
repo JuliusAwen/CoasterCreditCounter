@@ -18,26 +18,10 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implements IContentRecyclerViewAdapter
 {
-    @Deprecated
-    ContentRecyclerViewAdapter()
-    {
-        super();
-        Log.frame(LogLevel.INFO, "instantiated", '#', true);
-    }
-
     public ContentRecyclerViewAdapter(ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(configuration);
         Log.frame(LogLevel.INFO, "instantiated", '#', true);
-    }
-
-    @Deprecated
-    @Override
-    public void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
-    {
-        Log.v("configuring...");
-        super.setConfiguration(configuration);
-        Log.wrap(LogLevel.DEBUG, String.format("Configuration details:\n\n%s\n%s", configuration, configuration.getDecoration()), '=', false);
     }
 
     @Override

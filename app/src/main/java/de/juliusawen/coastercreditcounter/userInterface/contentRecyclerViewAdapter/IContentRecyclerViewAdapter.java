@@ -7,8 +7,6 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 
 public interface IContentRecyclerViewAdapter
 {
-    void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration); //Todo: remove and handle via constructor (deprecated)
-
     void notifySomethingChanged();
 
     void setContent(List<IElement> content);
@@ -24,7 +22,7 @@ public interface IContentRecyclerViewAdapter
     void scrollToItem(IElement element);
 
     void groupContent(GroupType groupType);
-    GroupType getGroupType(); //Todo: remove and handle via Config
+    GroupType getGroupType();
 
 
     void toggleExpansion(IElement element);

@@ -12,13 +12,6 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterDecorationHandler extends AdapterPlainHandler
 {
-    @Deprecated
-    AdapterDecorationHandler()
-    {
-        super();
-        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
     AdapterDecorationHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(configuration);

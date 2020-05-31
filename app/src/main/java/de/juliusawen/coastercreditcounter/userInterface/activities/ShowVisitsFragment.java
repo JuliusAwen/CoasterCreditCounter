@@ -96,7 +96,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(String.format("RequestCode[%s], ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {

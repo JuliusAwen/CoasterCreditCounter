@@ -7,18 +7,18 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class ContentRecyclerViewAdapterConfiguration
 {
-    private final Map<Class<? extends IElement>, View.OnClickListener> onClickListenersByType = new HashMap<>();
-    private final Map<Class<? extends IElement>, View.OnLongClickListener> onLongClickListenersByType = new HashMap<>();
+    private final Map<ElementType, View.OnClickListener> onClickListenersByElementType = new HashMap<>();
+    private final Map<ElementType, View.OnLongClickListener> onLongClickListenersByElementType = new HashMap<>();
 
     private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
 
-    private final LinkedHashSet<Class<? extends IElement>> relevantChildTypes = new LinkedHashSet<>();
+    private final LinkedHashSet<ElementType> relevantChildTypes = new LinkedHashSet<>();
 
     private boolean isSelecetable = false;
     private boolean isMultipleSelection = false;
@@ -31,27 +31,27 @@ public class ContentRecyclerViewAdapterConfiguration
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
-    Map<Class<? extends IElement>, View.OnClickListener> getOnClickListenersByType()
+    Map<ElementType, View.OnClickListener> getOnClickListenersByElementType()
     {
-        return this.onClickListenersByType;
+        return this.onClickListenersByElementType;
     }
 
-    Map<Class<? extends IElement>, View.OnLongClickListener> getOnLongClickListenersByType()
+    Map<ElementType, View.OnLongClickListener> getOnLongClickListenersByElementType()
     {
-        return this.onLongClickListenersByType;
+        return this.onLongClickListenersByElementType;
     }
 
-    public ContentRecyclerViewAdapterConfiguration addOnClickListenerByType(Class<? extends IElement> type, View.OnClickListener onClickListener)
+    public ContentRecyclerViewAdapterConfiguration addOnElementTypeClickListener(ElementType elementType, View.OnClickListener onClickListener)
     {
-        this.onClickListenersByType.put(type, onClickListener);
-        Log.v(String.format("for [%s]", type.getSimpleName()));
+        this.onClickListenersByElementType.put(elementType, onClickListener);
+        Log.v(String.format("%s", elementType));
         return this;
     }
 
-    public ContentRecyclerViewAdapterConfiguration addOnLongClickListenerByType(Class<? extends IElement> type, View.OnLongClickListener onLongClickListener)
+    public ContentRecyclerViewAdapterConfiguration addOnElementTypeLongClickListener(ElementType elementType, View.OnLongClickListener onLongClickListener)
     {
-        this.onLongClickListenersByType.put(type, onLongClickListener);
-        Log.v(String.format("for [%s]", type.getSimpleName()));
+        this.onLongClickListenersByElementType.put(elementType, onLongClickListener);
+        Log.v(String.format("%s", elementType));
         return this;
     }
 
@@ -85,28 +85,27 @@ public class ContentRecyclerViewAdapterConfiguration
         this.isMultipleSelection = isMultipleSelection;
     }
 
-    LinkedHashSet<Class<? extends IElement>> getRelevantChildTypes()
+    LinkedHashSet<ElementType> getRelevantChildTypes()
     {
         return this.relevantChildTypes;
     }
 
-    public void addRelevantChildTypes(LinkedHashSet<Class<? extends IElement>> relevantChildTypes)
+    public void addRelevantChildTypes(LinkedHashSet<ElementType> relevantChildTypes)
     {
         this.relevantChildTypes.addAll(relevantChildTypes);
 
         StringBuilder relevantChildTypesString = new StringBuilder();
-        for(Class<? extends IElement> type : relevantChildTypes)
+        for(ElementType elementType : relevantChildTypes)
         {
-            relevantChildTypesString.append(String.format(" [%s]", type.getSimpleName()));
+            relevantChildTypesString.append(String.format(" %s", elementType));
         }
-
         Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types:%s", relevantChildTypes.size(), relevantChildTypesString));
     }
 
-    public void addRelevantChildType(Class<? extends IElement> relevantChildType)
+    public void addRelevantChildType(ElementType relevantChildType)
     {
         this.relevantChildTypes.add(relevantChildType);
-        Log.v(String.format("added [%s] as relevant child type", relevantChildType));
+        Log.v(String.format("added %s as relevant child type", relevantChildType));
     }
 
     public boolean useBottomSpacer()
@@ -123,21 +122,21 @@ public class ContentRecyclerViewAdapterConfiguration
     public String toString()
     {
         StringBuilder childTypesString = new StringBuilder();
-        for(Class<? extends IElement> type : this.getRelevantChildTypes())
+        for(ElementType elementType : this.getRelevantChildTypes())
         {
-            childTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+            childTypesString.append(String.format("        %s\n", elementType));
         }
 
         StringBuilder onClickListenerTypesString = new StringBuilder();
-        for(Class<? extends IElement> type : this.onClickListenersByType.keySet())
+        for(ElementType elementType : this.onClickListenersByElementType.keySet())
         {
-            onClickListenerTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+            onClickListenerTypesString.append(String.format("        %s\n", elementType));
         }
 
         StringBuilder onLongClickListenerTypesString = new StringBuilder();
-        for(Class<? extends IElement> type : this.onLongClickListenersByType.keySet())
+        for(ElementType elementType : this.onLongClickListenersByElementType.keySet())
         {
-            onLongClickListenerTypesString.append(String.format("        [%s]\n", type.getSimpleName()));
+            onLongClickListenerTypesString.append(String.format("        %s\n", elementType));
         }
 
         return String.format(Locale.getDefault(),
@@ -149,8 +148,8 @@ public class ContentRecyclerViewAdapterConfiguration
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
-                this.onClickListenersByType.size(), onClickListenerTypesString,
-                this.onLongClickListenersByType.size(), onLongClickListenerTypesString
+                this.onClickListenersByElementType.size(), onClickListenerTypesString,
+                this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString
         );
     }
 }

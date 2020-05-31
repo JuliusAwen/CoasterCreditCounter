@@ -18,13 +18,6 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
 {
     private final LinkedList<IElement> selectedItemsInOrderOfSelection = new LinkedList<>();
 
-    @Deprecated
-    AdapterSelectionHandler()
-    {
-        super();
-        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
     AdapterSelectionHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(configuration);

@@ -15,23 +15,26 @@ public class ContentRecyclerViewAdapterFacade
         this.configuration = new ContentRecyclerViewAdapterConfiguration(this.decoration);
     }
 
-    public void createDefaultAdapter()
+    public IContentRecyclerViewAdapter createDefaultAdapter()
     {
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
+        return this.adapter;
     }
 
-    public void createPreconfiguredAdapter(RequestCode requestCode)
+    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
+        return this.adapter;
     }
 
-    public void createPreconfiguredAdapter(RequestCode requestCode, ElementType elementType)
+    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode, ElementType elementType)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
+        return this.adapter;
     }
 
     public ContentRecyclerViewDecoration getDecoration()
@@ -49,7 +52,7 @@ public class ContentRecyclerViewAdapterFacade
         return this.adapter;
     }
 
-    public void applyDecorationPreset(RequestCode requestCode)
+    public ContentRecyclerViewAdapterFacade applyDecorationPreset(RequestCode requestCode)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
 
@@ -57,9 +60,11 @@ public class ContentRecyclerViewAdapterFacade
         {
             this.adapter.notifyDataSetChanged();
         }
+
+        return this;
     }
 
-    public void applyDecorationPreset(RequestCode requestCode, ElementType elementType)
+    public ContentRecyclerViewAdapterFacade applyDecorationPreset(RequestCode requestCode, ElementType elementType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
 
@@ -67,11 +72,15 @@ public class ContentRecyclerViewAdapterFacade
         {
             this.adapter.notifyDataSetChanged();
         }
+
+        return this;
     }
 
-    public void setDetailModesAndGroupContent(RequestCode requestCode, GroupType groupType)
+    public ContentRecyclerViewAdapterFacade setDetailModesAndGroupContent(RequestCode requestCode, GroupType groupType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
         this.adapter.groupContent(groupType);
+
+        return this;
     }
 }

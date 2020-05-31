@@ -22,13 +22,6 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     private final HashMap<IElement, Integer> generationByItem = new HashMap<>();
     private final HashSet<IElement> expandedItems = new HashSet<>();
 
-    @Deprecated
-    AdapterExpansionHandler()
-    {
-        super();
-        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
     AdapterExpansionHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
         super(configuration);

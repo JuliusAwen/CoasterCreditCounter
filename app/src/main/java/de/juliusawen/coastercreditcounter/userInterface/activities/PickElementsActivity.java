@@ -147,7 +147,7 @@ public class PickElementsActivity extends BaseActivity
             this.decorateFloatingActionButtonCheck();
         }
 
-        Log.d(String.format("RequestCode[%s], isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
+        Log.d(String.format("%s, isSinglePick[%s]", this.viewModel.requestCode, this.viewModel.isSinglePick));
     }
 
     private void decorateFloatingActionButtonCheck()

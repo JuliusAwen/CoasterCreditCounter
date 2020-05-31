@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
@@ -26,13 +27,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     private GroupType groupType = GroupType.NONE;
     private final GroupHeaderProvider groupHeaderProvider;
-
-    @Deprecated
-    AdapterContentHandler()
-    {
-        this.groupHeaderProvider = new GroupHeaderProvider();
-        Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
 
     AdapterContentHandler(ContentRecyclerViewAdapterConfiguration configuration)
     {
@@ -67,7 +61,8 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return !this.getRelevantChildTypes().isEmpty();
     }
 
-    protected LinkedHashSet<Class<? extends IElement>> getRelevantChildTypes()
+
+    protected LinkedHashSet<ElementType> getRelevantChildTypes()
     {
         return this.configuration.getRelevantChildTypes();
     }
@@ -84,17 +79,17 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected boolean hasExternalOnClickListeners()
     {
-        return !(this.configuration.getOnClickListenersByType().isEmpty() && this.configuration.getOnLongClickListenersByType().isEmpty());
+        return !(this.configuration.getOnClickListenersByElementType().isEmpty() && this.configuration.getOnLongClickListenersByElementType().isEmpty());
     }
 
-    protected Map<Class<? extends IElement>, View.OnClickListener> getExternalOnClickListenersByType()
+    protected Map<ElementType, View.OnClickListener> getExternalOnClickListenersByType()
     {
-        return this.configuration.getOnClickListenersByType();
+        return this.configuration.getOnClickListenersByElementType();
     }
 
-    protected Map<Class<? extends IElement>, View.OnLongClickListener> getExternalOnLongClickListenersByType()
+    protected Map<ElementType, View.OnLongClickListener> getExternalOnLongClickListenersByType()
     {
-        return this.configuration.getOnLongClickListenersByType();
+        return this.configuration.getOnLongClickListenersByElementType();
     }
 
     @Override
@@ -270,10 +265,10 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         for(IElement child : item.getChildren())
         {
-            for(Class<? extends IElement> childType : this.getRelevantChildTypes())
+            for(ElementType childType : this.getRelevantChildTypes())
             {
 
-                if(childType.isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
+                if(childType.getType().isAssignableFrom(child.getClass()) && !distinctRelevantChildren.contains(child))
                 {
                     distinctRelevantChildren.add(child);
                     break;
