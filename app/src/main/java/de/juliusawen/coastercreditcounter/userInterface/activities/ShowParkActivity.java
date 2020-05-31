@@ -25,7 +25,7 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
-import de.juliusawen.coastercreditcounter.enums.Tab;
+import de.juliusawen.coastercreditcounter.enums.ShowParkTab;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
@@ -96,7 +96,7 @@ public class ShowParkActivity extends BaseActivity implements
     {
         OptionsItem optionsItem = super.getOptionsItem(item);
 
-        if(this.getCurrentTab() == Tab.SHOW_VISITS)
+        if(this.getCurrentTab() == ShowParkTab.SHOW_VISITS)
         {
             switch(optionsItem)
             {
@@ -186,9 +186,9 @@ public class ShowParkActivity extends BaseActivity implements
         super.markForUpdate(elementToUpdate);
     }
 
-    private Tab getCurrentTab()
+    private ShowParkTab getCurrentTab()
     {
-        return Tab.values()[this.viewPager.getCurrentItem()];
+        return ShowParkTab.values()[this.viewPager.getCurrentItem()];
     }
 
     private void createTabPagerAdapter()
@@ -216,7 +216,7 @@ public class ShowParkActivity extends BaseActivity implements
             @Override
             public void onPageSelected(int position)
             {
-                onPageSelectedViewPager(Tab.values()[position]);
+                onPageSelectedViewPager(ShowParkTab.values()[position]);
             }
 
             @Override
@@ -226,16 +226,16 @@ public class ShowParkActivity extends BaseActivity implements
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         this.viewPager.setCurrentItem(this.viewPager.getCurrentItem());
-        this.onPageSelectedViewPager(Tab.values()[this.viewPager.getCurrentItem()]);
+        this.onPageSelectedViewPager(ShowParkTab.values()[this.viewPager.getCurrentItem()]);
 
-        Log.d(String.format(Locale.getDefault(), "adapter created with [%d] tabs, selected tab[%s]", tabLayout.getTabCount(), Tab.values()[this.viewPager.getCurrentItem()]));
+        Log.d(String.format(Locale.getDefault(), "adapter created with [%d] tabs, selected tab[%s]", tabLayout.getTabCount(), ShowParkTab.values()[this.viewPager.getCurrentItem()]));
     }
 
-    private void onPageSelectedViewPager(Tab tab)
+    private void onPageSelectedViewPager(ShowParkTab showParkTab)
     {
-        Log.i(String.format("selected tab [%s]", tab));
+        Log.i(String.format("selected tab [%s]", showParkTab));
 
-        switch(tab)
+        switch(showParkTab)
         {
             case SHOW_PARK_OVERVIEW:
                 super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_overview), this.viewModel.park.getName());
@@ -253,12 +253,12 @@ public class ShowParkActivity extends BaseActivity implements
                 break;
         }
 
-        this.decorateFloatingActionButton(tab);
+        this.decorateFloatingActionButton(showParkTab);
     }
 
-    private void decorateFloatingActionButton(Tab tab)
+    private void decorateFloatingActionButton(ShowParkTab showParkTab)
     {
-        switch(tab)
+        switch(showParkTab)
         {
             case SHOW_PARK_OVERVIEW:
             {
@@ -335,7 +335,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             Log.v(String.format(Locale.getDefault(), "returning fragment for tab position [%d]", position));
 
-            switch(Tab.values()[position])
+            switch(ShowParkTab.values()[position])
             {
                 case SHOW_PARK_OVERVIEW:
                 {
@@ -363,7 +363,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             Fragment instantiatedFragment = (Fragment)super.instantiateItem(container, position);
 
-            switch(Tab.values()[position])
+            switch(ShowParkTab.values()[position])
             {
                 case SHOW_PARK_OVERVIEW:
                 {
@@ -395,7 +395,7 @@ public class ShowParkActivity extends BaseActivity implements
         @Override
         public int getCount()
         {
-            return Tab.values().length;
+            return ShowParkTab.values().length;
         }
 
         View getTabTitleView(int position)

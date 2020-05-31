@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.enums;
 
-public enum Tab
+public enum ShowParkTab
 {
     SHOW_PARK_OVERVIEW,
     SHOW_ATTRACTIONS,

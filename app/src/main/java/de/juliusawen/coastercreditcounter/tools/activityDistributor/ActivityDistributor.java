@@ -14,7 +14,7 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
-import de.juliusawen.coastercreditcounter.enums.Tab;
+import de.juliusawen.coastercreditcounter.enums.ShowParkTab;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -51,7 +51,7 @@ public abstract class ActivityDistributor
 
             case SHOW_PARK:
                 intent = new Intent(context, ShowParkActivity.class);
-                intent.putExtra(Constants.EXTRA_DEFAULT_TAB, Tab.SHOW_ATTRACTIONS.ordinal());
+                intent.putExtra(Constants.EXTRA_DEFAULT_TAB, ShowParkTab.SHOW_ATTRACTIONS.ordinal());
                 break;
 
             case SHOW_VISIT:
@@ -591,7 +591,7 @@ public abstract class ActivityDistributor
 
         Intent showParkIntent = new Intent(context, ShowParkActivity.class);
         showParkIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.SHOW_PARK.ordinal());
-        showParkIntent.putExtra(Constants.EXTRA_DEFAULT_TAB, Tab.SHOW_VISITS.ordinal());
+        showParkIntent.putExtra(Constants.EXTRA_DEFAULT_TAB, ShowParkTab.SHOW_VISITS.ordinal());
         showParkIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getParent().getUuid().toString());
 
         Intent showVisitIntent = new Intent(context, ShowVisitActivity.class);
