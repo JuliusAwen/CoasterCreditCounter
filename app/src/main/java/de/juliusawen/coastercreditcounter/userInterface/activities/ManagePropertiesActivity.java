@@ -123,7 +123,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
             this.viewModel.adapterFacade.getConfiguration()
-                    .addOnClickListenerByType(ElementType.GROUP_HEADER.getType(), super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
+                    .addOnClickListenerByType(ElementType.IGROUP_HEADER.getType(), super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
         }
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
@@ -285,7 +285,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 this.handleOnPropertyClick(element);
                 break;
 
-            case GROUP_HEADER:
+            case IGROUP_HEADER:
                 this.handleOnGroupHeaderClick(element);
                 break;
 
