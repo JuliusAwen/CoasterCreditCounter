@@ -46,7 +46,6 @@ import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailDisplayMode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.DetailType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
@@ -1493,12 +1492,6 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.useDedicatedExpansionOnClickListener = useDedicatedExpansionOnClickListener;
         Log.v(String.format("set to [%S]", useDedicatedExpansionOnClickListener));
         return this;
-    }
-
-    @Override
-    public void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
-    {
-        throw new IllegalAccessError();
     }
 
     @Override
