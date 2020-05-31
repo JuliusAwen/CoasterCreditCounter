@@ -1,22 +1,27 @@
 package de.juliusawen.coastercreditcounter.dataModel.elements.properties;
 
-import de.juliusawen.coastercreditcounter.enums.ButtonFunction;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
-public enum PropertyType
+public enum ElementType
 {
-    INVALID,
+    IELEMENT,
+
+    LOCATION,
+    PARK,
+    VISI,
+
+    IPROPERTY,
     CREDIT_TYPE,
     CATEGORY,
     MANUFACTURER,
     MODEL,
     STATUS;
 
-    public static PropertyType getValue(int ordinal)
+    public static ElementType getValue(int ordinal)
     {
-        if(ButtonFunction.values().length >= ordinal)
+        if(ElementType.values().length >= ordinal)
         {
-            return PropertyType.values()[ordinal];
+            return ElementType.values()[ordinal];
         }
         else
         {

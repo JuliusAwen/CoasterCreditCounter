@@ -590,6 +590,12 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     // region ContentRecyclerViewAdapter
 
+
+
+
+
+
+
     protected View.OnClickListener createDefaultOnClickListener()
     {
         return new View.OnClickListener()

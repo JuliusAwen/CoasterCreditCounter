@@ -13,7 +13,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.enums.ShowParkTab;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -121,7 +121,7 @@ public abstract class ActivityDistributor
         {
             case MANAGE_CREDIT_TYPES:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CREDIT_TYPE.ordinal());
                 toolbarTitle = context.getString(R.string.credit_type);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.credit_types));
@@ -130,7 +130,7 @@ public abstract class ActivityDistributor
 
             case MANAGE_CATEGORIES:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CATEGORY.ordinal());
                 toolbarTitle = context.getString(R.string.category);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.categories));
@@ -139,7 +139,7 @@ public abstract class ActivityDistributor
 
             case MANAGE_MANUFACTURERS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MANUFACTURER.ordinal());
                 toolbarTitle = context.getString(R.string.manufacturer);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.manufacturers));
@@ -148,7 +148,7 @@ public abstract class ActivityDistributor
 
             case MANAGE_MODELS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MODEL.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MODEL.ordinal());
                 toolbarTitle = context.getString(R.string.model);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.models));
@@ -157,7 +157,7 @@ public abstract class ActivityDistributor
 
             case MANAGE_STATUSES:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.STATUS.ordinal());
                 toolbarTitle = context.getString(R.string.status);
                 toolbarSubtitle = context.getString(R.string.subtitle_management);
                 helpTitle = context.getString(R.string.help_title_manage_property, context.getString(R.string.statuses));
@@ -461,7 +461,7 @@ public abstract class ActivityDistributor
 
             case PICK_CREDIT_TYPE:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CREDIT_TYPE.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CREDIT_TYPE.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_credit_type));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
@@ -470,7 +470,7 @@ public abstract class ActivityDistributor
 
             case PICK_CATEGORY:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.CATEGORY.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CATEGORY.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_category));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_category);
@@ -479,7 +479,7 @@ public abstract class ActivityDistributor
 
             case PICK_MANUFACTURER:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MANUFACTURER.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MANUFACTURER.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_manufacturer));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_manufacturer);
@@ -488,7 +488,7 @@ public abstract class ActivityDistributor
 
             case PICK_MODEL:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.MODEL.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MODEL.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_model));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_model);
@@ -497,7 +497,7 @@ public abstract class ActivityDistributor
 
             case PICK_STATUS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
-                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, PropertyType.STATUS.ordinal());
+                intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.STATUS.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_status));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_status);

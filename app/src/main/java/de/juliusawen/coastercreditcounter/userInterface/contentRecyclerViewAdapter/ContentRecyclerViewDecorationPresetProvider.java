@@ -10,21 +10,21 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttrac
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public abstract class ContentRecyclerViewDecorationPresetProvider
 {
-    public static void applyDecorationPreset(ContentRecyclerViewDecoration decoration, RequestCode requestCode, PropertyType propertyType)
+    public static void applyDecorationPreset(ContentRecyclerViewDecoration decoration, RequestCode requestCode, ElementType elementType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(decoration, requestCode);
 
-        switch(propertyType)
+        switch(elementType)
         {
             case CREDIT_TYPE:
             case STATUS:

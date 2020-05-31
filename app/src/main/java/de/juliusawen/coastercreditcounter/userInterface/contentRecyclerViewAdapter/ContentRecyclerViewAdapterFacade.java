@@ -1,6 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 
 public class ContentRecyclerViewAdapterFacade
@@ -27,10 +27,10 @@ public class ContentRecyclerViewAdapterFacade
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
     }
 
-    public void createPreconfiguredAdapter(RequestCode requestCode, PropertyType propertyType)
+    public void createPreconfiguredAdapter(RequestCode requestCode, ElementType elementType)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
-        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, propertyType);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
     }
 
@@ -59,9 +59,9 @@ public class ContentRecyclerViewAdapterFacade
         }
     }
 
-    public void applyDecorationPreset(RequestCode requestCode, PropertyType propertyType)
+    public void applyDecorationPreset(RequestCode requestCode, ElementType elementType)
     {
-        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, propertyType);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
 
         if(this.adapter != null)
         {

@@ -28,10 +28,10 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteA
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.PropertyType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
@@ -79,9 +79,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 || this.viewModel.requestCode == RequestCode.PICK_MODEL
                 || this.viewModel.requestCode == RequestCode.PICK_STATUS;
 
-        if(this.viewModel.propertyTypeToManage == null)
+        if(this.viewModel.typeToManage == null)
         {
-            this.viewModel.propertyTypeToManage = PropertyType.getValue(getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1));
+            this.viewModel.typeToManage = ElementType.getValue(getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1));
         }
 
         if(this.viewModel.adapterFacade == null)
@@ -105,7 +105,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING);
                 }
 
-                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.propertyTypeToManage);
+                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
                 this.viewModel.adapterFacade.getConfiguration().addOnLongClickListenerByType(IProperty.class, this.createOnPropertyLongClickListener());
             }
 
@@ -120,7 +120,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
         }
 
-        if(this.viewModel.propertyTypeToManage == PropertyType.MODEL)
+        if(this.viewModel.typeToManage == ElementType.MODEL)
         {
             this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
             this.viewModel.adapterFacade.getConfiguration().addOnClickListenerByType(IGroupHeader.class, this.createOnGroupHeaderClickListener());
@@ -196,7 +196,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
                 for(IElement element : resultElements)
                 {
-                    switch(this.viewModel.propertyTypeToManage)
+                    switch(this.viewModel.typeToManage)
                     {
                         case CREDIT_TYPE:
                             ((Attraction) element).setCreditType((CreditType) this.viewModel.longClickedElement);
@@ -333,7 +333,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
 
-        if(!this.viewModel.isSelectionMode && this.viewModel.propertyTypeToManage != PropertyType.MODEL)
+        if(!this.viewModel.isSelectionMode && this.viewModel.typeToManage != ElementType.MODEL)
         {
             popupMenuAgent
                     .add(PopupItem.ASSIGN_TO_ATTRACTIONS)
@@ -341,7 +341,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
 
         boolean longClickedPropertyIsDefault = this.fetchPropertyType().cast(this.viewModel.longClickedElement).isDefault();
-        boolean isSetAsDefaultVisible = !this.viewModel.propertyTypeToManage.equals(PropertyType.CREDIT_TYPE) && !this.viewModel.propertyTypeToManage.equals(PropertyType.MODEL);
+        boolean isSetAsDefaultVisible = !this.viewModel.typeToManage.equals(ElementType.CREDIT_TYPE) && !this.viewModel.typeToManage.equals(ElementType.MODEL);
 
         popupMenuAgent
                 .add(PopupItem.EDIT_ELEMENT)
@@ -392,7 +392,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         List<IAttraction> possibleAttractionsToAssignTo = new LinkedList<>(ConvertTool.convertElementsToType(elementsToAssignTo, IAttraction.class));
 
         RequestCode requestCode = null;
-        switch(this.viewModel.propertyTypeToManage)
+        switch(this.viewModel.typeToManage)
         {
             case CREDIT_TYPE:
             {
@@ -472,7 +472,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
             return;
         }
 
@@ -483,7 +483,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         RequestCode requestCode = null;
 
-        switch(this.viewModel.propertyTypeToManage)
+        switch(this.viewModel.typeToManage)
         {
             case CREDIT_TYPE:
                 requestCode = RequestCode.EDIT_CREDIT_TYPE;
@@ -523,7 +523,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
             return;
         }
 
@@ -537,7 +537,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         {
             String defaultName;
 
-            switch(this.viewModel.propertyTypeToManage)
+            switch(this.viewModel.typeToManage)
             {
                 case CREDIT_TYPE:
                     defaultName = CreditType.getDefault().getName();
@@ -627,7 +627,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 case SET_AS_DEFAULT:
                 {
-                    switch(this.viewModel.propertyTypeToManage)
+                    switch(this.viewModel.typeToManage)
                     {
                         case CREDIT_TYPE:
                         case MODEL:
@@ -656,7 +656,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    Log.d(String.format("[%s]:: setting %s as default [%s]", requestCode, this.viewModel.longClickedElement, this.viewModel.propertyTypeToManage));
+                    Log.d(String.format("[%s]:: setting %s as default [%s]", requestCode, this.viewModel.longClickedElement, this.viewModel.typeToManage));
                     break;
                 }
             }
@@ -682,7 +682,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 for(IAttraction child : children)
                 {
-                    switch(this.viewModel.propertyTypeToManage)
+                    switch(this.viewModel.typeToManage)
                     {
                         case CREDIT_TYPE:
                             child.setCreditType(CreditType.getDefault());
@@ -733,7 +733,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         Log.i("FloatingActionButton clicked");
 
         RequestCode requestCode = null;
-        switch(this.viewModel.propertyTypeToManage)
+        switch(this.viewModel.typeToManage)
         {
             case CREDIT_TYPE:
                 requestCode = RequestCode.CREATE_CREDIT_TYPE;
@@ -758,7 +758,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(requestCode == null)
         {
-            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.propertyTypeToManage));
+            Log.e(String.format("not able to determine RequestCode for PropertyType[%s]", this.viewModel.typeToManage));
             return;
         }
 
@@ -767,7 +767,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private Class<? extends IProperty> fetchPropertyType()
     {
-        switch(this.viewModel.propertyTypeToManage)
+        switch(this.viewModel.typeToManage)
         {
             case CREDIT_TYPE:
                 return CreditType.class;
