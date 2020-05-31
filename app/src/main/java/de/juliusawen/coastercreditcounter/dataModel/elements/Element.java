@@ -232,6 +232,7 @@ public abstract class Element implements IElement
                 children.add(element);
             }
         }
+        
         return children;
     }
 
@@ -245,6 +246,7 @@ public abstract class Element implements IElement
                 children.add(type.cast(element));
             }
         }
+
         return children;
     }
 

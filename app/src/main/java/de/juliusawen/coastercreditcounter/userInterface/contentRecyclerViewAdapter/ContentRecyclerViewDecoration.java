@@ -12,10 +12,10 @@ import java.util.Set;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasManufacturer;
@@ -31,10 +31,10 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class ContentRecyclerViewDecoration
 {
-    protected final HashMap<Class<? extends IElement>, Integer> specialStringResourcesByContentType = new HashMap<>();
-    protected final HashMap<Class<? extends IElement>, Integer> typefacesByContentType = new HashMap<>();
+    protected final HashMap<ElementType, Integer> specialStringResourcesByElementType = new HashMap<>();
+    protected final HashMap<ElementType, Integer> typefacesByElementType = new HashMap<>();
     protected final HashMap<DetailType, Integer> typefacesByDetailType = new HashMap<>();
-    protected final HashMap<DetailType, HashMap<DetailDisplayMode, Set<Class<? extends IElement>>>> contentTypesByDetailDisplayModeByDetailType = new HashMap<>();
+    protected final HashMap<DetailType, HashMap<DetailDisplayMode, Set<ElementType>>> elementTypesByDetailDisplayModeByDetailType = new HashMap<>();
 
     ContentRecyclerViewDecoration()
     {
@@ -46,55 +46,55 @@ public class ContentRecyclerViewDecoration
     {
         Log.v("initializing...");
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayModeLocation = new HashMap<>();
-        contentTypesByDetailDisplayModeLocation.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayModeLocation.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.LOCATION, contentTypesByDetailDisplayModeLocation);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayModeLocation = new HashMap<>();
+        elementTypesByDetailDisplayModeLocation.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayModeLocation.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.LOCATION, elementTypesByDetailDisplayModeLocation);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayModeCreditType = new HashMap<>();
-        contentTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.CREDIT_TYPE, contentTypesByDetailDisplayModeCreditType);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayModeCreditType = new HashMap<>();
+        elementTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayModeCreditType.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.CREDIT_TYPE, elementTypesByDetailDisplayModeCreditType);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayModeCategory = new HashMap<>();
-        contentTypesByDetailDisplayModeCategory.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayModeCategory.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.CATEGORY, contentTypesByDetailDisplayModeCategory);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayModeCategory = new HashMap<>();
+        elementTypesByDetailDisplayModeCategory.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayModeCategory.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.CATEGORY, elementTypesByDetailDisplayModeCategory);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayManufacturer = new HashMap<>();
-        contentTypesByDetailDisplayManufacturer.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayManufacturer.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.MANUFACTURER, contentTypesByDetailDisplayManufacturer);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayManufacturer = new HashMap<>();
+        elementTypesByDetailDisplayManufacturer.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayManufacturer.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.MANUFACTURER, elementTypesByDetailDisplayManufacturer);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayModel = new HashMap<>();
-        contentTypesByDetailDisplayModel.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayModel.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.MODEL, contentTypesByDetailDisplayModel);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayModel = new HashMap<>();
+        elementTypesByDetailDisplayModel.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayModel.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.MODEL, elementTypesByDetailDisplayModel);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayStatus = new HashMap<>();
-        contentTypesByDetailDisplayStatus.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayStatus.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.STATUS, contentTypesByDetailDisplayStatus);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayStatus = new HashMap<>();
+        elementTypesByDetailDisplayStatus.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayStatus.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.STATUS, elementTypesByDetailDisplayStatus);
 
-        HashMap<DetailDisplayMode, Set<Class<? extends IElement>>> contentTypesByDetailDisplayTotalRideCount = new HashMap<>();
-        contentTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.ABOVE, new HashSet<Class<? extends IElement>>());
-        contentTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.BELOW, new HashSet<Class<? extends IElement>>());
-        this.contentTypesByDetailDisplayModeByDetailType.put(DetailType.TOTAL_RIDE_COUNT, contentTypesByDetailDisplayTotalRideCount);
+        HashMap<DetailDisplayMode, Set<ElementType>> elementTypesByDetailDisplayTotalRideCount = new HashMap<>();
+        elementTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.ABOVE, new HashSet<ElementType>());
+        elementTypesByDetailDisplayTotalRideCount.put(DetailDisplayMode.BELOW, new HashSet<ElementType>());
+        this.elementTypesByDetailDisplayModeByDetailType.put(DetailType.TOTAL_RIDE_COUNT, elementTypesByDetailDisplayTotalRideCount);
     }
 
     public void resetStyles()
     {
         Log.d("resetting...");
-        this    .clearTypefacesForContentType()
+        this    .clearTypefacesForElementType()
                 .clearTypefacesForDetailType()
-                .clearDetailTypesAndModeForContentType();
+                .clearDetailTypesAndModeForElementType();
     }
 
-    private ContentRecyclerViewDecoration clearTypefacesForContentType()
+    private ContentRecyclerViewDecoration clearTypefacesForElementType()
     {
         Log.v("clearing...");
 
-        this.typefacesByContentType.clear();
+        this.typefacesByElementType.clear();
         return this;
     }
 
@@ -105,20 +105,20 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    private ContentRecyclerViewDecoration clearDetailTypesAndModeForContentType()
+    private ContentRecyclerViewDecoration clearDetailTypesAndModeForElementType()
     {
         Log.v("clearing...");
-        this.contentTypesByDetailDisplayModeByDetailType.clear();
+        this.elementTypesByDetailDisplayModeByDetailType.clear();
         this.initializeContentTypesByDetailDisplayModeByDetailType();
         return this;
     }
 
-    public ContentRecyclerViewDecoration addTypefaceForContentType(Class<? extends IElement> contentType, int typeface)
+    public ContentRecyclerViewDecoration addTypefaceForElementType(ElementType elementType, int typeface)
     {
         if(typeface <= 3)
         {
-            this.typefacesByContentType.put(contentType, typeface);
-            Log.v(String.format("added [%s] for [%s]", StringTool.typefaceToString(typeface), contentType.getSimpleName()));
+            this.typefacesByElementType.put(elementType, typeface);
+            Log.v(String.format("added %s for %s", StringTool.typefaceToString(typeface), elementType));
         }
         else
         {
@@ -128,43 +128,43 @@ public class ContentRecyclerViewDecoration
         return this;
     }
 
-    public ContentRecyclerViewDecoration addTypefaceForDetailType(DetailType type, int typeface)
+    public ContentRecyclerViewDecoration addTypefaceForDetailType(DetailType detailType, int typeface)
     {
         if(typeface <= 3)
         {
-            this.typefacesByDetailType.put(type, typeface);
-            Log.v(String.format("added [%s] for [%s]", StringTool.typefaceToString(typeface), type));
+            this.typefacesByDetailType.put(detailType, typeface);
+            Log.v(String.format("added %s for %s", StringTool.typefaceToString(typeface), detailType));
         }
         else
         {
-            Log.e(String.format("unknown typeface[%s]", StringTool.typefaceToString(typeface)));
+            Log.e(String.format("unexpected Typeface: %s", typeface));
         }
 
         return this;
     }
 
-    public ContentRecyclerViewDecoration addSpecialStringResourceForContentType(Class<? extends IElement> contentType, int stringResource)
+    public ContentRecyclerViewDecoration addSpecialStringResourceForElementType(ElementType elementType, int stringResource)
     {
-        Log.v(String.format("added StringResource[%s] for [%s]", StringTool.getString(stringResource), contentType.getSimpleName()));
-        this.specialStringResourcesByContentType.put(contentType, stringResource);
+        this.specialStringResourcesByElementType.put(elementType, stringResource);
+        Log.v(String.format("added StringResource[%s] for %s", StringTool.getString(stringResource), elementType));
         return this;
     }
 
-    public ContentRecyclerViewDecoration addDetailTypesAndModeForContentType(Class<? extends IElement> contentType, DetailType detailType, DetailDisplayMode detailDisplayMode)
+    public ContentRecyclerViewDecoration addDetailTypesAndModeForContentType(ElementType elementType, DetailType detailType, DetailDisplayMode detailDisplayMode)
     {
-        Log.v(String.format("added %s and %s for [%s]", detailType, detailDisplayMode, contentType.getSimpleName()));
-        this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(contentType);
+        Log.v(String.format("added %s and %s for [%s]", detailType, detailDisplayMode, elementType));
+        this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).add(elementType);
         return this;
     }
 
     int getTypeface(IElement element)
     {
-        for(Class<? extends IElement> type : this.typefacesByContentType.keySet())
+        for(ElementType elementType : this.typefacesByElementType.keySet())
         {
-            if(type.isAssignableFrom(element.getClass()))
+            if(elementType.getType().isAssignableFrom(element.getClass()))
             {
-                int typeface = this.typefacesByContentType.get(type);
-                Log.v(String.format("found Typeface [%s] for [%s]", StringTool.typefaceToString(typeface), type.getSimpleName()));
+                int typeface = this.typefacesByElementType.get(elementType);
+                Log.v(String.format("found %s for %s", StringTool.typefaceToString(typeface), elementType));
                 return typeface;
             }
         }
@@ -174,18 +174,18 @@ public class ContentRecyclerViewDecoration
 
     String getSpecialString(IElement element)
     {
-        for(Class<? extends IElement> type : this.specialStringResourcesByContentType.keySet())
+        for(ElementType elementType : this.specialStringResourcesByElementType.keySet())
         {
-            if(type.isAssignableFrom(element.getClass()))
+            if(elementType.getType().isAssignableFrom(element.getClass()))
             {
                 String specialString = "";
                 if(element.isVisit())
                 {
-                    specialString = App.getContext().getString(this.specialStringResourcesByContentType.get(Visit.class), element.getName(), element.getParent().getName());
+                    specialString = App.getContext().getString(this.specialStringResourcesByElementType.get(ElementType.VISIT), element.getName(), element.getParent().getName());
                 }
                 else if(element.isProperty() && ((IProperty)element).isDefault())
                 {
-                    specialString = App.getContext().getString(this.specialStringResourcesByContentType.get(IProperty.class), element.getName());
+                    specialString = App.getContext().getString(this.specialStringResourcesByElementType.get(ElementType.IPROPERTY), element.getName());
                 }
 
                 if(specialString.isEmpty())
@@ -206,20 +206,20 @@ public class ContentRecyclerViewDecoration
         Set<DetailType> detailTypesToDisplayAbove = new HashSet<>();
         Set<DetailType> detailTypesToDisplayBelow = new HashSet<>();
 
-        for(DetailType detailType : this.contentTypesByDetailDisplayModeByDetailType.keySet())
+        for(DetailType detailType : this.elementTypesByDetailDisplayModeByDetailType.keySet())
         {
-            for(Class<? extends IElement> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.ABOVE))
+            for(ElementType elementType : this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.ABOVE))
             {
-                if(contentType.isInstance(element))
+                if(elementType.getType().isInstance(element))
                 {
                     detailTypesToDisplayAbove.add(detailType);
                     break;
                 }
             }
 
-            for(Class<? extends IElement> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW))
+            for(ElementType elementType : this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW))
             {
-                if(contentType.isInstance(element))
+                if(elementType.getType().isInstance(element))
                 {
                     detailTypesToDisplayBelow.add(detailType);
                     break;
@@ -400,47 +400,47 @@ public class ContentRecyclerViewDecoration
 
         string.append(String.format("\n%sSpecialStringResources for ContentTypes:", this.getIntend(lenght)));
         lenght += 4;
-        if(this.specialStringResourcesByContentType.isEmpty())
+        if(this.specialStringResourcesByElementType.isEmpty())
         {
             string.append(String.format("\n%s[none]", this.getIntend(lenght)));
         }
         else
         {
-            for(Class<? extends IElement> contentType : this.specialStringResourcesByContentType.keySet())
+            for(ElementType elementType : this.specialStringResourcesByElementType.keySet())
             {
-                if(this.specialStringResourcesByContentType.get(contentType) != null)
+                if(this.specialStringResourcesByElementType.get(elementType) != null)
                 {
                     string.append(String.format("\n%s[none]", this.getIntend(lenght)));
                 }
                 else
                 {
-                    string.append(String.format(Locale.getDefault(), "\n%sContentType[%s]: SpecialStringResource[%d (%s)]",
+                    string.append(String.format(Locale.getDefault(), "\n%s%s: SpecialStringResource[%d (%s)]",
                             this.getIntend(lenght),
-                            contentType.getSimpleName(), this.specialStringResourcesByContentType.get(contentType),
-                            StringTool.getString(this.specialStringResourcesByContentType.get(contentType))));
+                            elementType, this.specialStringResourcesByElementType.get(elementType),
+                            StringTool.getString(this.specialStringResourcesByElementType.get(elementType))));
                 }
             }
         }
         lenght -= 4;
 
 
-        string.append(String.format("\n%sTypefaces for ContentTypes:", this.getIntend(lenght)));
+        string.append(String.format("\n%sTypefaces for ElementTypes:", this.getIntend(lenght)));
         lenght += 4;
-        if(this.typefacesByContentType.isEmpty())
+        if(this.typefacesByElementType.isEmpty())
         {
             string.append(String.format("\n%s[none]", this.getIntend(lenght)));
         }
         else
         {
-            for(Class<? extends IElement> contentType : this.typefacesByContentType.keySet())
+            for(ElementType elementType : this.typefacesByElementType.keySet())
             {
-                if(this.typefacesByContentType.get(contentType) == null)
+                if(this.typefacesByElementType.get(elementType) == null)
                 {
                     string.append(String.format("\n%s[none]", this.getIntend(lenght)));
                 }
                 else
                 {
-                    string.append(String.format("\n%s%s: %s", this.getIntend(lenght), contentType.getSimpleName(), StringTool.typefaceToString(this.typefacesByContentType.get(contentType))));
+                    string.append(String.format("\n%s%s: %s", this.getIntend(lenght), elementType, StringTool.typefaceToString(this.typefacesByElementType.get(elementType))));
                 }
             }
         }
@@ -473,23 +473,23 @@ public class ContentRecyclerViewDecoration
         string.append(String.format("\n%sDetailTypes for DetailDisplayMode for ContentType:", this.getIntend(lenght)));
         lenght += 4;
         boolean none = true;
-        for(DetailType detailType : this.contentTypesByDetailDisplayModeByDetailType.keySet())
+        for(DetailType detailType : this.elementTypesByDetailDisplayModeByDetailType.keySet())
         {
-            if(!this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.ABOVE).isEmpty()
-                    || !this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW).isEmpty())
+            if(!this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.ABOVE).isEmpty()
+                    || !this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(DetailDisplayMode.BELOW).isEmpty())
             {
                 none = false;
                 string.append(String.format("\n%s%s", this.getIntend(lenght), detailType));
                 lenght += 4;
-                for(DetailDisplayMode detailDisplayMode : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).keySet())
+                for(DetailDisplayMode detailDisplayMode : this.elementTypesByDetailDisplayModeByDetailType.get(detailType).keySet())
                 {
-                    if(!this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).isEmpty())
+                    if(!this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode).isEmpty())
                     {
                         string.append(String.format("\n%s%s", this.getIntend(lenght), detailDisplayMode));
                         lenght += 4;
-                        for(Class<? extends IElement> contentType : this.contentTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode))
+                        for(ElementType elementType : this.elementTypesByDetailDisplayModeByDetailType.get(detailType).get(detailDisplayMode))
                         {
-                            string.append(String.format("\n%sContentType[%s]", this.getIntend(lenght), contentType.getSimpleName()));
+                            string.append(String.format("\n%sContentType[%s]", this.getIntend(lenght), elementType));
                         }
                         lenght -= 4;
                     }

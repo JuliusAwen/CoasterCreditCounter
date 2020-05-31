@@ -3,18 +3,7 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 import android.graphics.Typeface;
 
 import de.juliusawen.coastercreditcounter.R;
-import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.CreditType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
-import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
@@ -30,28 +19,28 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case STATUS:
             {
                 decoration
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                 break;
             }
 
             case CATEGORY:
             {
                 decoration
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW);
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW);
                 break;
             }
 
             case MANUFACTURER:
             {
                 decoration
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW);
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                 break;
             }
         }
@@ -70,37 +59,37 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 {
                     case NONE:
                         decoration
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForContentType(Model.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addTypefaceForElementType(ElementType.MODEL, Typeface.BOLD);
                         break;
 
                     case CREDIT_TYPE:
                         decoration
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForContentType(CreditType.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addTypefaceForElementType(ElementType.CREDIT_TYPE, Typeface.BOLD);
                         break;
 
                     case CATEGORY:
                         decoration
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForContentType(Category.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addTypefaceForElementType(ElementType.CATEGORY, Typeface.BOLD);
                         break;
 
                     case MANUFACTURER:
                         decoration
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.MANUFACTURER, Typeface.BOLD);
                         break;
                 }
 
                 decoration
-                        .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                        .addSpecialStringResourceForContentType(IProperty.class, R.string.substitute_properties_default_postfix);
+                        .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                        .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
                 break;
             }
 
@@ -109,12 +98,12 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 if(groupType == GroupType.CATEGORY)
                 {
                     decoration
-                            .addTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
-                            .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                            .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                            .addTypefaceForElementType(ElementType.IGROUP_HEADER, Typeface.BOLD)
+                            .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                            .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
                             .addTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC)
-                            .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
-                            .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW);
+                            .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.TOTAL_RIDE_COUNT, DetailDisplayMode.BELOW)
+                            .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW);
                 }
                 break;
             }
@@ -125,76 +114,76 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 {
                     case NONE:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(IAttraction.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.IATTRACTION, Typeface.BOLD);
                         break;
 
                     case PARK:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(Location.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.LOCATION, Typeface.BOLD);
                         break;
 
                     case CREDIT_TYPE:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER ,DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(CreditType.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER ,DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.CREDIT_TYPE, Typeface.BOLD);
                         break;
 
                     case CATEGORY:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(Category.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.CATEGORY, Typeface.BOLD);
                         break;
 
                     case MANUFACTURER:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(Manufacturer.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.MANUFACTURER, Typeface.BOLD);
                         break;
 
                     case MODEL:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.STATUS, DetailDisplayMode.BELOW)
-                                .addTypefaceForContentType(Model.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.STATUS, DetailDisplayMode.BELOW)
+                                .addTypefaceForElementType(ElementType.MODEL, Typeface.BOLD);
                         break;
 
                     case STATUS:
                         decoration
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.LOCATION, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addDetailTypesAndModeForContentType(IAttraction.class, DetailType.MODEL, DetailDisplayMode.ABOVE)
-                                .addTypefaceForContentType(Status.class, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.LOCATION, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                                .addDetailTypesAndModeForContentType(ElementType.IATTRACTION, DetailType.MODEL, DetailDisplayMode.ABOVE)
+                                .addTypefaceForElementType(ElementType.STATUS, Typeface.BOLD);
                         break;
                 }
 
-                decoration.addSpecialStringResourceForContentType(IProperty.class, R.string.substitute_properties_default_postfix);
+                decoration.addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
             }
         }
     }
@@ -210,14 +199,14 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case NAVIGATE:
             {
                 decoration
-                        .addTypefaceForContentType(Park.class, Typeface.BOLD_ITALIC);
+                        .addTypefaceForElementType(ElementType.PARK, Typeface.BOLD_ITALIC);
                 break;
             }
 
             case SHOW_LOCATIONS:
             {
                 decoration
-                        .addTypefaceForContentType(Location.class, Typeface.BOLD);
+                        .addTypefaceForElementType(ElementType.LOCATION, Typeface.BOLD);
                 break;
             }
 
@@ -231,11 +220,11 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case SORT_STATUSES:
             {
                 decoration
-                        .addTypefaceForContentType(IElement.class, Typeface.BOLD)
-                        .addDetailTypesAndModeForContentType(Model.class, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                        .addDetailTypesAndModeForContentType(Model.class, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                        .addDetailTypesAndModeForContentType(Model.class, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                        .addSpecialStringResourceForContentType(IProperty.class, R.string.substitute_properties_default_postfix);
+                        .addTypefaceForElementType(ElementType.IELEMENT, Typeface.BOLD)
+                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
+                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
+                        .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
+                        .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
                 break;
             }
 
@@ -251,14 +240,14 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case MANAGE_STATUSES:
             {
                 decoration
-                        .addTypefaceForContentType(IProperty.class, Typeface.BOLD)
-                        .addSpecialStringResourceForContentType(IProperty.class, R.string.substitute_properties_default_postfix);
+                        .addTypefaceForElementType(ElementType.IPROPERTY, Typeface.BOLD)
+                        .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
                 break;
             }
         }
 
         decoration
-                .addTypefaceForContentType(GroupHeader.class, Typeface.BOLD)
+                .addTypefaceForElementType(ElementType.IGROUP_HEADER, Typeface.BOLD)
                 .addTypefaceForDetailType(DetailType.STATUS, Typeface.ITALIC);
     }
 }
