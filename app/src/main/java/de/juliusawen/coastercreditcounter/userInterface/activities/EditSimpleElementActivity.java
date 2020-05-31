@@ -49,7 +49,11 @@ public class EditSimpleElementActivity extends BaseActivity
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
-            this.viewModel.maxCharacterCount = this.viewModel.requestCode == RequestCode.EDIT_NOTE ? App.config.maxCharacterCountForNote : App.config.maxCharacterCountForSimpleElementName;
+            Log.d(String.format("%s", this.viewModel.requestCode));
+
+            this.viewModel.maxCharacterCount = this.viewModel.requestCode == RequestCode.EDIT_NOTE
+                    ? App.config.maxCharacterCountForNote
+                    : App.config.maxCharacterCountForSimpleElementName;
         }
 
         if(this.viewModel.elementToEdit == null)

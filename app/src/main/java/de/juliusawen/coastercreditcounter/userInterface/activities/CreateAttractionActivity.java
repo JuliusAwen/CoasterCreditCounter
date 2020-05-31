@@ -119,6 +119,7 @@ public class CreateAttractionActivity extends BaseActivity
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
+            Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
         if(this.viewModel.requestCode == RequestCode.CREATE_ATTRACTION && this.viewModel.parentPark == null)

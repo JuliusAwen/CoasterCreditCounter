@@ -52,13 +52,21 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+            Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
         if(this.viewModel.currentLocation == null)
         {
-            UUID elementUuid = UUID.fromString(getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID));
-            this.viewModel.currentLocation = elementUuid != null
-                    ? App.content.getContentByUuid(elementUuid)
+            IElement location = null;
+            String uuidString = getIntent().getStringExtra(Constants.EXTRA_ELEMENT_UUID);
+            if(uuidString != null)
+            {
+                location = App.content.getContentByUuid(UUID.fromString(uuidString));
+                Log.d(String.format("CurrentLocation: %s", location));
+            }
+
+            this.viewModel.currentLocation = location != null
+                    ? location
                     : App.content.getRootLocation();
         }
 

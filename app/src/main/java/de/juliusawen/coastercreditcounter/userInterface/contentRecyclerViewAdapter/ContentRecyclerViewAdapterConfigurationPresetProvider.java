@@ -25,13 +25,17 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             }
 
             case SHOW_LOCATIONS:
+            {
                 relevantChildTypes.add(ElementType.LOCATION);
                 relevantChildTypes.add(ElementType.PARK);
                 break;
+            }
 
             case SORT_LOCATIONS:
             case SORT_PARKS:
             case SORT_ATTRACTIONS:
+
+            case PICK_VISIT:
             {
                 configuration.setSelectable(true);
                 configuration.setMultipleSelection(false);
@@ -56,6 +60,17 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
                 break;
             }
 
+            case PICK_ATTRACTIONS:
+            case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
+            case ASSIGN_CATEGORY_TO_ATTRACTIONS:
+            case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
+            case ASSIGN_STATUS_TO_ATTRACTIONS:
+            {
+                configuration.setSelectable(true);
+                configuration.setMultipleSelection(true);
+                relevantChildTypes.add(ElementType.ON_SITE_ATTRACTION);
+                break;
+            }
 
             case MANAGE_MODELS:
             {

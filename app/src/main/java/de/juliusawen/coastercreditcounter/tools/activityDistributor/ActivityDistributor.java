@@ -525,12 +525,6 @@ public abstract class ActivityDistributor
                 toolbarSubtitle = context.getString(R.string.subtitle_to_assign_category_to);
                 break;
 
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
-                intent = new Intent(context, PickElementsActivity.class);
-                toolbarTitle = context.getString(R.string.title_pick_attractions);
-                toolbarSubtitle = context.getString(R.string.subtitle_to_assign_model_to);
-                break;
-
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
                 intent = new Intent(context, PickElementsActivity.class);
                 toolbarTitle = context.getString(R.string.title_pick_attractions);
@@ -572,6 +566,7 @@ public abstract class ActivityDistributor
         context.startActivity(intent);
     }
 
+    @SuppressWarnings("rawtypes")
     public static void startActivityViaClass(Context context, Class type)
     {
         Intent intent = new Intent(context, type);
@@ -584,10 +579,12 @@ public abstract class ActivityDistributor
 
     public static void goToCurrentVisit(Context context, IElement currentVisit)
     {
-        Intent navigationHubActivity = new Intent(context, NavigationHubActivity.class);
+        Intent navigationHubIntent = new Intent(context, NavigationHubActivity.class);
+        navigationHubIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.NAVIGATE.ordinal());
 
         Intent showLocationsIntent = new Intent(context, ShowLocationsActivity.class);
         showLocationsIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.SHOW_LOCATIONS.ordinal());
+        showLocationsIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, App.content.getRootLocation().getUuid().toString());
 
         Intent showParkIntent = new Intent(context, ShowParkActivity.class);
         showParkIntent.putExtra(Constants.EXTRA_REQUEST_CODE, RequestCode.SHOW_PARK.ordinal());
@@ -599,7 +596,7 @@ public abstract class ActivityDistributor
         showVisitIntent.putExtra(Constants.EXTRA_ELEMENT_UUID, currentVisit.getUuid().toString());
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        taskStackBuilder.addNextIntent(navigationHubActivity);
+        taskStackBuilder.addNextIntent(navigationHubIntent);
         taskStackBuilder.addNextIntent(showLocationsIntent);
         taskStackBuilder.addNextIntent(showParkIntent);
         taskStackBuilder.addNextIntent(showVisitIntent);

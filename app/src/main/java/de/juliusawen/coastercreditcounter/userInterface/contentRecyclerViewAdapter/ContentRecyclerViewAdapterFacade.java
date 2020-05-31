@@ -15,12 +15,6 @@ public class ContentRecyclerViewAdapterFacade
         this.configuration = new ContentRecyclerViewAdapterConfiguration(this.decoration);
     }
 
-    public IContentRecyclerViewAdapter createDefaultAdapter()
-    {
-        this.adapter = new ContentRecyclerViewAdapter(this.configuration);
-        return this.adapter;
-    }
-
     public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
@@ -37,11 +31,6 @@ public class ContentRecyclerViewAdapterFacade
         return this.adapter;
     }
 
-    public ContentRecyclerViewDecoration getDecoration()
-    {
-        return this.decoration;
-    }
-
     public ContentRecyclerViewAdapterConfiguration getConfiguration()
     {
         return this.configuration;
@@ -50,30 +39,6 @@ public class ContentRecyclerViewAdapterFacade
     public IContentRecyclerViewAdapter getAdapter()
     {
         return this.adapter;
-    }
-
-    public ContentRecyclerViewAdapterFacade applyDecorationPreset(RequestCode requestCode)
-    {
-        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
-
-        if(this.adapter != null)
-        {
-            this.adapter.notifyDataSetChanged();
-        }
-
-        return this;
-    }
-
-    public ContentRecyclerViewAdapterFacade applyDecorationPreset(RequestCode requestCode, ElementType elementType)
-    {
-        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
-
-        if(this.adapter != null)
-        {
-            this.adapter.notifyDataSetChanged();
-        }
-
-        return this;
     }
 
     public ContentRecyclerViewAdapterFacade setDetailModesAndGroupContent(RequestCode requestCode, GroupType groupType)

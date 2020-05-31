@@ -297,7 +297,6 @@
     <string name="title_create_model">Create Model</string>
     <string name="title_edit_model">Edit Model</string>
     <string name="title_pick_model">Pick Model</string>
-    <string name="subtitle_to_assign_model_to">to assign model to</string>
     <string name="hint_enter_model_name">Enter model name</string>
     <string name="header_model">Model:</string>
 

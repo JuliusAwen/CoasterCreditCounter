@@ -251,6 +251,14 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 break;
             }
 
+            case PICK_VISIT:
+            {
+                decoration
+                    .addTypefaceForElementType(ElementType.VISIT, Typeface.BOLD)
+                    .addSpecialStringResourceForElementType(ElementType.VISIT, R.string.text_visit_display_full_name);
+                break;
+            }
+
             default:
                 Log.v(String.format("no preset found for %s", requestCode));
                 break;

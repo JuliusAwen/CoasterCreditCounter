@@ -107,7 +107,6 @@ public class OptionsMenuButler
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-                case ASSIGN_MODEL_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     sortByVisible = true;
@@ -770,7 +769,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -789,7 +787,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -805,7 +802,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -824,7 +820,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -843,7 +838,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -862,7 +856,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -878,7 +871,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -894,7 +886,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -913,7 +904,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -932,7 +922,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -948,7 +937,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -967,7 +955,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -986,7 +973,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -1005,7 +991,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -1021,7 +1006,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -1037,7 +1021,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
                 return true;
 
@@ -1062,7 +1045,6 @@ public class OptionsMenuButler
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
 
             case SHOW_LOCATIONS:

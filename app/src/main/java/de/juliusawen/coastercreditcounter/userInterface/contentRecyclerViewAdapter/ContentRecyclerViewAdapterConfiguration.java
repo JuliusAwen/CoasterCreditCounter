@@ -18,6 +18,7 @@ public class ContentRecyclerViewAdapterConfiguration
 
     private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
 
+    // ElementTypes that are either expanded/collapsed or selected when parent is clicked
     private final LinkedHashSet<ElementType> relevantChildTypes = new LinkedHashSet<>();
 
     private boolean isSelecetable = false;

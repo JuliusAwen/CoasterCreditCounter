@@ -46,6 +46,7 @@ public class SortElementsActivity extends BaseActivity
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+            Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
         if(this.viewModel.elementsToSort == null)

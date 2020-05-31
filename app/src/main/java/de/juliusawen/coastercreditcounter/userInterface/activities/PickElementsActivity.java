@@ -1,7 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -19,8 +17,7 @@ import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
@@ -29,10 +26,9 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewOnClickListener;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewStyler;
 
 public class PickElementsActivity extends BaseActivity
 {
@@ -60,6 +56,7 @@ public class PickElementsActivity extends BaseActivity
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
+            Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
         this.viewModel.isSinglePick = getIntent().getBooleanExtra(Constants.EXTRA_SINGLE_PICK, false);
@@ -69,61 +66,52 @@ public class PickElementsActivity extends BaseActivity
             this.viewModel.elementsToPickFrom = App.content.getContentByUuidStrings(getIntent().getStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS));
         }
 
-        boolean groupByCategory = false;
-        if(this.viewModel.oldContentRecyclerViewAdapter == null)
+        if(this.viewModel.adapterFacade == null)
         {
+            this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+
             switch(this.viewModel.requestCode)
             {
                 case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
                 case ASSIGN_CATEGORY_TO_ATTRACTIONS:
                 case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-                case ASSIGN_MODEL_TO_ATTRACTIONS:
                 case ASSIGN_STATUS_TO_ATTRACTIONS:
                 {
                     this.viewModel.elementsToPickFrom = SortTool.sortElements(this.viewModel.elementsToPickFrom, SortType.BY_NAME, SortOrder.ASCENDING);
                 }
-
                 case PICK_ATTRACTIONS:
                 {
-                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            OnSiteAttraction.class,
-                            true)
-                            .setUseDedicatedExpansionOnClickListener(true);
-                    groupByCategory = true;
+                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToPickFrom);
+                    this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.CATEGORY);
                     break;
                 }
 
                 case PICK_VISIT:
                 {
-                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            new HashSet<Class<? extends IElement>>(),
-                            false)
-                            .setTypefaceForContentType(Visit.class, Typeface.BOLD)
-                            .setSpecialStringResourceForType(Visit.class, R.string.text_visit_display_full_name);
+                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToPickFrom);
                     break;
                 }
 
                 default:
                 {
-                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
-                            this.viewModel.elementsToPickFrom,
-                            new HashSet<Class<? extends IElement>>(),
-                            true)
-                            .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
+                    Log.e(String.format("CONGRATS - you found your default case: %s", this.viewModel.requestCode));
+
+//                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
+//                            this.viewModel.elementsToPickFrom,
+//                            new HashSet<Class<? extends IElement>>(),
+//                            true)
+//                            .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
                     break;
                 }
             }
+
+            this.viewModel.adapterFacade.getConfiguration().addOnElementTypeClickListener(ElementType.IELEMENT, super.createOnElementTypeClickListener(ElementType.IELEMENT));
         }
 
-        if(this.viewModel.oldContentRecyclerViewAdapter != null)
-        {
-            this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewOnClickListener());
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
-        }
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewPickElements);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
 
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_TOOLBAR_TITLE)), getString(R.string.help_text_pick_elements));
@@ -133,11 +121,6 @@ public class PickElementsActivity extends BaseActivity
 
         super.setOptionsMenuButlerViewModel(this.viewModel);
 
-
-        if(groupByCategory)
-        {
-            OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(this.viewModel.oldContentRecyclerViewAdapter, this.viewModel.requestCode, GroupType.CATEGORY);
-        }
 
         if(!this.viewModel.isSinglePick)
         {
@@ -152,7 +135,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void decorateFloatingActionButtonCheck()
     {
-        Log.d("decorating FloatingActionButton <CHECK>...");
+        Log.d("decorating FloatingActionButton<CHECK>...");
 
         super.setFloatingActionButtonIcon(DrawableProvider.getColoredDrawable(R.drawable.check, R.color.white));
         super.setFloatingActionButtonOnClickListener(new View.OnClickListener()
@@ -160,22 +143,26 @@ public class PickElementsActivity extends BaseActivity
             @Override
             public void onClick(View view)
             {
-                Log.i("<CHECK> clicked");
-
-                if(!viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection().isEmpty())
-                {
-                    Log.d("<CHECK> accepted - returning <RESULT_OK>");
-                    returnResult(RESULT_OK);
-                }
-                else
-                {
-                    Log.d("<CHECK> no element selected - returning <RESULT_CANCELED>");
-                    returnResult(RESULT_CANCELED);
-                }
+                Log.i("FloatingActionButton<CHECK> clicked");
+                handleOnFloatingActionButtonClicked();
             }
         });
 
         super.setFloatingActionButtonVisibility(true);
+    }
+
+    private void handleOnFloatingActionButtonClicked()
+    {
+        if(!viewModel.adapterFacade.getAdapter().getSelectedItemsInOrderOfSelection().isEmpty())
+        {
+            Log.d("<CHECK> accepted - returning <RESULT_OK>");
+            returnResult(RESULT_OK);
+        }
+        else
+        {
+            Log.d("<CHECK> no element selected - returning <RESULT_CANCELED>");
+            returnResult(RESULT_CANCELED);
+        }
     }
 
 
@@ -183,7 +170,7 @@ public class PickElementsActivity extends BaseActivity
     {
         this.linearLayoutSelectAll.setVisibility(View.VISIBLE);
 
-        if(this.viewModel.oldContentRecyclerViewAdapter.isAllSelected())
+        if(this.viewModel.adapterFacade.getAdapter().isAllContentSelected())
         {
             this.textViewSelectOrDeselectAll.setText(R.string.text_deselect_all);
         }
@@ -198,72 +185,70 @@ public class PickElementsActivity extends BaseActivity
             public void onClick(View view)
             {
                 Log.d("RadioButton<SELECT_ALL> clicked");
-
-                if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
-                {
-                    viewModel.oldContentRecyclerViewAdapter.setAllItemsSelected();
-                    changeRadioButtonToDeselectAll();
-                }
-                else if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
-                {
-                    viewModel.oldContentRecyclerViewAdapter.setAllItemsDeselected();
-                    changeRadioButtonToSelectAll();
-                }
+                handleOnRadioButtonClicked();
             }
         });
     }
 
-    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewOnClickListener()
+    private void handleOnRadioButtonClicked()
     {
-        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
+        if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_select_all)))
         {
-            @Override
-            public void onClick(View view)
+            this.viewModel.adapterFacade.getAdapter().selectAllContent();
+            changeRadioButtonToDeselectAll();
+        }
+        else if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
+        {
+            this.viewModel.adapterFacade.getAdapter().deselectAllContent();
+            changeRadioButtonToSelectAll();
+        }
+    }
+
+    @Override
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
+    {
+        if(elementType != ElementType.IELEMENT)
+        {
+            super.handleOnElementTypeClick(elementType, view);
+            return;
+        }
+
+        IElement element = (IElement)view.getTag();
+
+        if(this.viewModel.isSinglePick)
+        {
+            if(element.isGroupHeader())
             {
-                IElement element = (IElement)view.getTag();
-
-                if(PickElementsActivity.this.viewModel.isSinglePick)
+                this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
+                if(this.viewModel.adapterFacade.getAdapter().isAllContentExpanded() || this.viewModel.adapterFacade.getAdapter().isAllContentCollapsed())
                 {
-                    if(element.isGroupHeader())
-                    {
-                        viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
-                        if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
-                        {
-                            invalidateOptionsMenu();
-                        }
-                    }
-                    else
-                    {
-                        returnResult(RESULT_OK, element);
-                    }
+                    invalidateOptionsMenu();
                 }
-                else
+            }
+            else
+            {
+                returnResult(RESULT_OK, element);
+            }
+        }
+        else
+        {
+            if(!view.isSelected() && this.viewModel.adapterFacade.getAdapter().isAllContentSelected())
+            {
+                changeRadioButtonToDeselectAll();
+            }
+            else
+            {
+                if(this.textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
                 {
-                    if(!view.isSelected() && viewModel.oldContentRecyclerViewAdapter.isAllSelected())
-                    {
-                        changeRadioButtonToDeselectAll();
-                    }
-                    else
-                    {
-                        if(textViewSelectOrDeselectAll.getText().equals(getString(R.string.text_deselect_all)))
-                        {
-                            changeRadioButtonToSelectAll();
-                        }
-                    }
-
-                    if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
-                    {
-                        invalidateOptionsMenu();
-                    }
+                    changeRadioButtonToSelectAll();
                 }
             }
 
-            @Override
-            public boolean onLongClick(View view)
+            if(this.viewModel.adapterFacade.getAdapter().isAllContentExpanded() || this.viewModel.adapterFacade.getAdapter().isAllContentCollapsed())
             {
-                return true;
+                invalidateOptionsMenu();
             }
-        };
+        }
     }
 
     private void changeRadioButtonToSelectAll()
@@ -299,14 +284,14 @@ public class PickElementsActivity extends BaseActivity
             {
                 if(this.viewModel.requestCode == RequestCode.PICK_VISIT)
                 {
-                    Log.d(String.format("returning %s", this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem()));
-                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.oldContentRecyclerViewAdapter.getLastSelectedItem().getUuid().toString());
+                    Log.d(String.format("returning %s", this.viewModel.adapterFacade.getAdapter().getLastSelectedItem()));
+                    intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.adapterFacade.getAdapter().getLastSelectedItem().getUuid().toString());
                 }
                 else
                 {
                     LinkedList<IElement> selectedElementsWithoutOrphanElements = new LinkedList<>();
 
-                    for(IElement selectedElement : this.viewModel.oldContentRecyclerViewAdapter.getSelectedItemsInOrderOfSelection())
+                    for(IElement selectedElement : this.viewModel.adapterFacade.getAdapter().getSelectedItemsInOrderOfSelection())
                     {
                         if(!selectedElement.isOrphan())
                         {

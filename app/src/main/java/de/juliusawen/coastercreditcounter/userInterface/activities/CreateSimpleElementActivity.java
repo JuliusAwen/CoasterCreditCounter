@@ -54,7 +54,11 @@ public class CreateSimpleElementActivity extends BaseActivity
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
-            this.viewModel.maxCharacterCount = this.viewModel.requestCode == RequestCode.CREATE_NOTE ? App.config.maxCharacterCountForNote : App.config.maxCharacterCountForSimpleElementName;
+            Log.d(String.format("%s", this.viewModel.requestCode));
+
+            this.viewModel.maxCharacterCount = this.viewModel.requestCode == RequestCode.CREATE_NOTE
+                    ? App.config.maxCharacterCountForNote
+                    : App.config.maxCharacterCountForSimpleElementName;
         }
 
         this.createTextInput(getIntent().getStringExtra(Constants.EXTRA_HINT));

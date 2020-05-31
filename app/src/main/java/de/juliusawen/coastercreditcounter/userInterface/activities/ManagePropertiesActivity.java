@@ -69,6 +69,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         if(this.viewModel.requestCode == null)
         {
             this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
+            Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
         this.viewModel.isSelectionMode = this.viewModel.requestCode == RequestCode.PICK_CREDIT_TYPE
@@ -111,13 +112,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
         }
 
-
-        if(this.viewModel.adapterFacade.getAdapter() != null)
-        {
-            RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
-        }
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewManageProperties);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
 
         if(this.viewModel.typeToManage == ElementType.MODEL)
         {
@@ -190,7 +187,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case ASSIGN_CREDIT_TYPE_TO_ATTRACTIONS:
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
-            case ASSIGN_MODEL_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
@@ -419,21 +415,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 requestCode = RequestCode.ASSIGN_MANUFACTURER_TO_ATTRACTIONS;
-                break;
-            }
-
-            case MODEL:
-            {
-                for(IAttraction attraction : possibleAttractionsToAssignTo)
-                {
-                    if(attraction.getModel().equals(this.viewModel.longClickedElement))
-                    {
-                        Log.v(String.format("removing %s from pick list - %s is already assigned", attraction, this.viewModel.longClickedElement));
-                        elementsToAssignTo.remove(attraction);
-                    }
-                }
-
-                requestCode = RequestCode.ASSIGN_MODEL_TO_ATTRACTIONS;
                 break;
             }
 
