@@ -65,8 +65,6 @@ public class OptionsMenuButler
                     sortEnabled = this.getElements().size() > 1;
                     sortAscendingVisible = true;
                     sortDescendingVisible = true;
-
-                    expandAndCollapseAllVisible = this.getElements().size() > 1;
                     break;
                 }
 
@@ -1033,12 +1031,6 @@ public class OptionsMenuButler
     {
         switch(this.getRequestCode())
         {
-            case PICK_ATTRACTIONS:
-            case PICK_CREDIT_TYPE:
-            case PICK_CATEGORY:
-            case PICK_MANUFACTURER:
-            case PICK_STATUS:
-
             case PICK_MODEL:
             case MANAGE_MODELS:
 
