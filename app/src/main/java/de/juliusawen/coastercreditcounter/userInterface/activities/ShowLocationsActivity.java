@@ -79,8 +79,8 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     .addOnElementTypeClickListener(ElementType.PARK, super.createOnElementTypeClickListener(ElementType.PARK))
                     .addOnElementTypeLongClickListener(ElementType.IELEMENT, super.createOnElementTypeLongClickListener(ElementType.IELEMENT));
 
-            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode)
-                    .setContent(this.viewModel.currentLocation);
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);

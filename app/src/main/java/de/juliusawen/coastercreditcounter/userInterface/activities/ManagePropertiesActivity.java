@@ -312,6 +312,8 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             return super.handleOnElementTypeLongClick(elementType, view);
         }
 
+        this.viewModel.longClickedElement = (IElement) view.getTag();
+
         PopupMenuAgent popupMenuAgent = PopupMenuAgent.getMenu();
 
         if(!this.viewModel.isSelectionMode && this.viewModel.typeToManage != ElementType.MODEL)

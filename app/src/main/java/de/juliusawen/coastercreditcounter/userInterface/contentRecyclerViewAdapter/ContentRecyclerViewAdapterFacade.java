@@ -15,28 +15,25 @@ public class ContentRecyclerViewAdapterFacade
         this.configuration = new ContentRecyclerViewAdapterConfiguration(this.decoration);
     }
 
-    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode)
+    public void createPreconfiguredAdapter(RequestCode requestCode)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
-        return this.adapter;
     }
 
-    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode, ElementType elementType)
+    public void createPreconfiguredAdapter(RequestCode requestCode, ElementType elementType)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, elementType);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
-        return this.adapter;
     }
 
-    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode, GroupType groupType)
+    public void createPreconfiguredAdapter(RequestCode requestCode, GroupType groupType)
     {
         ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
-        return this.adapter;
     }
 
     public ContentRecyclerViewAdapterConfiguration getConfiguration()
@@ -49,15 +46,8 @@ public class ContentRecyclerViewAdapterFacade
         return this.adapter;
     }
 
-    public ContentRecyclerViewAdapterFacade applyPresetDecoration(RequestCode requestCode)
-    {
-        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
-        return this;
-    }
-
-    public ContentRecyclerViewAdapterFacade applyPresetDecoration(RequestCode requestCode, GroupType groupType)
+    public void applyPresetDecoration(RequestCode requestCode, GroupType groupType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
-        return this;
     }
 }

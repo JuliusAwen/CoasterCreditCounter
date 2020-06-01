@@ -72,7 +72,7 @@ public abstract class ActivityDistributor
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
 
-            Log.i(String.format("starting [%s] for %s with RequestCode [%s] from [%s]",
+            Log.i(String.format("starting [%s] for %s with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), element, requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -80,7 +80,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
+            Log.e(String.format("unable to start activity: unknown %s for type %s", requestCode, element));
         }
     }
 
@@ -97,7 +97,7 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_REQUEST_CODE, requestCode.ordinal());
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
 
-            Log.i(String.format("starting [%s] with RequestCode [%s] from [%s]",
+            Log.i(String.format("starting [%s] with %s from [%s]",
                             StringTool.parseActivityName(intent.getComponent().getShortClassName()), requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -105,7 +105,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s] for type %s", requestCode, element));
+            Log.e(String.format("unable to start activity: unknown %s for type %s", requestCode, element));
         }
     }
 
@@ -173,7 +173,7 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_HELP_TITLE, helpTitle);
             intent.putExtra(Constants.EXTRA_HELP_TEXT, helpText);
 
-            Log.i(String.format("starting [%s] with RequestCode [%s] from [%s]",
+            Log.i(String.format("starting [%s] with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -181,7 +181,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s] from [%s]", requestCode, context.getClass().getSimpleName()));
+            Log.e(String.format("unable to start activity: unknown %s from [%s]", requestCode, context.getClass().getSimpleName()));
         }
     }
 
@@ -249,7 +249,7 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_ELEMENT_UUID, element.getUuid().toString());
 
-            Log.i(String.format("starting [%s] for %s with RequestCode [%s] from [%s]",
+            Log.i(String.format("starting [%s] for %s with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), element, requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -257,7 +257,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e( String.format("unable to start activity: unknown RequestCode [%s] for type [%s] from [%s]", requestCode, element, context.getClass().getSimpleName()));
+            Log.e( String.format("unable to start activity: unknown %s for type [%s] from [%s]", requestCode, element, context.getClass().getSimpleName()));
         }
     }
 
@@ -365,7 +365,7 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_ELEMENT_UUID, parentElement.getUuid().toString());
             }
 
-            Log.i(String.format("starting [%s] with %s with RequestCode [%s] from [%s]",
+            Log.i(String.format("starting [%s] with %s with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()),
                     parentElement != null ? String.format("[%s %s]", "parent", parentElement) : "[no parent]",
                     requestCode,
@@ -376,7 +376,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s] from [%s]", requestCode, context.getClass().getSimpleName()));
+            Log.e(String.format("unable to start activity: unknown %s from [%s]", requestCode, context.getClass().getSimpleName()));
         }
     }
 
@@ -430,7 +430,7 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
             intent.putStringArrayListExtra(Constants.EXTRA_ELEMENTS_UUIDS, App.content.getUuidStringsFromElements(elementsToSort));
 
-            Log.i(String.format(Locale.getDefault(), "starting [%s] for [%d] Elements with RequestCode [%s] from [%s]",
+            Log.i(String.format(Locale.getDefault(), "starting [%s] for [%d] Elements with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), elementsToSort.size(), requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -438,7 +438,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s]", requestCode));
+            Log.e(String.format("unable to start activity: unknown %s", requestCode));
         }
     }
 
@@ -545,7 +545,7 @@ public abstract class ActivityDistributor
             intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, toolbarTitle);
             intent.putExtra(Constants.EXTRA_TOOLBAR_SUBTITLE, toolbarSubtitle);
 
-            Log.i(String.format(Locale.getDefault(), "starting [%s] for [%d] Elements with RequestCode [%s] from [%s]",
+            Log.i(String.format(Locale.getDefault(), "starting [%s] for [%d] Elements with %s from [%s]",
                     StringTool.parseActivityName(intent.getComponent().getShortClassName()), elementsToPickFrom.size(), requestCode, context.getClass().getSimpleName()));
 
             Log.frame(LogLevel.INFO, String.format("leaving [%s]", context.getClass().getSimpleName()), '-', false);
@@ -553,7 +553,7 @@ public abstract class ActivityDistributor
         }
         else
         {
-            Log.e(String.format("unable to start activity: unknown RequestCode [%s]", requestCode));
+            Log.e(String.format("unable to start activity: unknown %s", requestCode));
         }
     }
 

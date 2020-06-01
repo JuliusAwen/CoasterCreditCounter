@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -71,8 +70,8 @@ public class SortElementsActivity extends BaseActivity
             }
 
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
-            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode)
-                    .setContent(this.viewModel.elementsToSort);
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToSort);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSortElements);
@@ -118,30 +117,30 @@ public class SortElementsActivity extends BaseActivity
         buttonDown.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.arrow_downward, R.color.white));
         buttonDown.setId(ButtonFunction.MOVE_SELECTION_DOWN.ordinal());
         this.frameLayoutDialogDown = findViewById(R.id.frameLayoutDialogUpDown_Down);
-        this.frameLayoutDialogDown.setOnClickListener(this.getActionDialogOnClickListener());
-        this.frameLayoutDialogDown.setOnTouchListener(this.getActionDialogOnTouchListener());
+        this.frameLayoutDialogDown.setOnClickListener(this.getOnActionDialogClickListener());
+        this.frameLayoutDialogDown.setOnTouchListener(this.getOnActionDialogTouchListener());
 
         ImageButton buttonUp = findViewById(R.id.buttonActionDialogUpDown_Up);
         buttonUp.setImageDrawable(DrawableProvider.getColoredDrawable(R.drawable.arrow_upward, R.color.white));
         buttonUp.setId(ButtonFunction.MOVE_SELECTION_UP.ordinal());
         this.frameLayoutDialogUp = findViewById(R.id.frameLayoutDialogUpDown_Up);
-        this.frameLayoutDialogUp.setOnClickListener(this.getActionDialogOnClickListener());
-        this.frameLayoutDialogUp.setOnTouchListener(this.getActionDialogOnTouchListener());
+        this.frameLayoutDialogUp.setOnClickListener(this.getOnActionDialogClickListener());
+        this.frameLayoutDialogUp.setOnTouchListener(this.getOnActionDialogTouchListener());
     }
 
-    private View.OnClickListener getActionDialogOnClickListener()
+    private View.OnClickListener getOnActionDialogClickListener()
     {
         return new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                handleActionDialogClicked(view);
+                handleActionDialogClick(view);
             }
         };
     }
 
-    private void handleActionDialogClicked(View view)
+    private void handleActionDialogClick(View view)
     {
         this.viewModel.selectedElement = this.viewModel.adapterFacade.getAdapter().getLastSelectedItem();
 
@@ -155,7 +154,7 @@ public class SortElementsActivity extends BaseActivity
         }
     }
 
-    private View.OnTouchListener getActionDialogOnTouchListener()
+    private View.OnTouchListener getOnActionDialogTouchListener()
     {
         return (new View.OnTouchListener()
         {
@@ -205,7 +204,7 @@ public class SortElementsActivity extends BaseActivity
                         }
 
                         handler = null;
-                        break;
+                        return true;
                     }
                 }
 
@@ -242,7 +241,6 @@ public class SortElementsActivity extends BaseActivity
             {
                 Log.v("swapping elements");
                 this.viewModel.adapterFacade.getAdapter().swapItems(this.viewModel.elementsToSort.get(position), this.viewModel.elementsToSort.get(position + 1));
-                Collections.swap(this.viewModel.elementsToSort, position, position + 1);
             }
             else
             {
@@ -266,7 +264,7 @@ public class SortElementsActivity extends BaseActivity
                 Log.v("swapping elements");
 
                 this.viewModel.adapterFacade.getAdapter().swapItems(this.viewModel.elementsToSort.get(position), this.viewModel.elementsToSort.get(position - 1));
-                Collections.swap(this.viewModel.elementsToSort, position, position - 1);
+                this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
             }
             else
             {

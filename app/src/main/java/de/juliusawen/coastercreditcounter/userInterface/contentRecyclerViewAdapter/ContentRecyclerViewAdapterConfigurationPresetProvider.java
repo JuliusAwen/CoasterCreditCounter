@@ -55,12 +55,6 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             case SORT_ATTRACTIONS:
 
             case PICK_VISIT:
-            {
-                configuration.setSelectable(true);
-                configuration.setMultipleSelection(false);
-                break;
-            }
-
             case PICK_CREDIT_TYPE:
             case PICK_CATEGORY:
             case PICK_MANUFACTURER:
@@ -75,7 +69,6 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             {
                 configuration.setSelectable(true);
                 configuration.setMultipleSelection(false);
-                relevantChildTypes.add(ElementType.IPROPERTY);
                 break;
             }
 
