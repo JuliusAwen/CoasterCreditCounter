@@ -95,14 +95,14 @@ public class PickElementsActivity extends BaseActivity
 
                 default:
                 {
-                    Log.e(String.format("CONGRATS - you found your default case: %s", this.viewModel.requestCode));
 
 //                    this.viewModel.oldContentRecyclerViewAdapter = OLD_ContentRecyclerViewAdapterProvider.getSelectableContentRecyclerViewAdapter(
 //                            this.viewModel.elementsToPickFrom,
 //                            new HashSet<Class<? extends IElement>>(),
 //                            true)
 //                            .setTypefaceForContentType(this.viewModel.elementsToPickFrom.get(0).getClass(), Typeface.BOLD);
-                    break;
+
+                    throw new IllegalStateException(String.format("CONGRATS - you found your default case: %s", this.viewModel.requestCode));
                 }
             }
 
