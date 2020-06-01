@@ -264,7 +264,6 @@ public class SortElementsActivity extends BaseActivity
                 Log.v("swapping elements");
 
                 this.viewModel.adapterFacade.getAdapter().swapItems(this.viewModel.elementsToSort.get(position), this.viewModel.elementsToSort.get(position - 1));
-                this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
             }
             else
             {
