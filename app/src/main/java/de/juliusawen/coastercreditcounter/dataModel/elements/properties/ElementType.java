@@ -6,6 +6,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
@@ -21,6 +22,7 @@ public enum ElementType
 
     IATTRACTION(IAttraction.class),
     ON_SITE_ATTRACTION(OnSiteAttraction.class),
+    VISITED_ATTRACTION(VisitedAttraction.class),
 
     IPROPERTY(IProperty.class),
     CREDIT_TYPE(CreditType.class),

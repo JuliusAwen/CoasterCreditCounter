@@ -7,11 +7,13 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
@@ -20,6 +22,8 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 abstract class AdapterPlainHandler extends AdapterContentHandler
 {
+    private boolean formatAsPrettyPrint = false;
+
     private final View.OnClickListener internalOnClickListener;
     private final View.OnLongClickListener internalOnLongClickListener;
 
@@ -29,6 +33,17 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
+    }
+
+    @Override
+    protected void setContent(List<IElement> content)
+    {
+        super.setContent(content);
+
+        if(super.useBottomSpacer())
+        {
+            this.addBottomSpacer();
+        }
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -83,6 +98,42 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
                 * generation;
 
         viewHolder.linearLayout.setPadding(padding, 0, padding, 0);
+    }
+
+    protected VisitedAttraction bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
+    {
+        VisitedAttraction visitedAttraction = (VisitedAttraction) super.getItem(position);
+        Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]", visitedAttraction, position));
+
+        if(!this.formatAsPrettyPrint())
+        {
+            viewHolder.textViewPrettyPrint.setVisibility(View.GONE);
+            viewHolder.linearLayoutEditable.setVisibility(View.VISIBLE);
+
+            viewHolder.linearLayoutCounter.setTag(visitedAttraction);
+            viewHolder.linearLayoutCounter.setOnClickListener(this.internalOnClickListener);
+            viewHolder.linearLayoutCounter.setOnLongClickListener(this.internalOnLongClickListener);
+
+            viewHolder.textViewName.setText(visitedAttraction.getName());
+            viewHolder.textViewCount.setText(String.valueOf(visitedAttraction.fetchTotalRideCount()));
+
+            viewHolder.imageViewIncrease.setTag(visitedAttraction);
+            viewHolder.imageViewIncrease.setOnClickListener(super.getOnIncreaseRideCountClickListener());
+
+            viewHolder.imageViewDecrease.setTag(visitedAttraction);
+            viewHolder.imageViewDecrease.setOnClickListener(super.getOnDecreaseRideCountClickListener());
+        }
+        else
+        {
+            viewHolder.linearLayoutEditable.setVisibility(View.GONE);
+
+
+            viewHolder.textViewPrettyPrint.setText(
+                    App.getContext().getString(R.string.text_visited_attraction_pretty_print, visitedAttraction.fetchTotalRideCount(), visitedAttraction.getName()));
+            viewHolder.textViewPrettyPrint.setVisibility(View.VISIBLE);
+        }
+
+        return visitedAttraction;
     }
 
     protected boolean handleOnClick(View view, boolean performExternalClick)
@@ -166,16 +217,24 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         throw new IllegalArgumentException(String.format("View tag object's type [%s] is not assignable from IElement", tag.getClass().getSimpleName()));
     }
 
-    protected boolean tryAddBottomSpacer()
+    protected void setFormatAsPrettyPrint(boolean formatAsPrettyPrint)
+    {
+        this.formatAsPrettyPrint = formatAsPrettyPrint;
+        super.notifyDataSetChanged();
+    }
+
+    protected boolean formatAsPrettyPrint()
+    {
+        return this.formatAsPrettyPrint;
+    }
+
+    protected void addBottomSpacer()
     {
         if(!super.content.isEmpty() && !(super.getItem(super.getItemCount() - 1) instanceof BottomSpacer))
         {
             super.insertItem(new BottomSpacer());
-            Log.v("added BottomSpacer");
-            return true;
+            Log.d("added BottomSpacer");
         }
-
-        return false;
     }
 
     static class ViewHolderElement extends RecyclerView.ViewHolder

@@ -47,5 +47,5 @@ public interface IContentRecyclerViewAdapter
     LinkedList<IElement> getSelectedItemsInOrderOfSelection();
     IElement getLastSelectedItem();
 
-    IContentRecyclerViewAdapter addBottomSpacer(); //Todo: remove and handle via Config
+    void setFormatAsPrettyPrint(boolean formatAsPrettyPrint);
 }

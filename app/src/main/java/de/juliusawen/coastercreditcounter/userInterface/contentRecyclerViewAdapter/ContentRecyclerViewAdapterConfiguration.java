@@ -16,6 +16,9 @@ public class ContentRecyclerViewAdapterConfiguration
     private final Map<ElementType, View.OnClickListener> onClickListenersByElementType = new HashMap<>();
     private final Map<ElementType, View.OnLongClickListener> onLongClickListenersByElementType = new HashMap<>();
 
+    private View.OnClickListener onIncreaseRideCountClickListener;
+    private View.OnClickListener onDecreaseRideCountClickListener;
+
     private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
 
     // ElementTypes that are either expanded/collapsed or selected when parent is clicked
@@ -53,6 +56,28 @@ public class ContentRecyclerViewAdapterConfiguration
     {
         this.onLongClickListenersByElementType.put(elementType, onLongClickListener);
         Log.v(String.format("%s", elementType));
+        return this;
+    }
+
+    public View.OnClickListener getOnIncreaseRideCountClickListener()
+    {
+        return this.onIncreaseRideCountClickListener;
+    }
+
+    public ContentRecyclerViewAdapterConfiguration setOnIncreaseRideCountClickListener(View.OnClickListener onIncreaseRideCountClickListener)
+    {
+        this.onIncreaseRideCountClickListener = onIncreaseRideCountClickListener;
+        return this;
+    }
+
+    public View.OnClickListener getOnDecreaseRideCountClickListener()
+    {
+        return this.onDecreaseRideCountClickListener;
+    }
+
+    public ContentRecyclerViewAdapterConfiguration setOnDecreaseRideCountClickListener(View.OnClickListener onDecreaseRideCountClickListener)
+    {
+        this.onDecreaseRideCountClickListener = onDecreaseRideCountClickListener;
         return this;
     }
 
@@ -137,16 +162,18 @@ public class ContentRecyclerViewAdapterConfiguration
         }
 
         return String.format(Locale.getDefault(),
-                        "ContentRecyclerViewConfiguration:\n" +
-                        "    isSelectable[%S], isMultipleSelection[%S]\n" +
-                        "    [%d] relevant child type(s)%s\n"+
-                        "    [%d] OnElementTypeClickListener(s)%s\n"+
-                        "    [%d] OnElementTypeLongClickListener(s)%s",
+                "ContentRecyclerViewConfiguration:\n" +
+                "    isSelectable[%S], isMultipleSelection[%S]\n" +
+                "    [%d] relevant child type(s)%s\n"+
+                "    [%d] OnElementTypeClickListener(s)%s\n"+
+                "    [%d] OnElementTypeLongClickListener(s)%s\n" +
+                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]",
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
                 this.onClickListenersByElementType.size(), onClickListenerTypesString,
-                this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString
+                this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString,
+                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null
         );
     }
 }

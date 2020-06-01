@@ -218,6 +218,11 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 break;
             }
 
+            case SHOW_VISIT:
+            {
+                decoration.addSpecialStringResourceForElementType(ElementType.VISITED_ATTRACTION, R.string.text_visited_attraction_pretty_print);
+            }
+
             case SORT_LOCATIONS:
             case SORT_PARKS:
             {

@@ -20,8 +20,6 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewDecorationPresetProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewStyler;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class OptionsMenuButler
@@ -428,94 +426,49 @@ public class OptionsMenuButler
         {
             this.master.invalidateOptionsMenu();
 
-            IContentRecyclerViewAdapter contentRecyclerViewAdapter = this.getContentRecyclerViewAdapter();
-            OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter = null;
-            if(contentRecyclerViewAdapter instanceof OLD_ContentRecyclerViewAdapter)
+            GroupType groupType = null;
+            switch(optionsItem)
             {
-                oldContentRecyclerViewAdapter = (OLD_ContentRecyclerViewAdapter) contentRecyclerViewAdapter;
+                case GROUP_BY_NONE:
+                    groupType = GroupType.NONE;
+                    break;
+
+                case GROUP_BY_PARK:
+                    groupType = GroupType.PARK;
+                    break;
+
+                case GROUP_BY_CREDIT_TYPE:
+                    groupType = GroupType.CREDIT_TYPE;
+                    break;
+
+                case GROUP_BY_CATEGORY:
+                    groupType = GroupType.CATEGORY;
+                    break;
+
+                case GROUP_BY_MANUFACTURER:
+                    groupType = GroupType.MANUFACTURER;
+                    break;
+
+                case GROUP_BY_MODEL:
+                    groupType = GroupType.MODEL;
+                    break;
+
+                case GROUP_BY_STATUS:
+                    groupType = GroupType.STATUS;
+                    break;
             }
 
-            if(oldContentRecyclerViewAdapter != null)
+            if(groupType != null)
             {
-                switch(optionsItem)
-                {
-                    case GROUP_BY_NONE:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.NONE);
-                        return true;
+                ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(
+                        this.viewModel.getContentRecyclerViewAdapterConfiguration().getDecoration(),
+                        this.getRequestCode(),
+                        GroupType.NONE
+                );
 
-                    case GROUP_BY_PARK:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.PARK);
-                        return true;
-
-                    case GROUP_BY_CREDIT_TYPE:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.CREDIT_TYPE);
-                        return true;
-
-                    case GROUP_BY_CATEGORY:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.CATEGORY);
-                        return true;
-
-                    case GROUP_BY_MANUFACTURER:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.MANUFACTURER);
-                        return true;
-
-                    case GROUP_BY_MODEL:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.MODEL);
-                        return true;
-
-                    case GROUP_BY_STATUS:
-                        OLD_ContentRecyclerViewStyler.groupElementsAndSetDetailModes(oldContentRecyclerViewAdapter, this.getRequestCode(), GroupType.STATUS);
-                        return true;
-                }
+                this.getContentRecyclerViewAdapter().groupContent(groupType);
 
                 return true;
-            }
-            else
-            {
-                GroupType groupType = null;
-                switch(optionsItem)
-                {
-                    case GROUP_BY_NONE:
-                        groupType = GroupType.NONE;
-                        break;
-
-                    case GROUP_BY_PARK:
-                        groupType = GroupType.PARK;
-                        break;
-
-                    case GROUP_BY_CREDIT_TYPE:
-                        groupType = GroupType.CREDIT_TYPE;
-                        break;
-
-                    case GROUP_BY_CATEGORY:
-                        groupType = GroupType.CATEGORY;
-                        break;
-
-                    case GROUP_BY_MANUFACTURER:
-                        groupType = GroupType.MANUFACTURER;
-                        break;
-
-                    case GROUP_BY_MODEL:
-                        groupType = GroupType.MODEL;
-                        break;
-
-                    case GROUP_BY_STATUS:
-                        groupType = GroupType.STATUS;
-                        break;
-                }
-
-                if(groupType != null)
-                {
-                    ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(
-                            this.viewModel.getContentRecyclerViewAdapterConfiguration().getDecoration(),
-                            this.getRequestCode(),
-                            GroupType.NONE
-                    );
-
-                    contentRecyclerViewAdapter.groupContent(groupType);
-
-                    return true;
-                }
             }
         }
 

@@ -343,4 +343,11 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     {
         return this.expandedItems.isEmpty();
     }
+
+    @Override
+    protected void setFormatAsPrettyPrint(boolean formatAsPrettyPrint)
+    {
+        super.setFormatAsPrettyPrint(formatAsPrettyPrint);
+        this.expandAllContent();
+    }
 }

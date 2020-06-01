@@ -87,6 +87,21 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return this.configuration.getOnLongClickListenersByElementType();
     }
 
+    protected boolean hasRideCountClickListeners()
+    {
+        return this.configuration.getOnIncreaseRideCountClickListener() != null && this.configuration.getOnDecreaseRideCountClickListener() != null;
+    }
+
+    protected View.OnClickListener getOnIncreaseRideCountClickListener()
+    {
+        return this.configuration.getOnIncreaseRideCountClickListener();
+    }
+
+    protected View.OnClickListener getOnDecreaseRideCountClickListener()
+    {
+        return this.configuration.getOnDecreaseRideCountClickListener();
+    }
+
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView)
     {

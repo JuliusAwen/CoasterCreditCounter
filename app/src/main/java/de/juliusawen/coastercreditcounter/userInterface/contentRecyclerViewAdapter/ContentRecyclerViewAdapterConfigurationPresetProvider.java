@@ -43,6 +43,13 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
                 break;
             }
 
+            case SHOW_VISIT:
+            {
+                relevantChildTypes.add(ElementType.VISITED_ATTRACTION);
+                configuration.setBottomSpacer(true);
+                break;
+            }
+
             case SORT_LOCATIONS:
             case SORT_PARKS:
             case SORT_ATTRACTIONS:

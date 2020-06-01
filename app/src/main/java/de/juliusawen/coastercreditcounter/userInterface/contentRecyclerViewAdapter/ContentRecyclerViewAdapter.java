@@ -210,15 +210,10 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     }
 
     @Override
-    public IContentRecyclerViewAdapter addBottomSpacer()
+    public void setFormatAsPrettyPrint(boolean formatAsPrettyPrint)
     {
-        Log.i("adding BottomSpacer...");
-        if(!super.tryAddBottomSpacer())
-        {
-            Log.w("BottomSpacer already added");
-        }
-
-        return this;
+        Log.i(String.format("formatAsPrettyPrint[%S]", formatAsPrettyPrint));
+        super.setFormatAsPrettyPrint(formatAsPrettyPrint);
     }
 
     @Override
@@ -238,7 +233,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     {
         IElement element = super.getItem(position);
 
-        if(element.isVisitedAttraction())
+        if(element.isVisitedAttraction() && super.hasRideCountClickListeners())
         {
             return ItemViewType.VISITED_ATTRACTION.ordinal();
         }
@@ -296,10 +291,10 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
                 this.bindViewHolderElement(viewHolderElement, position);
                 break;
 
-//            case VISITED_ATTRACTION:
-//                ViewHolderVisitedAttraction viewHolderVisitedAttraction = (ViewHolderVisitedAttraction) viewHolder;
-//                this.bindViewHolderVisitedAttraction(viewHolderVisitedAttraction, position);
-//                break;
+            case VISITED_ATTRACTION:
+                ViewHolderVisitedAttraction viewHolderVisitedAttraction = (ViewHolderVisitedAttraction) viewHolder;
+                this.bindViewHolderVisitedAttraction(viewHolderVisitedAttraction, position);
+                break;
 
             case BOTTOM_SPACER:
                 break;

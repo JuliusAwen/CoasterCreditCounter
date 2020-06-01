@@ -2,7 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -28,7 +27,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.Attract
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -40,10 +39,9 @@ import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbar
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
@@ -70,6 +68,26 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
+        if(this.viewModel.adapterFacade == null)
+        {
+            this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+            this.viewModel.adapterFacade.getConfiguration()
+                    .addOnElementTypeClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeClickListener(ElementType.GROUP_HEADER))
+                    .addOnElementTypeClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeClickListener(ElementType.VISITED_ATTRACTION))
+                    .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
+                    .addOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION))
+                    .setOnIncreaseRideCountClickListener(this.createIncreaseRideCountOnClickListener())
+                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener());
+
+            this.updateContentRecyclerView(true);
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.adapterFacade.getAdapter());
+
+
         super.createHelpOverlayFragment(getString(R.string.title_help, getString(R.string.title_show_visit)), getString(R.string.help_text_show_visit));
         super.createToolbar();
         super.addToolbarHomeButton();
@@ -86,20 +104,6 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         invalidateOptionsMenu();
 
-        if(this.viewModel.oldContentRecyclerViewAdapter == null)
-        {
-            this.viewModel.oldContentRecyclerViewAdapter = this.createContentRecyclerView()
-                    .setTypefaceForContentType(GroupHeader.class, Typeface.BOLD);
-        }
-
-        this.viewModel.oldContentRecyclerViewAdapter.setOnClickListener(this.getContentRecyclerViewAdapterOnClickListener())
-                .addIncreaseRideCountOnClickListener(this.getIncreaseRideCountOnClickListener())
-                .addDecreaseRideCountOnClickListener(this.getDecreaseRideCountOnClickListener());
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.viewModel.oldContentRecyclerViewAdapter);
-
         if(Visit.isCurrentVisit(this.viewModel.visit))
         {
             this.viewModel.visit.setEditingEnabled(true);
@@ -107,11 +111,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         if(this.viewModel.visit.isEditingEnabled())
         {
-            this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
+            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
         }
         else
         {
-            this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
+            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
         }
 
         this.handleFloatingActionButtonVisibility();
@@ -125,20 +129,26 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         switch(super.getOptionsItem(item))
         {
             case ENABLE_EDITING:
+            {
                 this.viewModel.visit.setEditingEnabled(true);
                 invalidateOptionsMenu();
-                this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(false);
+                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
                 this.handleFloatingActionButtonVisibility();
+
                 Log.d(String.format("<ENABLE_EDITING> enabled editing for %s", this.viewModel.visit));
                 return true;
+            }
 
             case DISABLE_EDITING:
+            {
                 this.viewModel.visit.setEditingEnabled(false);
                 invalidateOptionsMenu();
-                this.viewModel.oldContentRecyclerViewAdapter.setFormatAsPrettyPrint(true);
+                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
                 this.handleFloatingActionButtonVisibility();
+
                 Log.d(String.format("<DISABLE_EDITING> disabled editing %s", this.viewModel.visit));
                 return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -165,7 +175,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
 
                     super.markForUpdate(this.viewModel.visit);
                     break;
@@ -198,14 +208,17 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             public void onClick(View view)
             {
                 Log.i("FloatingActionButton clicked");
-
-                ActivityDistributor.startActivityPickForResult(
-                        ShowVisitActivity.this,
-                        RequestCode.PICK_ATTRACTIONS,
-                        new LinkedList<IElement>(getNotYetAddedAttractionsWithDefaultStatus()));
-
+                handleOnFloatingActionButtonClick();
             }
         });
+    }
+
+    private void handleOnFloatingActionButtonClick()
+    {
+        ActivityDistributor.startActivityPickForResult(
+                ShowVisitActivity.this,
+                RequestCode.PICK_ATTRACTIONS,
+                new LinkedList<IElement>(getNotYetAddedAttractionsWithDefaultStatus()));
     }
 
     private void handleFloatingActionButtonVisibility()
@@ -217,64 +230,81 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         else
         {
             super.setFloatingActionButtonVisibility(true);
-            this.viewModel.oldContentRecyclerViewAdapter.old_addBottomSpacer();
         }
     }
 
-    private OLD_ContentRecyclerViewAdapter createContentRecyclerView()
+    @Override
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
     {
-        return OLD_ContentRecyclerViewAdapterProvider.getCountableContentRecyclerViewAdapter(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class), VisitedAttraction.class)
-                .groupItems(GroupType.CATEGORY);
+        IElement element = (IElement) view.getTag();
+        switch(elementType)
+        {
+            case GROUP_HEADER:
+                this.handleOnGroupHeaderClick(element);
+                break;
+
+            case VISITED_ATTRACTION:
+                this.handleOnVisitedAttractionClick(element);
+                break;
+
+            default:
+                super.handleOnElementTypeClick(elementType, view);
+                break;
+        }
     }
 
-    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewAdapterOnClickListener()
+    private void handleOnGroupHeaderClick(IElement element)
     {
-        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
+        this.viewModel.adapterFacade.getAdapter().toggleExpansion(element);
+        if(this.viewModel.adapterFacade.getAdapter().isAllContentExpanded() || this.viewModel.adapterFacade.getAdapter().isAllContentCollapsed())
         {
-            @Override
-            public void onClick(View view)
-            {
-                Element element = (Element) view.getTag();
+            invalidateOptionsMenu();
+        }
+    }
 
-                if(element.isGroupHeader())
-                {
-                    viewModel.oldContentRecyclerViewAdapter.old_toggleExpansion(element);
-                    if(viewModel.oldContentRecyclerViewAdapter.isAllExpanded() || viewModel.oldContentRecyclerViewAdapter.isAllCollapsed())
-                    {
-                        invalidateOptionsMenu();
-                    }
-                }
-                else if(element.isAttraction())
-                {
-                    Toaster.makeShortToast(ShowVisitActivity.this, element + " clicked");
-                }
-            }
+    private void handleOnVisitedAttractionClick(IElement element)
+    {
+        Toaster.notYetImplemented(ShowVisitActivity.this);
+    }
 
-            @Override
-            public boolean onLongClick(View view)
-            {
-                viewModel.longClickedElement = (Element) view.getTag();
+    @Override
+    protected boolean handleOnElementTypeLongClick(ElementType elementType, View view)
+    {
+        this.viewModel.longClickedElement = (Element) view.getTag();
 
-                if(viewModel.longClickedElement.isGroupHeader())
-                {
-                    boolean sortAttractionsIsEnabled =
-                            viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1;
+        switch(elementType)
+        {
+            case GROUP_HEADER:
+                return this.handleOnGroupHeaderLongClick(view);
 
-                    PopupMenuAgent.getMenu()
-                            .add(PopupItem.SORT_ATTRACTIONS)
-                            .setEnabled(PopupItem.SORT_ATTRACTIONS, sortAttractionsIsEnabled)
-                            .show(ShowVisitActivity.this, view);
-                }
-                else if(viewModel.longClickedElement.isAttraction())
-                {
-                    PopupMenuAgent.getMenu()
-                            .add(PopupItem.REMOVE_ELEMENT)
-                            .show(ShowVisitActivity.this, view);
-                }
+            case VISITED_ATTRACTION:
+                return this.handleOnVisitedAttractionLongClick(view);
 
-                return true;
-            }
-        };
+            default:
+                return super.handleOnElementTypeLongClick(elementType, view);
+        }
+    }
+
+    private boolean handleOnGroupHeaderLongClick(View view)
+    {
+        boolean sortAttractionsIsEnabled =
+                this.viewModel.longClickedElement.getChildCountOfType(Attraction.class) > 1 || this.viewModel.longClickedElement.getChildCountOfType(VisitedAttraction.class) > 1;
+
+        PopupMenuAgent.getMenu()
+                .add(PopupItem.SORT_ATTRACTIONS)
+                .setEnabled(PopupItem.SORT_ATTRACTIONS, sortAttractionsIsEnabled)
+                .show(ShowVisitActivity.this, view);
+
+        return true;
+    }
+
+    private boolean handleOnVisitedAttractionLongClick(View view)
+    {
+        PopupMenuAgent.getMenu()
+                .add(PopupItem.REMOVE_ELEMENT)
+                .show(ShowVisitActivity.this, view);
+
+        return true;
     }
 
     @Override
@@ -362,40 +392,44 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         this.handleFloatingActionButtonVisibility();
     }
 
-    private View.OnClickListener getIncreaseRideCountOnClickListener()
+    private View.OnClickListener createIncreaseRideCountOnClickListener()
     {
         return new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
-
-                Log.v(String.format("increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
-
-                visitedAttraction.increaseTrackedRideCount(App.preferences.getIncrement());
-                ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
-                updateContentRecyclerView(false);
+                handleOnIncreaseRideCountClick((VisitedAttraction) view.getTag());
             }
         };
     }
 
-    private View.OnClickListener getDecreaseRideCountOnClickListener()
+    private void handleOnIncreaseRideCountClick(VisitedAttraction visitedAttraction)
+    {
+        Log.v(String.format("increasing %s's ride count for %s", visitedAttraction, visitedAttraction.getParent()));
+        visitedAttraction.increaseTrackedRideCount(App.preferences.getIncrement());
+        this.viewModel.adapterFacade.getAdapter().notifyItemChanged(visitedAttraction);
+        super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
+    }
+
+    private View.OnClickListener createDecreaseRideCountOnClickListener()
     {
         return new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                VisitedAttraction visitedAttraction = (VisitedAttraction) view.getTag();
-
-                Log.v(String.format(" decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
-
-                visitedAttraction.decreaseTrackedRideCount(App.preferences.getIncrement());
-                ShowVisitActivity.super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
-                updateContentRecyclerView(false);
+                handleOnDecreaseRideCountClick((VisitedAttraction) view.getTag());
             }
         };
+    }
+
+    private void handleOnDecreaseRideCountClick(VisitedAttraction visitedAttraction)
+    {
+        Log.v(String.format(" decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+        visitedAttraction.decreaseTrackedRideCount(App.preferences.getIncrement());
+        this.viewModel.adapterFacade.getAdapter().notifyItemChanged(visitedAttraction);
+        super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
     }
 
     private boolean allAttractionsAdded()
@@ -448,18 +482,14 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(resetContent)
         {
             Log.d("resetting content...");
-            this.viewModel.oldContentRecyclerViewAdapter.setItems(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class))
-                    .expandAll();
-
-            if(!this.allAttractionsAdded())
-            {
-                this.viewModel.oldContentRecyclerViewAdapter.old_addBottomSpacer();
-            }
+            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+            this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
+            this.viewModel.adapterFacade.getAdapter().expandAllContent();
         }
         else
         {
             Log.d("notifying data set changed...");
-            this.viewModel.oldContentRecyclerViewAdapter.notifyDataSetChanged();
+            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
         }
     }
 }

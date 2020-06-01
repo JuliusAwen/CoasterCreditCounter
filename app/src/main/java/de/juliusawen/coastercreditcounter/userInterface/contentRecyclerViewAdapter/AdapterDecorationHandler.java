@@ -1,12 +1,14 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
@@ -18,34 +20,49 @@ abstract class AdapterDecorationHandler extends AdapterPlainHandler
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
+    @Override
     protected IElement bindViewHolderElement(final ViewHolderElement viewHolder, int position)
     {
         IElement element = super.bindViewHolderElement(viewHolder, position);
 
         Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]...", element, position));
 
-        this.applyTypeface(element, viewHolder);
-        this.applySpecialStringRecource(element, viewHolder);
-        this.setDetails(element, viewHolder);
+        this.applyTypeface(element, viewHolder.textViewName);
+        this.applySpecialStringRecource(element, viewHolder.textViewName);
+        this.setDetailsOnElement(element, viewHolder);
 
         return element;
     }
 
-    private void applyTypeface(IElement item, ViewHolderElement viewHolder)
+    @Override
+    protected VisitedAttraction bindViewHolderVisitedAttraction(ViewHolderVisitedAttraction viewHolder, int position)
     {
-        viewHolder.textViewName.setTypeface(null, super.getDecoration().getTypeface(item));
+        VisitedAttraction visitedAttraction = super.bindViewHolderVisitedAttraction(viewHolder, position);
+
+        if(this.formatAsPrettyPrint())
+        {
+            Log.v(String.format(Locale.getDefault(), "binding %s for position [%d]", visitedAttraction, position));
+            this.applySpecialStringRecource(visitedAttraction, viewHolder.textViewPrettyPrint);
+        }
+
+        return visitedAttraction;
     }
 
-    private void applySpecialStringRecource(IElement item, ViewHolderElement viewHolder)
+    private void applyTypeface(IElement item, TextView textView)
+    {
+        textView.setTypeface(null, super.getDecoration().getTypeface(item));
+    }
+
+    private void applySpecialStringRecource(IElement item, TextView textView)
     {
         String specialString = super.getDecoration().getSpecialString(item);
         if(specialString != null)
         {
-            viewHolder.textViewName.setText(specialString);
+            textView.setText(specialString);
         }
     }
 
-    private void setDetails(IElement item, ViewHolderElement viewHolder)
+    private void setDetailsOnElement(IElement item, ViewHolderElement viewHolder)
     {
         viewHolder.textViewDetailAbove.setVisibility(View.GONE);
         viewHolder.textViewDetailBelow.setVisibility(View.GONE);
