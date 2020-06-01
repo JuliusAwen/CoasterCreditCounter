@@ -8,13 +8,15 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
 
 public class ShowParkSharedViewModel extends OptionsMenuButlerCompatibleBaseViewModel
 {
     public RequestCode requestCode;
-    public OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
+    public ContentRecyclerViewAdapterFacade showAttractionsAdapterFacade;
+    public ContentRecyclerViewAdapterFacade showVisitsAdapterFacade;
+
     public Park park;
 
     public IElement longClickedElement;
@@ -31,7 +33,17 @@ public class ShowParkSharedViewModel extends OptionsMenuButlerCompatibleBaseView
     @Override
     public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
-        return this.oldContentRecyclerViewAdapter;
+        switch(this.requestCode)
+        {
+            case SHOW_ATTRACTIONS:
+                return this.showAttractionsAdapterFacade.getAdapter();
+
+            case SHOW_VISITS:
+                return showVisitsAdapterFacade.getAdapter();
+
+            default:
+                return null;
+        }
     }
 
     @Override

@@ -83,7 +83,8 @@ public class PickElementsActivity extends BaseActivity
                 case PICK_ATTRACTIONS:
                 {
                     this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToPickFrom);
-                    this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.CATEGORY);
+                    this.viewModel.adapterFacade.applyPresetDecoration(this.viewModel.requestCode, GroupType.CATEGORY);
+                    this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
                     break;
                 }
 

@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +24,9 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.application.Constants;
-import de.juliusawen.coastercreditcounter.dataModel.elements.Element;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
@@ -41,16 +39,14 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapter;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewAdapterProvider;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OLD.OLD_ContentRecyclerViewOnClickListener;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
 
 public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
 {
     private ShowParkSharedViewModel viewModel;
-    private OLD_ContentRecyclerViewAdapter oldContentRecyclerViewAdapter;
     private ShowVisitsFragmentInteraction fragmentInteraction;
 
     public static ShowVisitsFragment newInstance()
@@ -66,7 +62,16 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
 
         this.viewModel = new ViewModelProvider(getActivity()).get(ShowParkSharedViewModel.class);
 
-        this.oldContentRecyclerViewAdapter = this.createContentRecyclerAdapter();
+        if(this.viewModel.showVisitsAdapterFacade == null)
+        {
+            this.viewModel.showVisitsAdapterFacade = new ContentRecyclerViewAdapterFacade();
+            this.viewModel.showVisitsAdapterFacade.createPreconfiguredAdapter(RequestCode.SHOW_VISITS);
+            this.viewModel.showVisitsAdapterFacade.getConfiguration()
+                    .addOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER))
+                    .addOnElementTypeClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.VISIT))
+                    .addOnElementTypeLongClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.VISIT));
+
+        }
 
         this.setHasOptionsMenu(true);
     }
@@ -82,7 +87,9 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowVisits);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(this.oldContentRecyclerViewAdapter);
+        recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.showVisitsAdapterFacade.getAdapter());
+
+        this.updateContentRecyclerView();
     }
 
     @Override
@@ -90,7 +97,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         super.onResume();
         this.viewModel.requestCode = RequestCode.SHOW_VISITS;
-        this.viewModel.oldContentRecyclerViewAdapter = this.oldContentRecyclerViewAdapter;
     }
 
     @Override
@@ -137,57 +143,58 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         }
     }
 
-    private OLD_ContentRecyclerViewAdapter createContentRecyclerAdapter()
+    public void handleOnElementTypeClick(ElementType elementType, View view)
     {
-        return OLD_ContentRecyclerViewAdapterProvider.getExpandableContentRecyclerViewAdapter(this.viewModel.park.getChildrenOfType(Visit.class), Visit.class)
-                .setTypefaceForContentType(SpecialGroupHeader.class, Typeface.BOLD)
-                .groupItems(GroupType.YEAR)
-                .setOnClickListener(this.getContentRecyclerViewOnClickListener());
+        IElement element = (IElement) view.getTag();
+        switch(elementType)
+        {
+            case SPECIAL_GROUP_HEADER:
+                this.handleOnSpecialGroupHeaderClick(element);
+                break;
+
+            case VISIT:
+                this.handleOnVisitClick(element);
+                break;
+
+            default:
+                Log.e(String.format("unhandled click on %s", elementType));
+        }
     }
 
-    private OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener getContentRecyclerViewOnClickListener()
+    private void handleOnSpecialGroupHeaderClick(IElement element)
     {
-        return new OLD_ContentRecyclerViewOnClickListener.CustomOnClickListener()
+        this.viewModel.showVisitsAdapterFacade.getAdapter().toggleExpansion(element);
+        if(this.viewModel.showVisitsAdapterFacade.getAdapter().isAllContentExpanded() || this.viewModel.showVisitsAdapterFacade.getAdapter().isAllContentCollapsed())
         {
-            @Override
-            public void onClick(View view)
-            {
-                Element element = (Element)view.getTag();
-                if(element.isVisit())
-                {
-                    ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, element);
-                }
-                else if(element.isGroupHeader())
-                {
-                    oldContentRecyclerViewAdapter.old_toggleExpansion(element);
-                    if(oldContentRecyclerViewAdapter.isAllExpanded() || oldContentRecyclerViewAdapter.isAllCollapsed())
-                    {
-                        getActivity().invalidateOptionsMenu();
-                    }
-                }
-            }
+            getActivity().invalidateOptionsMenu();
+        }
+    }
 
-            @Override
-            public boolean onLongClick(final View view)
-            {
-                IElement longClickedElement = (IElement)view.getTag();
-                if(longClickedElement.isVisit())
-                {
-                    viewModel.longClickedElement = longClickedElement;
+    private void handleOnVisitClick(IElement element)
+    {
+        ActivityDistributor.startActivityShow(getActivity(), RequestCode.SHOW_VISIT, element);
+    }
 
-                    PopupMenuAgent.getMenu()
-                            .add(PopupItem.EDIT_ELEMENT)
-                            .add(PopupItem.DELETE_ELEMENT)
-                            .show(getContext(), view);
+    public boolean handleOnElementTypeLongClick(ElementType elementType, View view)
+    {
+        if(elementType != ElementType.VISIT)
+        {
+            Log.e(String.format("unhandled click on %s", elementType));
+            return false;
+        }
 
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        };
+        return this.handleOnVisitLongClick(view);
+    }
+    private boolean handleOnVisitLongClick(View view)
+    {
+        this.viewModel.longClickedElement = (IElement) view.getTag();
+
+        PopupMenuAgent.getMenu()
+                .add(PopupItem.EDIT_ELEMENT)
+                .add(PopupItem.DELETE_ELEMENT)
+                .show(getContext(), view);
+
+        return true;
     }
 
     public void handlePopupItemDeleteElementClicked()
@@ -225,28 +232,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day)
             {
-                Log.v(String.format(Locale.getDefault(), "picked date: year[%d], month[%d], day[%d]", year, month, day));
-                viewModel.calendar.set(year, month, day);
-
-                if(!(Visit.isSameDay(((Visit)viewModel.longClickedElement).getCalendar(), viewModel.calendar)))
-                {
-                    if(!Visit.fetchVisitsForYearAndDay(viewModel.calendar, viewModel.park.getChildrenAsType(Visit.class)).isEmpty())
-                    {
-                        viewModel.datePickerDialog.dismiss();
-                        Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
-                    }
-                    else
-                    {
-                        ((Visit)viewModel.longClickedElement).setDateAndAdjustName(viewModel.calendar);
-                        ShowVisitsFragment.this.fragmentInteraction.markForUpdate(viewModel.longClickedElement);
-                        updateContentRecyclerView();
-                    }
-                }
-                else
-                {
-                    Log.v("same date picked - doing nothing");
-                }
-
+                handleOnDateSet(year, month, day);
                 viewModel.datePickerDialog.dismiss();
             }
         }, year, month, day);
@@ -263,6 +249,31 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.viewModel.datePickerDialog.setCancelable(false);
         this.viewModel.datePickerDialog.setCanceledOnTouchOutside(false);
         this.viewModel.datePickerDialog.show();
+    }
+
+    private void handleOnDateSet(int year, int month, int day)
+    {
+        Log.v(String.format(Locale.getDefault(), "picked date: year[%d], month[%d], day[%d]", year, month, day));
+        this.viewModel.calendar.set(year, month, day);
+
+        if(!(Visit.isSameDay(((Visit) this.viewModel.longClickedElement).getCalendar(), this.viewModel.calendar)))
+        {
+            if(!Visit.fetchVisitsForYearAndDay(this.viewModel.calendar, this.viewModel.park.getChildrenAsType(Visit.class)).isEmpty())
+            {
+                this.viewModel.datePickerDialog.dismiss();
+                Toaster.makeLongToast(getContext(), getString(R.string.error_visit_already_exists));
+            }
+            else
+            {
+                ((Visit) this.viewModel.longClickedElement).setDateAndAdjustName(this.viewModel.calendar);
+                ShowVisitsFragment.this.fragmentInteraction.markForUpdate(this.viewModel.longClickedElement);
+                updateContentRecyclerView();
+            }
+        }
+        else
+        {
+            Log.v("same date picked - doing nothing");
+        }
     }
 
     @Override
@@ -304,11 +315,14 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void updateContentRecyclerView()
     {
         Log.i("updating RecyclerView...");
-        this.oldContentRecyclerViewAdapter.setItems(this.viewModel.park.getChildrenOfType(Visit.class));
+        this.viewModel.showVisitsAdapterFacade.getAdapter().setContent(this.viewModel.park.getChildrenOfType(Visit.class));
+        this.viewModel.showVisitsAdapterFacade.getAdapter().groupContent(GroupType.YEAR);
     }
 
     public interface ShowVisitsFragmentInteraction
     {
+        View.OnClickListener createOnElementTypeClickListener(ElementType elementType);
+        View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType);
         void setFloatingActionButtonVisibility(boolean isVisible);
         void markForDeletion(IElement elementToDelete, boolean deleteDescendants);
         void markForUpdate(IElement elementToDelete);

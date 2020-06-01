@@ -58,8 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     @Override
     protected final void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
         Log.frame(LogLevel.VERBOSE, "creating...", '#', true);
 
         this.setContentView();
@@ -85,6 +83,8 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             Log.w("app is not initialized");
             this.startAppInitialization();
         }
+
+        super.onCreate(savedInstanceState);
     }
 
     protected abstract void setContentView();
@@ -589,7 +589,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     // endregion FloatingActionButton
 
-    // region ContentRecyclerViewAdapterOnClickListener
+    // region OnElementTypeClickListener
 
     protected View.OnClickListener createOnElementTypeClickListener(ElementType elementType)
     {
@@ -652,7 +652,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         return false;
     }
 
-    // endregion ContentRecyclerViewAdapterOnClickListener
+    // endregion OnElementTypeClickListener
 
     // region Statistics
 

@@ -6,7 +6,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.GroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.IGroupHeader;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public enum ElementType
@@ -27,7 +29,10 @@ public enum ElementType
     MODEL(Model.class),
     STATUS(Status.class),
 
-    IGROUP_HEADER(IGroupHeader.class);
+    IGROUP_HEADER(IGroupHeader.class),
+    GROUP_HEADER(GroupHeader.class),
+    SPECIAL_GROUP_HEADER(SpecialGroupHeader.class);
+
 
     private final Class<? extends IElement> type;
 

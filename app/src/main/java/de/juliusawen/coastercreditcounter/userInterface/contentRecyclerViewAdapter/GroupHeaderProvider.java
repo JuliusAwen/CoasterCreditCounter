@@ -47,7 +47,7 @@ class GroupHeaderProvider
         }
         else if(groupType == GroupType.NONE)
         {
-            Log.v("GroupType is <NONE> - returning ungrouped elements");
+            Log.v(String.format("%s - returning ungrouped elements", groupType));
             return new LinkedList<>(elements);
         }
         else if(groupType == GroupType.YEAR)

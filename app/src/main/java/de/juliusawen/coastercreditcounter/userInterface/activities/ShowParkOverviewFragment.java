@@ -87,7 +87,6 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     {
         super.onResume();
         this.viewModel.requestCode = RequestCode.SHOW_PARK_OVERVIEW;
-        this.viewModel.oldContentRecyclerViewAdapter = null;
     }
 
     @Override

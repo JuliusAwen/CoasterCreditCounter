@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -33,12 +34,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.configuration = configuration;
         this.groupHeaderProvider = new GroupHeaderProvider();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
-    protected void setConfiguration(ContentRecyclerViewAdapterConfiguration configuration)
-    {
-        this.configuration = configuration;
-        Log.v(String.format(Locale.getDefault(), "[%d] relevant child types", configuration.getRelevantChildTypes().size()));
     }
 
     protected ContentRecyclerViewDecoration getDecoration()
@@ -117,7 +112,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
-        this.groupContent(this.groupType);
     }
 
     protected boolean exists(IElement element)
@@ -233,6 +227,12 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected void groupContent(GroupType groupType)
     {
+        if(this.content.isEmpty())
+        {
+            Log.w("Content is empty - not grouping");
+            return;
+        }
+
         if(groupType == null)
         {
             Log.w("GroupType is null - falling back to default GroupType.NONE");
@@ -242,16 +242,17 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.groupType = groupType;
         Log.d(String.format("GroupType[%s]...", this.groupType));
 
-
-        //        if(App.preferences.expandLatestYearHeaderByDefault())
-        //        {
-        //            SpecialGroupHeader latestSpecialGroupHeader = this.OLDGroupHeaderProvider.getSpecialGroupHeaderForLatestYear(groupedItems);
-        //            this.expandedItems.add(latestSpecialGroupHeader);
-        //        }
-
         this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
         super.notifyDataSetChanged();
+
         this.scrollToItem(this.getItem(0));
+    }
+
+    protected SpecialGroupHeader getLatestSpecialGroupHeader()
+    {
+        return this.groupType == GroupType.YEAR
+                ? this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(this.content)
+                : null;
     }
 
     protected boolean hasRelevantChildren(IElement element)

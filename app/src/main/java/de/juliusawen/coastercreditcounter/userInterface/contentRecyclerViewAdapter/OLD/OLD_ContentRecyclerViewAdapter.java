@@ -1561,4 +1561,10 @@ public class OLD_ContentRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     {
         this.old_expandItem(element, scrollToItem);
     }
+
+    @Override
+    public void expandGroupHeaderForItem(IElement element)
+    {
+        this.expandGroupHeaderOfElement(element);
+    }
 }

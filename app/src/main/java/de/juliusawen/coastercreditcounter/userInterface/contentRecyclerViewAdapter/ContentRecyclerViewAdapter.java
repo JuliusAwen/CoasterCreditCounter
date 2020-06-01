@@ -22,6 +22,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     {
         super(configuration);
         Log.frame(LogLevel.INFO, "instantiated", '#', true);
+        Log.wrap(LogLevel.INFO, String.format("%s", configuration), '-', false);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void setContent(IElement element)
     {
-        Log.d(String.format(Locale.getDefault(), "setting [%s] as content...", element));
+        Log.i(String.format(Locale.getDefault(), "setting %s as content...", element));
         List<IElement> content = new ArrayList<>();
         content.add(element);
         this.setContent(content);
@@ -43,33 +44,21 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void setContent(List<IElement> content)
     {
-        Log.d(String.format(Locale.getDefault(), "setting [%d] Items...", content.size()));
+        Log.i(String.format(Locale.getDefault(), "setting [%d] Items...", content.size()));
         super.setContent(content);
-    }
-
-    @Override
-    protected boolean handleOnClick(View view, boolean performExternalClick)
-    {
-        return super.handleOnClick(view, performExternalClick);
-    }
-
-    @Override
-    protected boolean handleOnLongClick(View view, boolean performExternalClick)
-    {
-        return super.handleOnLongClick(view, performExternalClick);
     }
 
     @Override
     public void insertItem(IElement element)
     {
-        Log.d(String.format("inserting %s...", element));
+        Log.i(String.format("inserting %s...", element));
         super.insertItem(element);
     }
 
     @Override
     public void insertItem(int position, IElement element)
     {
-        Log.d(String.format(Locale.getDefault(), "inserting %s at position[%d]...", element, position));
+        Log.i(String.format(Locale.getDefault(), "inserting %s at position[%d]...", element, position));
         super.insertItem(position, element);
     }
 
@@ -83,7 +72,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void removeItem(IElement element)
     {
-        Log.d(String.format("removing %s...", element));
+        Log.i(String.format("removing %s...", element));
         super.removeItem(element);
     }
 
@@ -130,15 +119,22 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void expandAllContent()
     {
-        Log.d("expanding all content...");
+        Log.i("expanding all content...");
         super.expandAllContent();
     }
 
     @Override
     public void expandItem(IElement element, boolean scrollToItem)
     {
-        Log.d(String.format("expanding %s - scrollToItem[%S]...", element, scrollToItem));
+        Log.i(String.format("expanding %s - scrollToItem[%S]...", element, scrollToItem));
         super.expandItem(element, scrollToItem);
+    }
+
+    @Override
+    public void expandGroupHeaderForItem(IElement element)
+    {
+        Log.i(String.format("expanding GroupHeader for %s...", element));
+        super.expandGroupHeaderForItem(element);
     }
 
     @Override
@@ -150,14 +146,14 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void collapseAllContent()
     {
-        Log.d("collapsing all content...");
+        Log.i("collapsing all content...");
         super.collapseAllContent();
     }
 
     @Override
     public void collapseItem(IElement element, boolean scrollToItem)
     {
-        Log.d(String.format("collapsing %s - scrollToItem[%S]...", element, scrollToItem));
+        Log.i(String.format("collapsing %s - scrollToItem[%S]...", element, scrollToItem));
         super.collapseItem(element, scrollToItem);
     }
 
@@ -170,7 +166,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void selectAllContent()
     {
-        Log.d("selecting all content...");
+        Log.i("selecting all content...");
         super.selectAllContent();
     }
 
@@ -190,7 +186,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void deselectAllContent()
     {
-        Log.d("deselecting all content...");
+        Log.i("deselecting all content...");
         super.deselectAllContent();
     }
 
@@ -216,13 +212,25 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public IContentRecyclerViewAdapter addBottomSpacer()
     {
-        Log.d("adding BottomSpacer...");
+        Log.i("adding BottomSpacer...");
         if(!super.tryAddBottomSpacer())
         {
-            Log.w("BottomSpacer is already added");
+            Log.w("BottomSpacer already added");
         }
 
         return this;
+    }
+
+    @Override
+    protected boolean handleOnClick(View view, boolean performExternalClick)
+    {
+        return super.handleOnClick(view, performExternalClick);
+    }
+
+    @Override
+    protected boolean handleOnLongClick(View view, boolean performExternalClick)
+    {
+        return super.handleOnLongClick(view, performExternalClick);
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.Locale;
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -34,17 +35,38 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     }
 
     @Override
+    protected void setContent(List<IElement> content)
+    {
+        super.setContent(content);
+        this.reInitializeItems();
+    }
+
+    @Override
     protected void groupContent(GroupType groupType)
     {
         super.groupContent(groupType);
 
+        if(groupType == GroupType.YEAR && App.preferences.expandLatestYearHeaderByDefault())
+        {
+            SpecialGroupHeader latestSpecialGroupHeader = super.getLatestSpecialGroupHeader();
+            if(latestSpecialGroupHeader != null)
+            {
+                Log.d(String.format("expanding %s according to App.preferences expandLatestYearHeaderByDefault=TRUE", latestSpecialGroupHeader));
+                this.expandedItems.add(latestSpecialGroupHeader);
+            }
+        }
+
+        this.reInitializeItems();
+    }
+
+    private void reInitializeItems()
+    {
         if(this.isExpandable())
         {
             Log.v("re-initializing generations by item...");
             this.generationByItem.clear();
             super.content = this.initializeItems(super.content, 0);
         }
-
     }
 
     private ArrayList<IElement> initializeItems(List<IElement> items, int generation)
@@ -165,7 +187,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
     }
 
-    private void expandGroupHeaderForItem(IElement item)
+    protected void expandGroupHeaderForItem(IElement item)
     {
         for(IElement groupHeader : this.content)
         {

@@ -30,6 +30,7 @@ public interface IContentRecyclerViewAdapter
     boolean isAllContentExpanded();
     void expandAllContent();
     void expandItem(IElement element, boolean scrollToItem);
+    void expandGroupHeaderForItem(IElement element);
 
     boolean isAllContentCollapsed();
     void collapseAllContent();

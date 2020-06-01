@@ -31,6 +31,14 @@ public class ContentRecyclerViewAdapterFacade
         return this.adapter;
     }
 
+    public IContentRecyclerViewAdapter createPreconfiguredAdapter(RequestCode requestCode, GroupType groupType)
+    {
+        ContentRecyclerViewAdapterConfigurationPresetProvider.applyConfigurationPreset(this.configuration, requestCode);
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
+        this.adapter = new ContentRecyclerViewAdapter(this.configuration);
+        return this.adapter;
+    }
+
     public ContentRecyclerViewAdapterConfiguration getConfiguration()
     {
         return this.configuration;
@@ -41,11 +49,15 @@ public class ContentRecyclerViewAdapterFacade
         return this.adapter;
     }
 
-    public ContentRecyclerViewAdapterFacade setDetailModesAndGroupContent(RequestCode requestCode, GroupType groupType)
+    public ContentRecyclerViewAdapterFacade applyPresetDecoration(RequestCode requestCode)
+    {
+        ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode);
+        return this;
+    }
+
+    public ContentRecyclerViewAdapterFacade applyPresetDecoration(RequestCode requestCode, GroupType groupType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
-        this.adapter.groupContent(groupType);
-
         return this;
     }
 }

@@ -61,11 +61,6 @@ public class ContentRecyclerViewAdapterConfiguration
         return this.contentRecyclerViewDecoration;
     }
 
-    public void setContentRecyclerViewDecoration(ContentRecyclerViewDecoration contentRecyclerViewDecoration)
-    {
-        this.contentRecyclerViewDecoration = contentRecyclerViewDecoration;
-    }
-
     public boolean isSelecetable()
     {
         return this.isSelecetable;
@@ -122,30 +117,31 @@ public class ContentRecyclerViewAdapterConfiguration
     @Override
     public String toString()
     {
+        String indent = "        ";
         StringBuilder childTypesString = new StringBuilder();
         for(ElementType elementType : this.getRelevantChildTypes())
         {
-            childTypesString.append(String.format("        %s\n", elementType));
+            childTypesString.append(String.format("\n%s%s", indent, elementType));
         }
 
         StringBuilder onClickListenerTypesString = new StringBuilder();
         for(ElementType elementType : this.onClickListenersByElementType.keySet())
         {
-            onClickListenerTypesString.append(String.format("        %s\n", elementType));
+            onClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
         }
 
         StringBuilder onLongClickListenerTypesString = new StringBuilder();
         for(ElementType elementType : this.onLongClickListenersByElementType.keySet())
         {
-            onLongClickListenerTypesString.append(String.format("        %s\n", elementType));
+            onLongClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
         }
 
         return String.format(Locale.getDefault(),
                         "ContentRecyclerViewConfiguration:\n" +
                         "    isSelectable[%S], isMultipleSelection[%S]\n" +
-                        "    [%d] relevant child types\n%s"+
-                        "    [%d] types with OnClickListeners\n%s"+
-                        "    [%d] types with OnLongClickListeners\n%s",
+                        "    [%d] relevant child type(s)%s\n"+
+                        "    [%d] OnElementTypeClickListener(s)%s\n"+
+                        "    [%d] OnElementTypeLongClickListener(s)%s",
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,

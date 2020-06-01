@@ -25,6 +25,7 @@ import de.juliusawen.coastercreditcounter.application.Constants;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
+import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.enums.ShowParkTab;
 import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -34,7 +35,9 @@ import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 
 public class ShowParkActivity extends BaseActivity implements
-        ShowVisitsFragment.ShowVisitsFragmentInteraction, ShowAttractionsFragment.ShowAttractionsFragmentInteraction, ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
+        ShowVisitsFragment.ShowVisitsFragmentInteraction,
+        ShowAttractionsFragment.ShowAttractionsFragmentInteraction,
+        ShowParkOverviewFragment.ShowParkOverviewFragmentInteraction
 {
     private ShowParkSharedViewModel viewModel;
     private ViewPager viewPager;
@@ -163,6 +166,59 @@ public class ShowParkActivity extends BaseActivity implements
     }
 
     @Override
+    public View.OnClickListener createOnElementTypeClickListener(ElementType elementType)
+    {
+        return super.createOnElementTypeClickListener(elementType);
+    }
+
+    @Override
+    protected void handleOnElementTypeClick(ElementType elementType, View view)
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_PARK_OVERVIEW:
+                break;
+
+            case SHOW_ATTRACTIONS:
+                this.showAttractionsFragment.handleOnElementTypeClick(elementType, view);
+                break;
+
+            case SHOW_VISITS:
+                this.showVisitsFragment.handleOnElementTypeClick(elementType, view);
+                break;
+
+            default:
+                super.handleOnElementTypeClick(elementType, view);
+        }
+    }
+
+    @Override
+    public View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType)
+    {
+        return super.createOnElementTypeLongClickListener(elementType);
+    }
+
+    @Override
+    protected boolean handleOnElementTypeLongClick(ElementType elementType, View view)
+    {
+        switch(this.getCurrentTab())
+        {
+            case SHOW_PARK_OVERVIEW:
+                break;
+
+            case SHOW_ATTRACTIONS:
+                this.showAttractionsFragment.handleOnElementTypeLongClick(elementType, view);
+                break;
+
+            case SHOW_VISITS:
+                this.showVisitsFragment.handleOnElementTypeLongClick(elementType, view);
+                break;
+        }
+
+        return super.handleOnElementTypeLongClick(elementType, view);
+    }
+
+    @Override
     public void setFloatingActionButtonVisibility(boolean isVisible)
     {
         super.setFloatingActionButtonVisibility(isVisible);
@@ -188,7 +244,7 @@ public class ShowParkActivity extends BaseActivity implements
 
     private ShowParkTab getCurrentTab()
     {
-        return ShowParkTab.values()[this.viewPager.getCurrentItem()];
+        return ShowParkTab.getValue(this.viewPager.getCurrentItem());
     }
 
     private void createTabPagerAdapter()
@@ -226,30 +282,36 @@ public class ShowParkActivity extends BaseActivity implements
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         this.viewPager.setCurrentItem(this.viewPager.getCurrentItem());
-        this.onPageSelectedViewPager(ShowParkTab.values()[this.viewPager.getCurrentItem()]);
+        this.onPageSelectedViewPager(ShowParkTab.getValue(this.viewPager.getCurrentItem()));
 
-        Log.d(String.format(Locale.getDefault(), "adapter created with [%d] tabs, selected tab[%s]", tabLayout.getTabCount(), ShowParkTab.values()[this.viewPager.getCurrentItem()]));
+        Log.d(String.format(Locale.getDefault(), "created with [%d] tabs, selected %s", tabLayout.getTabCount(), ShowParkTab.getValue(this.viewPager.getCurrentItem())));
     }
 
     private void onPageSelectedViewPager(ShowParkTab showParkTab)
     {
-        Log.i(String.format("selected tab [%s]", showParkTab));
+        Log.i(String.format("selected %s", showParkTab));
 
         switch(showParkTab)
         {
             case SHOW_PARK_OVERVIEW:
                 super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_overview), this.viewModel.park.getName());
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)), getString(R.string.help_text_show_park_overview));
+                super.setHelpOverlayTitleAndMessage(
+                        getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_overview)),
+                        getString(R.string.help_text_show_park_overview));
                 break;
 
             case SHOW_ATTRACTIONS:
                 super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_attractions), this.viewModel.park.getName());
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)), getString(R.string.help_text_show_attractions));
+                super.setHelpOverlayTitleAndMessage(
+                        getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_attractions)),
+                        getString(R.string.help_text_show_attractions));
                 break;
 
             case SHOW_VISITS:
                 super.setToolbarTitleAndSubtitle(getString(R.string.subtitle_park_show_tab_visits), this.viewModel.park.getName());
-                super.setHelpOverlayTitleAndMessage(getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)), getString(R.string.help_text_show_visits));
+                super.setHelpOverlayTitleAndMessage(
+                        getString(R.string.title_help, getString(R.string.subtitle_park_show_tab_visits)),
+                        getString(R.string.help_text_show_visits));
                 break;
         }
 
@@ -335,7 +397,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             Log.v(String.format(Locale.getDefault(), "returning fragment for tab position [%d]", position));
 
-            switch(ShowParkTab.values()[position])
+            switch(ShowParkTab.getValue(position))
             {
                 case SHOW_PARK_OVERVIEW:
                 {
@@ -363,7 +425,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             Fragment instantiatedFragment = (Fragment)super.instantiateItem(container, position);
 
-            switch(ShowParkTab.values()[position])
+            switch(ShowParkTab.getValue(position))
             {
                 case SHOW_PARK_OVERVIEW:
                 {
@@ -402,7 +464,7 @@ public class ShowParkActivity extends BaseActivity implements
         {
             View view = LayoutInflater.from(ShowParkActivity.this).inflate(R.layout.layout_tab_title, null);
             ImageView imageView = view.findViewById(R.id.imageViewTabTitle);
-            imageView.setImageDrawable(tabTitleDrawables[position]);
+            imageView.setImageDrawable(this.tabTitleDrawables[position]);
 
             return view;
         }

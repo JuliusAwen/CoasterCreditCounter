@@ -31,6 +31,18 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
                 break;
             }
 
+            case SHOW_ATTRACTIONS:
+            {
+                relevantChildTypes.add(ElementType.ON_SITE_ATTRACTION);
+                break;
+            }
+
+            case SHOW_VISITS:
+            {
+                relevantChildTypes.add(ElementType.VISIT);
+                break;
+            }
+
             case SORT_LOCATIONS:
             case SORT_PARKS:
             case SORT_ATTRACTIONS:

@@ -118,7 +118,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
         if(this.viewModel.typeToManage == ElementType.MODEL)
         {
-            this.viewModel.adapterFacade.setDetailModesAndGroupContent(this.viewModel.requestCode, GroupType.MANUFACTURER);
+            this.viewModel.adapterFacade.applyPresetDecoration(this.viewModel.requestCode, GroupType.MANUFACTURER);
+            this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.MANUFACTURER);
+
             this.viewModel.adapterFacade.getConfiguration()
                     .addOnElementTypeClickListener(ElementType.IGROUP_HEADER, super.createOnElementTypeClickListener(ElementType.IGROUP_HEADER));
         }
