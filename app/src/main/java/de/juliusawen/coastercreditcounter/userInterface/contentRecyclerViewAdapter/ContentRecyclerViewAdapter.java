@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -29,16 +28,6 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     public void notifySomethingChanged()
     {
         super.notifyDataSetChanged();
-    }
-
-
-    @Override
-    public void setContent(IElement element)
-    {
-        Log.i(String.format(Locale.getDefault(), "setting %s as content...", element));
-        List<IElement> content = new ArrayList<>();
-        content.add(element);
-        this.setContent(content);
     }
 
     @Override

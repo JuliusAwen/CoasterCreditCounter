@@ -80,7 +80,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
                     .addOnElementTypeLongClickListener(ElementType.IELEMENT, super.createOnElementTypeLongClickListener(ElementType.IELEMENT));
 
             this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
-            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
+            this.viewModel.adapterFacade.setSingleElementAsContent(this.viewModel.currentLocation);
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowLocations);
@@ -513,6 +513,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     private void updateContentRecyclerView()
     {
         Log.d("resetting content...");
-        this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.currentLocation);
+        this.viewModel.adapterFacade.setSingleElementAsContent(this.viewModel.currentLocation);
     }
 }

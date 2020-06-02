@@ -1,7 +1,13 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
+import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class ContentRecyclerViewAdapterFacade
 {
@@ -49,5 +55,13 @@ public class ContentRecyclerViewAdapterFacade
     public void applyPresetDecoration(RequestCode requestCode, GroupType groupType)
     {
         ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(this.decoration, requestCode, groupType);
+    }
+
+    public void setSingleElementAsContent(IElement element)
+    {
+        Log.i(String.format(Locale.getDefault(), "setting %s as content...", element));
+        List<IElement> content = new ArrayList<>();
+        content.add(element);
+        this.adapter.setContent(content);
     }
 }

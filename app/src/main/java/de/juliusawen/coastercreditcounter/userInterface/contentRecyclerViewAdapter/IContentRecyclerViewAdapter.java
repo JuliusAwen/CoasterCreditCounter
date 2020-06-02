@@ -10,7 +10,6 @@ public interface IContentRecyclerViewAdapter
     void notifySomethingChanged();
 
     void setContent(List<IElement> content);
-    void setContent(IElement element);
 
     void insertItem(IElement element);
     void insertItem(int position, IElement element);
