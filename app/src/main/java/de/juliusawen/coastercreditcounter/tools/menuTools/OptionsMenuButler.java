@@ -420,6 +420,8 @@ public class OptionsMenuButler
                     this.getContentRecyclerViewAdapter().setContent(this.getElements());
                     return true;
             }
+
+            this.getContentRecyclerViewAdapter().notifySomethingChanged();
         }
 
         if(this.getContentRecyclerViewAdapter() != null && this.getRequestCode() != null && this.getElements() != null)
@@ -466,6 +468,7 @@ public class OptionsMenuButler
                         groupType);
 
                 this.getContentRecyclerViewAdapter().groupContent(groupType);
+                this.getContentRecyclerViewAdapter().notifySomethingChanged();
 
                 return true;
             }

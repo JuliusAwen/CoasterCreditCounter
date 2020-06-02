@@ -126,7 +126,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
-        this.notifyDataSetChanged();
     }
 
     protected boolean exists(IElement element)
@@ -258,8 +257,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         Log.d(String.format("GroupType[%s]...", this.groupType));
 
         this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
-        super.notifyDataSetChanged();
-
         this.scrollToItem(this.getItem(0));
     }
 

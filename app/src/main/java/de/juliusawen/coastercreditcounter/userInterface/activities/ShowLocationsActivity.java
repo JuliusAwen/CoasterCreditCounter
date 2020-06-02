@@ -514,5 +514,6 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
     {
         Log.d("resetting content...");
         this.viewModel.adapterFacade.setSingleElementAsContent(this.viewModel.currentLocation);
+        this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
     }
 }

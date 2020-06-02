@@ -175,8 +175,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
-
+                    this.updateContentRecyclerView(true);
                     super.markForUpdate(this.viewModel.visit);
                     break;
                 }
@@ -485,6 +484,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
             this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
             this.viewModel.adapterFacade.getAdapter().expandAllContent();
+            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
         }
         else
         {

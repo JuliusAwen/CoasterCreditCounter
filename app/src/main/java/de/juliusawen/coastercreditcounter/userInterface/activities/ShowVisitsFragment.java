@@ -322,6 +322,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
         this.viewModel.showVisitsAdapterFacade.getAdapter().setContent(content);
         this.viewModel.showVisitsAdapterFacade.getAdapter().groupContent(GroupType.YEAR);
         this.expandLatestYearHeader(content);
+        this.viewModel.showVisitsAdapterFacade.getAdapter().notifySomethingChanged();
     }
 
     private void expandLatestYearHeader(List<IElement> visits)

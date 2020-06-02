@@ -314,6 +314,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             Log.d("resetting content...");
             this.viewModel.showAttractionsAdapterFacade.getAdapter().setContent(this.viewModel.park.getChildrenOfType(OnSiteAttraction.class));
             this.viewModel.showAttractionsAdapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
+            this.viewModel.showAttractionsAdapterFacade.getAdapter().notifySomethingChanged();
         }
         else
         {

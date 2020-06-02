@@ -771,6 +771,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             }
             this.viewModel.elements = elements;
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
+            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
             invalidateOptionsMenu();
         }
         else
