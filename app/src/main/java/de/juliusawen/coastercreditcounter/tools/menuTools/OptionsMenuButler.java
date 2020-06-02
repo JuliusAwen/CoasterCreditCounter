@@ -463,8 +463,7 @@ public class OptionsMenuButler
                 ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(
                         this.viewModel.getContentRecyclerViewAdapterConfiguration().getDecoration(),
                         this.getRequestCode(),
-                        GroupType.NONE
-                );
+                        groupType);
 
                 this.getContentRecyclerViewAdapter().groupContent(groupType);
 
