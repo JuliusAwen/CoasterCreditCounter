@@ -191,6 +191,7 @@ public class OptionsMenuButler
             }
         }
 
+        boolean noAdapter = this.getContentRecyclerViewAdapter() == null;
 
         this.optionsMenuProvider
 
@@ -218,87 +219,112 @@ public class OptionsMenuButler
                 .setVisible(OptionsItem.ENABLE_EDITING, enableEditingVisible)
                 .setVisible(OptionsItem.DISABLE_EDITING, disableEditingVisible)
 
-                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, goToCurrentVisitVisible);
+                .setVisible(OptionsItem.GO_TO_CURRENT_VISIT, goToCurrentVisitVisible)
 
 
-        if(this.getContentRecyclerViewAdapter() != null)
-        {
-            this.optionsMenuProvider
+                .setVisible(OptionsItem.SORT_BY_PARK, sortByParkVisible)
+                .setEnabled(OptionsItem.SORT_BY_PARK, noAdapter
+                        ? sortByParkEnabled
+                        : sortByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
+                .setVisible(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingEnabled)
 
-                    .setVisible(OptionsItem.SORT_BY_PARK, sortByParkVisible)
-                    .setEnabled(OptionsItem.SORT_BY_PARK, sortByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
-                    .setVisible(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_PARK_ASCENDING, sortByParkAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_PARK_DESCENDING, sortByParkDescendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeVisible)
+                .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, noAdapter
+                        ? sortByCreditTypeEnabled
+                        : sortByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
+                .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingEnabled)
 
-                    .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE, sortByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
-                    .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_ASCENDING, sortByCreditTypeAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CREDIT_TYPE_DESCENDING, sortByCreditTypeDescendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_CATEGORY, sortByCategoryVisible)
+                .setEnabled(OptionsItem.SORT_BY_CATEGORY, noAdapter
+                        ? sortByCategoryEnabled
+                        : sortByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
+                .setVisible(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingEnabled)
 
-                    .setVisible(OptionsItem.SORT_BY_CATEGORY, sortByCategoryVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CATEGORY, sortByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
-                    .setVisible(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CATEGORY_ASCENDING, sortByCategoryAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_CATEGORY_DESCENDING, sortByCategoryDescendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerVisible)
+                .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, noAdapter
+                        ? sortByManufacturerEnabled
+                        : sortByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
+                .setVisible(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingEnabled)
 
-                    .setVisible(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MANUFACTURER, sortByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
-                    .setVisible(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_ASCENDING, sortByManufacturerAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MANUFACTURER_DESCENDING, sortByManufacturerDescendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_MODEL, sortByModelVisible)
+                .setEnabled(OptionsItem.SORT_BY_MODEL, noAdapter
+                        ? sortByModelEnabled
+                        : sortByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
+                .setVisible(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingEnabled)
 
-                    .setVisible(OptionsItem.SORT_BY_MODEL, sortByModelVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MODEL, sortByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
-                    .setVisible(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MODEL_ASCENDING, sortByModelAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_MODEL_DESCENDING, sortByModelDescendingEnabled)
-
-                    .setVisible(OptionsItem.SORT_BY_STATUS, sortByStatusVisible)
-                    .setEnabled(OptionsItem.SORT_BY_STATUS, sortByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
-                    .setVisible(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingEnabled)
-                    .setVisible(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingVisible)
-                    .setEnabled(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingEnabled)
-
-
-                    .setVisible(OptionsItem.GROUP_BY, groupByVisible && (groupByNoneVisible || groupByParkVisible || groupByCreditTypeVisible || groupByCategoryVisible
-                            || groupByManufacturerVisible || groupByModelVisible || groupByStatusVisible))
-                    .setEnabled(OptionsItem.GROUP_BY, groupByEnabled && (groupByNoneEnabled || groupByParkEnabled || groupByCreditTypeEnabled || groupByCategoryEnabled
-                            || groupByManufacturerEnabled || groupByModelEnabled || groupByStatusEnabled))
-
-                    .setVisible(OptionsItem.GROUP_BY_NONE, groupByNoneVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_NONE, groupByNoneEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.NONE)
-
-                    .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_PARK, groupByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
-
-                    .setVisible(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
-
-                    .setVisible(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
-
-                    .setVisible(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
-
-                    .setVisible(OptionsItem.GROUP_BY_MODEL, groupByModelVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_MODEL, groupByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
-
-                    .setVisible(OptionsItem.GROUP_BY_STATUS, groupByStatusVisible)
-                    .setEnabled(OptionsItem.GROUP_BY_STATUS, groupByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
+                .setVisible(OptionsItem.SORT_BY_STATUS, sortByStatusVisible)
+                .setEnabled(OptionsItem.SORT_BY_STATUS, noAdapter
+                        ? sortByStatusEnabled
+                        : sortByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
+                .setVisible(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_STATUS_ASCENDING, sortByStatusAscendingEnabled)
+                .setVisible(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingVisible)
+                .setEnabled(OptionsItem.SORT_BY_STATUS_DESCENDING, sortByStatusDescendingEnabled)
 
 
-                    .setVisible(OptionsItem.EXPAND_ALL, expandAndCollapseAllVisible && !this.getContentRecyclerViewAdapter().isAllContentExpanded())
-                    .setVisible(OptionsItem.COLLAPSE_ALL, expandAndCollapseAllVisible && this.getContentRecyclerViewAdapter().isAllContentExpanded());
-        }
+                .setVisible(OptionsItem.GROUP_BY, groupByVisible && (groupByNoneVisible || groupByParkVisible || groupByCreditTypeVisible || groupByCategoryVisible
+                        || groupByManufacturerVisible || groupByModelVisible || groupByStatusVisible))
+                .setEnabled(OptionsItem.GROUP_BY, groupByEnabled && (groupByNoneEnabled || groupByParkEnabled || groupByCreditTypeEnabled || groupByCategoryEnabled
+                        || groupByManufacturerEnabled || groupByModelEnabled || groupByStatusEnabled))
 
+                .setVisible(OptionsItem.GROUP_BY_NONE, groupByNoneVisible)
+                .setEnabled(OptionsItem.GROUP_BY_NONE, noAdapter
+                        ? groupByNoneEnabled
+                        : groupByNoneEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.NONE)
+
+                .setVisible(OptionsItem.GROUP_BY_PARK, groupByParkVisible)
+                .setEnabled(OptionsItem.GROUP_BY_PARK, noAdapter
+                        ? groupByParkEnabled
+                        : groupByParkEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.PARK)
+
+                .setVisible(OptionsItem.GROUP_BY_CREDIT_TYPE, groupByCreditTypeVisible)
+                .setEnabled(OptionsItem.GROUP_BY_CREDIT_TYPE, noAdapter
+                        ? groupByCreditTypeEnabled
+                        : groupByCreditTypeEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CREDIT_TYPE)
+
+                .setVisible(OptionsItem.GROUP_BY_CATEGORY, groupByCategoryVisible)
+                .setEnabled(OptionsItem.GROUP_BY_CATEGORY, noAdapter
+                        ? groupByCategoryEnabled
+                        : groupByCategoryEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.CATEGORY)
+
+                .setVisible(OptionsItem.GROUP_BY_MANUFACTURER, groupByManufacturerVisible)
+                .setEnabled(OptionsItem.GROUP_BY_MANUFACTURER, noAdapter
+                        ? groupByManufacturerEnabled
+                        : groupByManufacturerEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MANUFACTURER)
+
+                .setVisible(OptionsItem.GROUP_BY_MODEL, groupByModelVisible)
+                .setEnabled(OptionsItem.GROUP_BY_MODEL, noAdapter
+                        ? groupByModelEnabled
+                        : groupByModelEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.MODEL)
+
+                .setVisible(OptionsItem.GROUP_BY_STATUS, groupByStatusVisible)
+                .setEnabled(OptionsItem.GROUP_BY_STATUS, noAdapter
+                        ? groupByStatusEnabled
+                        : groupByStatusEnabled && this.getContentRecyclerViewAdapter().getGroupType() != GroupType.STATUS)
+
+
+                .setVisible(OptionsItem.EXPAND_ALL, noAdapter
+                        ? expandAndCollapseAllVisible
+                        : expandAndCollapseAllVisible && !this.getContentRecyclerViewAdapter().isAllContentExpanded())
+
+                .setVisible(OptionsItem.COLLAPSE_ALL, noAdapter
+                        ? expandAndCollapseAllVisible
+                        : expandAndCollapseAllVisible && this.getContentRecyclerViewAdapter().isAllContentExpanded());
 
         return this.optionsMenuProvider.prepare(menu);
     }
