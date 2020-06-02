@@ -421,28 +421,4 @@ class GroupHeaderProvider
         Log.i(String.format(Locale.getDefault(), "sorted [%d] visits [%s]", visits.size(), Visit.getSortOrder()));
         return sortedVisits;
     }
-
-    SpecialGroupHeader getSpecialGroupHeaderForLatestYear(List<? extends IElement> yearHeaders)
-    {
-        SpecialGroupHeader latestSpecialGroupHeader = null;
-
-        if(yearHeaders.size() > 0)
-        {
-            for(IElement yearHeader : yearHeaders)
-            {
-                if(latestSpecialGroupHeader == null)
-                {
-                    latestSpecialGroupHeader = (SpecialGroupHeader) yearHeader;
-                }
-                else if((Integer.parseInt(yearHeader.getName()) > (Integer.parseInt(latestSpecialGroupHeader.getName()))))
-                {
-                    latestSpecialGroupHeader = (SpecialGroupHeader) yearHeader;
-                }
-            }
-
-            Log.v(String.format(Locale.getDefault(), "%s found as latest SpecialGroupHeader in a list of [%d]", latestSpecialGroupHeader, yearHeaders.size()));
-        }
-
-        return latestSpecialGroupHeader;
-    }
 }

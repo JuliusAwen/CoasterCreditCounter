@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -28,7 +29,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.ResultFetcher;
+import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
@@ -315,8 +318,23 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void updateContentRecyclerView()
     {
         Log.i("updating RecyclerView...");
-        this.viewModel.showVisitsAdapterFacade.getAdapter().setContent(this.viewModel.park.getChildrenOfType(Visit.class));
+        List<IElement> content = this.viewModel.park.getChildrenOfType(Visit.class);
+        this.viewModel.showVisitsAdapterFacade.getAdapter().setContent(content);
         this.viewModel.showVisitsAdapterFacade.getAdapter().groupContent(GroupType.YEAR);
+        this.expandLatestYearHeader(content);
+    }
+
+    private void expandLatestYearHeader(List<IElement> visits)
+    {
+        if(!App.preferences.expandLatestYearHeaderByDefault() || visits.isEmpty() || !visits.get(0).isVisit())
+        {
+            Log.v("not expanding");
+            return;
+        }
+
+        IElement latestVisit = SortTool.sortElements(visits, SortType.BY_NAME, SortOrder.DESCENDING).get(0);
+        Log.d(String.format("expanding for %s", latestVisit));
+        this.viewModel.showVisitsAdapterFacade.getAdapter().expandGroupHeaderForItem(latestVisit);
     }
 
     public interface ShowVisitsFragmentInteraction

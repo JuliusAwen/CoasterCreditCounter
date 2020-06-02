@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
-import de.juliusawen.coastercreditcounter.dataModel.elements.groupHeader.SpecialGroupHeader;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -262,13 +261,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         super.notifyDataSetChanged();
 
         this.scrollToItem(this.getItem(0));
-    }
-
-    protected SpecialGroupHeader getLatestSpecialGroupHeader()
-    {
-        return this.groupType == GroupType.YEAR
-                ? this.groupHeaderProvider.getSpecialGroupHeaderForLatestYear(this.content)
-                : null;
     }
 
     protected boolean hasRelevantChildren(IElement element)
