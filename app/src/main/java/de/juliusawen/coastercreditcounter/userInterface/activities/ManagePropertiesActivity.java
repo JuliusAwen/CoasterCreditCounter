@@ -141,7 +141,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode != RESULT_OK)
         {
@@ -149,7 +149,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
 
         IElement resultElement = ResultFetcher.fetchResultElement(data);
-        switch(RequestCode.values()[requestCode])
+        switch(RequestCode.getValue(requestCode))
         {
             case CREATE_CREDIT_TYPE:
             case CREATE_CATEGORY:
@@ -158,7 +158,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case CREATE_STATUS:
             {
                 this.viewModel.propertyToReturn = resultElement;
-                this.updateContentRecyclerView(true);
+                this.viewModel.adapterFacade.getAdapter().insertItem(resultElement);
                 break;
             }
 
@@ -168,7 +168,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case EDIT_MODEL:
             case EDIT_STATUS:
             {
-                this.updateContentRecyclerView(false);
+                this.viewModel.adapterFacade.getAdapter().notifyItemChanged(resultElement);
                 break;
             }
 
@@ -179,10 +179,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             case SORT_STATUSES:
             {
                 ArrayList<IElement> resultElements = ResultFetcher.fetchResultElements(data);
-                App.content.reorderElements(resultElements);
-                this.updateContentRecyclerView(true);
+                this.handleSortProperties(resultElements);
                 this.viewModel.adapterFacade.getAdapter().scrollToItem(resultElement);
-                super.markForUpdate(resultElements);
+                invalidateOptionsMenu();
                 break;
             }
 
@@ -222,9 +221,18 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
                 Toaster.makeShortToast(this, getString(R.string.information_assigned_to_attractions, this.viewModel.longClickedElement.getName(), resultElements.size()));
                 Log.d(String.format(Locale.getDefault(), "<ASSIGN_TO_ATTRACTIONS>:: assigned %s to [%d] attractions", this.viewModel.longClickedElement, resultElements.size()));
-                this.updateContentRecyclerView(true);
             }
         }
+    }
+
+    private void handleSortProperties(ArrayList<IElement> resultElements)
+    {
+        App.content.reorderElements(resultElements);
+        this.viewModel.elements = App.content.getContentOfType(this.fetchPropertyType());
+
+        this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
+
+        super.markForUpdate(resultElements);
     }
 
     @Override
@@ -597,11 +605,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 {
                     switch(this.viewModel.typeToManage)
                     {
-                        case CREDIT_TYPE:
-                        case MODEL:
-                            // no option to change default value
-                            break;
-
                         case CATEGORY:
                             super.markForUpdate(Category.getDefault());
                             super.markForUpdate(this.viewModel.longClickedElement);
@@ -622,14 +625,17 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             Status.setDefault((Status) this.viewModel.longClickedElement);
                             Toaster.makeLongToast(this, getString(R.string.information_set_as_default, this.viewModel.longClickedElement.getName()));
                             break;
+
+                        default:
+                            throw new IllegalArgumentException(String.format("setting default for %s is not allowed", this.viewModel.typeToManage));
                     }
+
+                    this.viewModel.adapterFacade.getAdapter().notifyItemChanged(this.viewModel.longClickedElement);
 
                     Log.d(String.format("[%s]:: setting %s as default [%s]", requestCode, this.viewModel.longClickedElement, this.viewModel.typeToManage));
                     break;
                 }
             }
-
-            this.updateContentRecyclerView(false);
         }
     }
 
@@ -672,12 +678,12 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                             break;
                     }
 
-                    markForUpdate(child);
+                    super.markForUpdate(child);
                 }
             }
 
+            this.viewModel.adapterFacade.getAdapter().removeItem(this.viewModel.longClickedElement);
             super.markForDeletion(this.viewModel.longClickedElement);
-            this.updateContentRecyclerView(true);
         }
     }
 
@@ -757,33 +763,9 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
         }
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
-    {
-        if(resetContent)
-        {
-            Log.d("resetting content...");
-
-            List<IElement> elements = App.content.getContentOfType(this.fetchPropertyType());
-
-            for(IElement element : elements)
-            {
-                element.reorderChildren(SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING));
-            }
-            this.viewModel.elements = elements;
-            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
-            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
-            invalidateOptionsMenu();
-        }
-        else
-        {
-            Log.d("notifying data set changes...");
-            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
-        }
-    }
-
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

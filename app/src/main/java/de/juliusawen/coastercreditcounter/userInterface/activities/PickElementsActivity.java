@@ -55,7 +55,7 @@ public class PickElementsActivity extends BaseActivity
 
         if(this.viewModel.requestCode == null)
         {
-            this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
             Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
@@ -82,8 +82,8 @@ public class PickElementsActivity extends BaseActivity
                 }
                 case PICK_ATTRACTIONS:
                 {
-                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToPickFrom);
                     this.viewModel.adapterFacade.applyPresetDecoration(this.viewModel.requestCode, GroupType.CATEGORY);
+                    this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elementsToPickFrom);
                     this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
                     break;
                 }
@@ -275,7 +275,7 @@ public class PickElementsActivity extends BaseActivity
 
     private void returnResult(int resultCode, IElement element)
     {
-        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

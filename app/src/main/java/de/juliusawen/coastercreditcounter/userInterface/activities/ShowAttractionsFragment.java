@@ -104,7 +104,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.showAttractionsAdapterFacade.getAdapter());
 
-        this.updateContentRecyclerView(true);
+        this.updateContentRecyclerView();
     }
 
     @Override
@@ -117,13 +117,13 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
             IElement resultElement = ResultFetcher.fetchResultElement(data);
 
-            switch(RequestCode.values()[requestCode])
+            switch(RequestCode.getValue(requestCode))
             {
                 case SORT_ATTRACTIONS:
                 {
@@ -135,7 +135,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                         this.fragmentInteraction.markForUpdate(resultElement.getParent());
 
-                        this.updateContentRecyclerView(true);
+                        this.updateContentRecyclerView();
                         this.viewModel.showAttractionsAdapterFacade.getAdapter().expandGroupHeaderForItem(resultElement);
                         this.viewModel.showAttractionsAdapterFacade.getAdapter().scrollToItem(resultElement);
                     }
@@ -150,7 +150,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
 
                 case CREATE_ATTRACTION:
                 {
-                    this.updateContentRecyclerView(true);
+                    this.updateContentRecyclerView();
                     this.viewModel.showAttractionsAdapterFacade.getAdapter().expandGroupHeaderForItem(resultElement);
                     this.viewModel.showAttractionsAdapterFacade.getAdapter().scrollToItem(resultElement);
                     break;
@@ -303,24 +303,15 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
             }
 
             this.fragmentInteraction.markForDeletion(this.viewModel.longClickedElement, true);
-            updateContentRecyclerView(true);
+            updateContentRecyclerView();
         }
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
+    private void updateContentRecyclerView()
     {
-        if(resetContent)
-        {
-            Log.d("resetting content...");
-            this.viewModel.showAttractionsAdapterFacade.getAdapter().setContent(this.viewModel.park.getChildrenOfType(OnSiteAttraction.class));
-            this.viewModel.showAttractionsAdapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
-            this.viewModel.showAttractionsAdapterFacade.getAdapter().notifySomethingChanged();
-        }
-        else
-        {
-            Log.d("notifying something changed...");
-            this.viewModel.showAttractionsAdapterFacade.getAdapter().notifySomethingChanged();
-        }
+        Log.d("resetting content...");
+        this.viewModel.showAttractionsAdapterFacade.getAdapter().setContent(this.viewModel.park.getChildrenOfType(OnSiteAttraction.class));
+        this.viewModel.showAttractionsAdapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
     }
 
     public interface ShowAttractionsFragmentInteraction

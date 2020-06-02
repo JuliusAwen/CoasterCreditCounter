@@ -124,10 +124,10 @@ public abstract class StringTool
         switch(resultCode)
         {
             case -1:
-                return "RESULT_OK";
+                return "ResultCode[OK]";
 
             case 0:
-                return "RESULT_CANCELED";
+                return "ResultCode[CANCELED]";
 
             default:
                 Log.e(String.format(Locale.getDefault(), "unknown ResultCode[%d]", resultCode));

@@ -92,13 +92,13 @@ public class ShowParkOverviewFragment extends Fragment implements AlertDialogFra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
             IElement resultElement = ResultFetcher.fetchResultElement(data);
 
-            switch(RequestCode.values()[requestCode])
+            switch(RequestCode.getValue(requestCode))
             {
                 case CREATE_NOTE:
                 {

@@ -129,7 +129,7 @@ public class AlertDialogFragment extends DialogFragment
                     {
                         Log.i(String.format("PositiveButton [%s] clicked", positiveButtonText));
                         dialog.dismiss();
-                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
+                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.getValue(requestCode), which);
                     }
                 })
                 .setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener()
@@ -139,7 +139,7 @@ public class AlertDialogFragment extends DialogFragment
                     {
                         Log.i(String.format("NegativeButton [%s] clicked", negativeButtonText));
                         dialog.dismiss();
-                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.values()[requestCode], which);
+                        AlertDialogFragment.this.alertDialogListener.handleAlertDialogClick(RequestCode.getValue(requestCode), which);
                     }
                 })
                 .create();

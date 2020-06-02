@@ -142,7 +142,7 @@ public class EditAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK) // Element was picked in PickElementsActivity
         {
@@ -760,7 +760,7 @@ public class EditAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

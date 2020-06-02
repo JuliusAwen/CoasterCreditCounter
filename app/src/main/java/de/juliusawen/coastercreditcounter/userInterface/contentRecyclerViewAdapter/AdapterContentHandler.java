@@ -55,7 +55,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return !this.getRelevantChildTypes().isEmpty();
     }
 
-
     protected LinkedHashSet<ElementType> getRelevantChildTypes()
     {
         return this.configuration.getRelevantChildTypes();
@@ -126,6 +125,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
+        super.notifyDataSetChanged();
     }
 
     protected boolean exists(IElement element)
@@ -215,6 +215,28 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         this.scrollToItem(element1);
     }
 
+    protected void groupContent(GroupType groupType)
+    {
+        if(this.content.isEmpty())
+        {
+            Log.w("Content is empty - not grouping");
+            return;
+        }
+
+        if(groupType == null)
+        {
+            Log.w("GroupType is null - falling back to default GroupType.NONE");
+            groupType = GroupType.NONE;
+        }
+
+        this.groupType = groupType;
+        Log.d(String.format("setting %s...", this.groupType));
+
+        this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
+        super.notifyDataSetChanged();
+        this.scrollToItem(this.getItem(0));
+    }
+
     protected void scrollToItem(IElement element)
     {
         if(this.content.isEmpty())
@@ -237,27 +259,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         Log.d(String.format("scrolling to %s", element));
         this.recyclerView.scrollToPosition(this.getPosition(element));
-    }
-
-    protected void groupContent(GroupType groupType)
-    {
-        if(this.content.isEmpty())
-        {
-            Log.w("Content is empty - not grouping");
-            return;
-        }
-
-        if(groupType == null)
-        {
-            Log.w("GroupType is null - falling back to default GroupType.NONE");
-            groupType = GroupType.NONE;
-        }
-
-        this.groupType = groupType;
-        Log.d(String.format("GroupType[%s]...", this.groupType));
-
-        this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
-        this.scrollToItem(this.getItem(0));
     }
 
     protected boolean hasRelevantChildren(IElement element)

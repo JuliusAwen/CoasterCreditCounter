@@ -83,13 +83,13 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == Activity.RESULT_OK)
         {
             IElement resultElement = ResultFetcher.fetchResultElement(data);
 
-            switch(RequestCode.values()[requestCode])
+            switch(RequestCode.getValue(requestCode))
             {
                 case EDIT_ATTRACTION:
                 {
@@ -345,7 +345,7 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("returning %s with ResultCode[%s]", this.viewModel.attraction, StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("returning %s with %s", this.viewModel.attraction, StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
         intent.putExtra(Constants.EXTRA_ELEMENT_UUID, this.viewModel.attraction.getUuid().toString());

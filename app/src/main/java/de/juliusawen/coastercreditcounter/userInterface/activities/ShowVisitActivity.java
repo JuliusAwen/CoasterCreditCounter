@@ -80,7 +80,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .setOnIncreaseRideCountClickListener(this.createIncreaseRideCountOnClickListener())
                     .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener());
 
-            this.updateContentRecyclerView(true);
+            this.updateContentRecyclerView();
         }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewShowVisit);
@@ -159,13 +159,13 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
             List<IElement> resultElements = ResultFetcher.fetchResultElements(data);
 
-            switch(RequestCode.values()[requestCode])
+            switch(RequestCode.getValue(requestCode))
             {
                 case PICK_ATTRACTIONS:
                 {
@@ -175,7 +175,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.addChildAndSetParent(visitedAttraction);
                     }
 
-                    this.updateContentRecyclerView(true);
+                    this.updateContentRecyclerView();
                     super.markForUpdate(this.viewModel.visit);
                     break;
                 }
@@ -188,7 +188,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                         this.viewModel.visit.reorderChildren(resultElements);
                         Log.d(String.format("<SortAttractions> replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
-                        updateContentRecyclerView(true);
+                        updateContentRecyclerView();
 
                         super.markForUpdate(this.viewModel.visit);
                     }
@@ -387,7 +387,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
         super.markForUpdate(this.viewModel.longClickedElement.getParent());
         super.markForDeletion(this.viewModel.longClickedElement, true);
-        updateContentRecyclerView(true);
+        updateContentRecyclerView();
         this.handleFloatingActionButtonVisibility();
     }
 
@@ -476,20 +476,11 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return attractionsWithDefaultStatus;
     }
 
-    private void updateContentRecyclerView(boolean resetContent)
+    private void updateContentRecyclerView()
     {
-        if(resetContent)
-        {
-            Log.d("resetting content...");
-            this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
-            this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
-            this.viewModel.adapterFacade.getAdapter().expandAllContent();
-            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
-        }
-        else
-        {
-            Log.d("notifying data set changed...");
-            this.viewModel.adapterFacade.getAdapter().notifySomethingChanged();
-        }
+        Log.d("resetting content...");
+        this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.visit.getChildrenOfType(VisitedAttraction.class));
+        this.viewModel.adapterFacade.getAdapter().groupContent(GroupType.CATEGORY);
+        this.viewModel.adapterFacade.getAdapter().expandAllContent();
     }
 }

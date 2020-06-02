@@ -118,7 +118,7 @@ public class CreateAttractionActivity extends BaseActivity
 
         if(this.viewModel.requestCode == null)
         {
-            this.viewModel.requestCode = RequestCode.values()[getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0)];
+            this.viewModel.requestCode = RequestCode.getValue(getIntent().getIntExtra(Constants.EXTRA_REQUEST_CODE, 0));
             Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
@@ -177,7 +177,7 @@ public class CreateAttractionActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -672,7 +672,7 @@ public class CreateAttractionActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

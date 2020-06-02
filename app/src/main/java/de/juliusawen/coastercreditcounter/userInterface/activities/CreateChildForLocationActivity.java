@@ -174,7 +174,7 @@ public class CreateChildForLocationActivity extends BaseActivity
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("resultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
 

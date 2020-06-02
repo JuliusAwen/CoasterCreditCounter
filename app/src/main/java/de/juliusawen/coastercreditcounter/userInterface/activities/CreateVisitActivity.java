@@ -65,7 +65,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i(String.format("%s, ResultCode[%s]", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s, %s", RequestCode.getValue(requestCode), StringTool.resultCodeToString(resultCode)));
 
         if(resultCode == RESULT_OK)
         {
@@ -260,7 +260,7 @@ public class CreateVisitActivity extends BaseActivity implements AlertDialogFrag
 
     private void returnResult(int resultCode)
     {
-        Log.i(String.format("ResultCode[%s]", StringTool.resultCodeToString(resultCode)));
+        Log.i(String.format("%s", StringTool.resultCodeToString(resultCode)));
 
         Intent intent = new Intent();
         if(resultCode == RESULT_OK)
