@@ -58,7 +58,6 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             case PICK_CREDIT_TYPE:
             case PICK_CATEGORY:
             case PICK_MANUFACTURER:
-            case PICK_MODEL:
             case PICK_STATUS:
 
             case SORT_CREDIT_TYPES:
@@ -81,6 +80,14 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
                 configuration.setSelectable(true);
                 configuration.setMultipleSelection(true);
                 relevantChildTypes.add(ElementType.ON_SITE_ATTRACTION);
+                break;
+            }
+
+            case PICK_MODEL:
+            {
+                configuration.setSelectable(true);
+                configuration.setMultipleSelection(false);
+                relevantChildTypes.add(ElementType.MODEL);
                 break;
             }
 

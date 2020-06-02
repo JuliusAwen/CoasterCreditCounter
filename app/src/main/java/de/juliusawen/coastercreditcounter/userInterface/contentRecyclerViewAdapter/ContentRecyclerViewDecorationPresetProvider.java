@@ -66,28 +66,25 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForElementType(ElementType.MODEL, Typeface.BOLD);
+                                .addTypefaceForElementType(ElementType.CREDIT_TYPE, Typeface.BOLD);
                         break;
 
                     case CREDIT_TYPE:
                         decoration
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForElementType(ElementType.CREDIT_TYPE, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE);
                         break;
 
                     case CATEGORY:
                         decoration
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE)
-                                .addTypefaceForElementType(ElementType.CATEGORY, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.MANUFACTURER, DetailDisplayMode.ABOVE);
                         break;
 
                     case MANUFACTURER:
                         decoration
                                 .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CREDIT_TYPE, DetailDisplayMode.BELOW)
-                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW)
-                                .addTypefaceForElementType(ElementType.MANUFACTURER, Typeface.BOLD);
+                                .addDetailTypesAndModeForContentType(ElementType.MODEL, DetailType.CATEGORY, DetailDisplayMode.BELOW);
                         break;
                 }
 
@@ -251,7 +248,6 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
             case SORT_STATUSES:
             {
                 decoration
-                        .addTypefaceForElementType(ElementType.IPROPERTY, Typeface.BOLD)
                         .addSpecialStringResourceForElementType(ElementType.IPROPERTY, R.string.substitute_properties_default_postfix);
                 break;
             }
