@@ -62,7 +62,7 @@ public class OptionsMenuProvider
         {
             if(this.isActionItem(item))
             {
-                Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] as ACTION_IF_ROOM to ROOT", item.ordinal(), item));
+                Log.v(String.format(Locale.getDefault(), "adding ITEM %s as ACTION_IF_ROOM to ROOT", item));
 
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource)
                         .setIcon(DrawableProvider.getColoredDrawable(item.drawableResource, R.color.white))
@@ -72,7 +72,7 @@ public class OptionsMenuProvider
             {
                 if(this.isGroupInRootMenu(item))
                 {
-                    Log.v(String.format(Locale.getDefault(), "adding Group [#%d - %s] to ROOT", item.ordinal(), item));
+                    Log.v(String.format("adding GROUP %s to ROOT", item));
                     this.subMenuByGroup.put(item, menu.addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                 }
                 else //isGroupInSubMenu
@@ -80,19 +80,19 @@ public class OptionsMenuProvider
                     if(this.subMenuByGroup.containsKey(this.groupByItem.get(item)))
                     {
                         OptionsItem group = this.groupByItem.get(item);
-                        Log.v(String.format(Locale.getDefault(), "adding Subgroup [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                        Log.v(String.format("adding SUBGROUP %s to GROUP %s", item, group));
                         this.subMenuByGroup.put(item, this.subMenuByGroup.get(group).addSubMenu(item.ordinal(), item.ordinal(), item.ordinal(), item.stringResource));
                     }
                     else
                     {
-                        Log.e(String.format(Locale.getDefault(), "Subgroup for Group [#%d - %s] not found", item.ordinal(), item));
+                        Log.e(String.format("SUBGROUP for GROUP %s not found", item));
                         break;
                     }
                 }
             }
             else if(this.isItemInRootMenu(item))
             {
-                Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] to ROOT", item.ordinal(), item));
+                Log.v(String.format("adding ITEM %s to ROOT", item));
                 menu.add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
             }
             else //IsItemInGroup
@@ -100,12 +100,12 @@ public class OptionsMenuProvider
                 if((this.subMenuByGroup.containsKey(this.groupByItem.get(item))))
                 {
                     OptionsItem group = this.groupByItem.get(item);
-                    Log.v(String.format(Locale.getDefault(), "adding Item [#%d - %s] to Group [#%d - %s]", item.ordinal(), item, group.ordinal(), group));
+                    Log.v(String.format("adding ITEM %s to GROUP %s", item, group));
                     this.subMenuByGroup.get(group).add(Menu.NONE, item.ordinal(), item.ordinal(), item.stringResource);
                 }
                 else
                 {
-                    Log.e(String.format(Locale.getDefault(), "Group for Item [#%d - %s] not found", item.ordinal(), item));
+                    Log.e(String.format("GROUP for ITEM %s not found", item));
                     break;
                 }
             }
@@ -137,11 +137,11 @@ public class OptionsMenuProvider
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupEnabled(optionsItem.ordinal(), isEnabled);
                     }
-                    Log.v(String.format(Locale.getDefault(), "Group [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
+                    Log.v(String.format("GROUP %s enabled [%s]", optionsItem, isEnabled));
                 }
                 else
                 {
-                    Log.v(String.format(Locale.getDefault(), "Item [#%d - %s] enabled [%s]", optionsItem.ordinal(), optionsItem, isEnabled));
+                    Log.v(String.format("ITEM %s enabled [%s]", optionsItem, isEnabled));
                     menuItem.setEnabled(isEnabled);
                 }
             }
@@ -164,12 +164,12 @@ public class OptionsMenuProvider
                         OptionsItem group = this.groupByItem.get(optionsItem);
                         this.subMenuByGroup.get(group).setGroupVisible(optionsItem.ordinal(), isVisible);
                     }
-                    Log.v(String.format(Locale.getDefault(), "Group [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
+                    Log.v(String.format("GROUP %s visible [%s]", optionsItem, isVisible));
                 }
                 else
                 {
                     menuItem.setVisible(isVisible);
-                    Log.v(String.format(Locale.getDefault(), "Item [#%d - %s] visible [%s]", optionsItem.ordinal(), optionsItem, isVisible));
+                    Log.v(String.format("ITEM %s visible [%s]", optionsItem, isVisible));
                 }
             }
         }

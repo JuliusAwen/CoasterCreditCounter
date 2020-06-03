@@ -30,6 +30,7 @@ import de.juliusawen.coastercreditcounter.userInterface.activities.PickElementsA
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowAttractionActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowLocationsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowParkActivity;
+import de.juliusawen.coastercreditcounter.userInterface.activities.ShowPropertyActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.ShowVisitActivity;
 import de.juliusawen.coastercreditcounter.userInterface.activities.SortElementsActivity;
 
@@ -60,6 +61,26 @@ public abstract class ActivityDistributor
 
             case SHOW_ATTRACTION:
                 intent = new Intent(context, ShowAttractionActivity.class);
+                break;
+
+            case SHOW_CREDIT_TYPE:
+                intent = new Intent(context, ShowPropertyActivity.class);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.credit_type));
+                break;
+
+            case SHOW_CATEGORY:
+                intent = new Intent(context, ShowPropertyActivity.class);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.category));
+                break;
+
+            case SHOW_MANUFACTURER:
+                intent = new Intent(context, ShowPropertyActivity.class);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.manufacturer));
+                break;
+
+            case SHOW_STATUS:
+                intent = new Intent(context, ShowPropertyActivity.class);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.status));
                 break;
         }
 

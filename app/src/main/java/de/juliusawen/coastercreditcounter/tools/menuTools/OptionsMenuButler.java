@@ -4,7 +4,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
@@ -29,7 +28,7 @@ public class OptionsMenuButler
 
     // find boolean spam at the end of the class
 
-    IOptionsMenuButlerCompatibleViewModel viewModel;
+    IBaseViewModel viewModel;
 
     public OptionsMenuButler(BaseActivity master)
     {
@@ -37,7 +36,7 @@ public class OptionsMenuButler
         this.master = master;
     }
 
-    public void setViewModel(IOptionsMenuButlerCompatibleViewModel viewModel)
+    public void setViewModel(IBaseViewModel viewModel)
     {
         this.viewModel = viewModel;
     }
@@ -180,6 +179,50 @@ public class OptionsMenuButler
                     sortDescendingVisible = true;
 
                     expandAndCollapseAllVisible = childCountLargerThanOne;
+                    break;
+                }
+
+                case SHOW_CATEGORY:
+                {
+                    sortByVisible = true;
+                    sortByParkVisible = true;
+                    sortByCreditTypeVisible = true;
+                    sortByManufacturerVisible = true;
+                    sortByModelVisible = true;
+                    sortByStatusVisible = true;
+                    break;
+                }
+
+                case SHOW_CREDIT_TYPE:
+                {
+                    sortByVisible = true;
+                    sortByParkVisible = true;
+                    sortByCategoryVisible = true;
+                    sortByManufacturerVisible = true;
+                    sortByModelVisible = true;
+                    sortByStatusVisible = true;
+                    break;
+                }
+
+                case SHOW_MANUFACTURER:
+                {
+                    sortByVisible = true;
+                    sortByParkVisible = true;
+                    sortByCategoryVisible = true;
+                    sortByCreditTypeVisible = true;
+                    sortByModelVisible = true;
+                    sortByStatusVisible = true;
+                    break;
+                }
+
+                case SHOW_STATUS:
+                {
+                    sortByVisible = true;
+                    sortByParkVisible = true;
+                    sortByCategoryVisible = true;
+                    sortByCreditTypeVisible = true;
+                    sortByManufacturerVisible = true;
+                    sortByModelVisible = true;
                     break;
                 }
 
@@ -345,7 +388,7 @@ public class OptionsMenuButler
     public boolean handleMenuItemSelected(MenuItem item)
     {
         OptionsItem optionsItem = this.getOptionsItem(item);
-        Log.i(String.format(Locale.getDefault(), "OptionsItem [#%d - %s] selected", optionsItem.ordinal(), optionsItem));
+        Log.i(String.format("OptionsItem %s selected", optionsItem));
 
         switch(optionsItem)
         {
@@ -513,7 +556,7 @@ public class OptionsMenuButler
             }
         }
 
-        Log.e(String.format(Locale.getDefault(), "OptionsItem [#%d - %s] unhandled", optionsItem.ordinal(), optionsItem));
+        Log.v(String.format("OptionsItem %s not handled by Butler", optionsItem));
         return false;
     }
 
@@ -746,6 +789,11 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -764,6 +812,11 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -779,6 +832,11 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -797,6 +855,10 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -815,6 +877,10 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -833,6 +899,10 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -848,6 +918,11 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
                 return true;
 
             default:
@@ -863,6 +938,10 @@ public class OptionsMenuButler
             case ASSIGN_CATEGORY_TO_ATTRACTIONS:
             case ASSIGN_MANUFACTURER_TO_ATTRACTIONS:
             case ASSIGN_STATUS_TO_ATTRACTIONS:
+
+            case SHOW_CATEGORY:
+            case SHOW_CREDIT_TYPE:
+            case SHOW_MANUFACTURER:
                 return true;
 
             default:

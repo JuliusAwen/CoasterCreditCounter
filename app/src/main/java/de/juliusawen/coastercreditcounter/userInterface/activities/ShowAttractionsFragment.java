@@ -100,7 +100,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFragmentShowAttractions);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewShowAttractions);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter((ContentRecyclerViewAdapter) this.viewModel.showAttractionsAdapterFacade.getAdapter());
 

@@ -6,9 +6,9 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
 
-public class NavigationHubViewModel extends OptionsMenuButlerCompatibleBaseViewModel
+public class NavigationHubViewModel extends BaseViewModel
 {
     public RequestCode requestCode = RequestCode.NAVIGATE;
     public List<IElement> currentVisits;

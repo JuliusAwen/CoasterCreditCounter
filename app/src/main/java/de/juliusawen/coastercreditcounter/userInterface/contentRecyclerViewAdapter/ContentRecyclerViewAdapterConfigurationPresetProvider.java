@@ -16,14 +16,6 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
 
         switch(requestCode)
         {
-            case NAVIGATE:
-            {
-                configuration.setSelectable(true);
-                configuration.setMultipleSelection(true);
-                relevantChildTypes.add(ElementType.IATTRACTION);
-                break;
-            }
-
             case SHOW_LOCATIONS:
             {
                 relevantChildTypes.add(ElementType.LOCATION);
@@ -32,6 +24,11 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             }
 
             case SHOW_ATTRACTIONS:
+
+            case SHOW_CREDIT_TYPE:
+            case SHOW_CATEGORY:
+            case SHOW_MANUFACTURER:
+            case SHOW_STATUS:
             {
                 relevantChildTypes.add(ElementType.ON_SITE_ATTRACTION);
                 break;

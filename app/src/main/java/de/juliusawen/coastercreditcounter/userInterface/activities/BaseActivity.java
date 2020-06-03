@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
 import de.juliusawen.coastercreditcounter.application.App;
@@ -36,7 +37,7 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.IBaseViewModel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
@@ -231,7 +232,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     //region OptionsMenu
 
-    protected void setOptionsMenuButlerViewModel(IOptionsMenuButlerCompatibleViewModel viewModel)
+    protected void setOptionsMenuButlerViewModel(IBaseViewModel viewModel)
     {
         this.viewModel.optionsMenuButler.setViewModel(viewModel);
     }
@@ -239,11 +240,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     protected OptionsItem getOptionsItem(MenuItem item)
     {
         return this.viewModel.optionsMenuButler.getOptionsItem(item);
-    }
-
-    protected boolean handleMenuItemSelected(MenuItem item)
-    {
-        return this.viewModel.optionsMenuButler.handleMenuItemSelected(item);
     }
 
     @Override
@@ -271,8 +267,20 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        return this.viewModel.optionsMenuButler.handleMenuItemSelected(item);
+        return this.viewModel.optionsMenuButler.handleMenuItemSelected(item)
+                ? true
+                : this.handleMenuItemSelected(item);
     }
+
+    protected boolean handleMenuItemSelected(MenuItem item)
+    {
+        Log.e(String.format(Locale.getDefault(), "OptionsItem %s unhandled", this.viewModel.optionsMenuButler.getOptionsItem(item)));
+        return false;
+    }
+
+    //endregion OptionsMenu
+
+    // region PopupMenu
 
     @Override
     public void handlePopupItemClicked(PopupItem item)
@@ -280,7 +288,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         Log.e(String.format("[%s] clicked - unhandled", item));
     }
 
-    //endregion OptionsMenu
+    // endregion PopupMenu
 
     // region HelpOverlayFragment
 

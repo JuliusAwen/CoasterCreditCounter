@@ -1,10 +1,10 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IOptionsMenuButlerCompatibleViewModel;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButlerCompatibleBaseViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
+import de.juliusawen.coastercreditcounter.tools.menuTools.IBaseViewModel;
 
-public class DeveloperOptionsViewModel extends OptionsMenuButlerCompatibleBaseViewModel implements IOptionsMenuButlerCompatibleViewModel
+public class DeveloperOptionsViewModel extends BaseViewModel implements IBaseViewModel
 {
     public RequestCode requestCode = RequestCode.DEVELOPER_OPTIONS;
 

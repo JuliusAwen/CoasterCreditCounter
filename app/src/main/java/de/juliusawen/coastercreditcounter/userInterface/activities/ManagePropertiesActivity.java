@@ -93,7 +93,6 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 this.viewModel.elements = SortTool.sortElements(this.viewModel.elements, SortType.BY_NAME, SortOrder.ASCENDING);
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
-                this.viewModel.adapterFacade.getConfiguration().addOnElementTypeClickListener(ElementType.IPROPERTY, super.createOnElementTypeClickListener(ElementType.IPROPERTY));
             }
             else //ManageMode
             {
@@ -109,6 +108,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                         .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
             }
 
+            this.viewModel.adapterFacade.getConfiguration().addOnElementTypeClickListener(ElementType.IPROPERTY, super.createOnElementTypeClickListener(ElementType.IPROPERTY));
             this.viewModel.adapterFacade.getAdapter().setContent(this.viewModel.elements);
         }
 
@@ -308,8 +308,42 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
 
     private void handleOnPropertyClick(IElement element)
     {
-        this.viewModel.propertyToReturn = element;
-        returnResult(RESULT_OK);
+        if(this.viewModel.isSelectionMode)
+        {
+            this.viewModel.propertyToReturn = element;
+            returnResult(RESULT_OK);
+        }
+        else
+        {
+            RequestCode requestCode;
+
+            switch(this.viewModel.typeToManage)
+            {
+                case CREDIT_TYPE:
+                    requestCode = RequestCode.SHOW_CREDIT_TYPE;
+                    break;
+
+                case CATEGORY:
+                    requestCode = RequestCode.SHOW_CATEGORY;
+                    break;
+
+                case MANUFACTURER:
+                    requestCode = RequestCode.SHOW_MANUFACTURER;
+                    break;
+
+                case STATUS:
+                    requestCode = RequestCode.SHOW_STATUS;
+                    break;
+
+                default:
+                    requestCode = RequestCode.INVALID;
+            }
+
+            if(requestCode != RequestCode.INVALID)
+            {
+                ActivityDistributor.startActivityShow(this, requestCode, element);
+            }
+        }
     }
 
     @Override

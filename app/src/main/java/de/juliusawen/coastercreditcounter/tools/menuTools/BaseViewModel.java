@@ -9,7 +9,7 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-public abstract class OptionsMenuButlerCompatibleBaseViewModel extends ViewModel implements IOptionsMenuButlerCompatibleViewModel
+public abstract class BaseViewModel extends ViewModel implements IBaseViewModel
 {
 
     @Override

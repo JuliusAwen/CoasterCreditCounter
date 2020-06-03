@@ -186,8 +186,6 @@
     <string name="text_click_back_again_to_exit">Click BACK again to exit</string>
 
 
-
-
     <!--SEARCH-->
     <string name="hint_search_content">Search content</string>
 
@@ -251,6 +249,12 @@
     <string name="title_edit_on_site_attraction">Edit Attraction</string>
 
     <string name="header_total_ride_count">Total rides:</string>
+
+
+
+
+    <!--PROPERTY-->
+    <string name="help_title_show_property">Property Details</string>
 
 
 
@@ -393,6 +397,7 @@
     <string name="help_text_show_attraction">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visits">@string/help_text_not_yet_available</string>
     <string name="help_text_show_visit">@string/help_text_not_yet_available</string>
+    <string name="help_text_show_property">@string/help_text_not_yet_available</string>
 
     <string name="help_text_manage_models">@string/help_text_not_yet_available</string>
     <string name="help_text_manage_credit_types">@string/help_text_not_yet_available</string>

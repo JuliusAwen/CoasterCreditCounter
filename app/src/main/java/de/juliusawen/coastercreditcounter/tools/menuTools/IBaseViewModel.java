@@ -7,7 +7,7 @@ import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
-public interface IOptionsMenuButlerCompatibleViewModel
+public interface IBaseViewModel
 {
     RequestCode getRequestCode();
 

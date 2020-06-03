@@ -205,7 +205,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
         else
         {
             this.viewModel.adapterFacade.getAdapter().deselectItem(this.viewModel.longClickedElement);
-            super.setToolbarTitleAndSubtitle(getString(R.string.locations), "");
+            super.setToolbarTitleAndSubtitle(getString(R.string.locations), null);
         }
 
         super.setFloatingActionButtonVisibility(enabled);
