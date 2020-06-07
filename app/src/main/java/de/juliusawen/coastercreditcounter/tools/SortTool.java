@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
+import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.IAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCategory;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasCreditType;
@@ -446,6 +447,35 @@ public abstract class SortTool
                     });
                 }
                 sortedElements = ConvertTool.convertElementsToType(sortedElementsWithStatus, IElement.class);
+                break;
+            }
+
+            case BY_DATE:
+            {
+                List<Visit> sortedVisits = ConvertTool.convertElementsToType(elements, Visit.class);
+                if(sortOrder == SortOrder.ASCENDING)
+                {
+                    Collections.sort(sortedVisits, new Comparator<Visit>()
+                    {
+                        @Override
+                        public int compare(Visit element1, Visit element2)
+                        {
+                            return element1.getCalendar().compareTo(element2.getCalendar());
+                        }
+                    });
+                }
+                else
+                {
+                    Collections.sort(sortedVisits, new Comparator<Visit>()
+                    {
+                        @Override
+                        public int compare(Visit element1, Visit element2)
+                        {
+                            return element2.getCalendar().compareTo(element1.getCalendar());
+                        }
+                    });
+                }
+                sortedElements = ConvertTool.convertElementsToType(sortedVisits, IElement.class);
                 break;
             }
         }

@@ -409,7 +409,7 @@ public class OptionsMenuButler
             case SORT_BY_MANUFACTURER:
             case SORT_BY_MODEL:
             case SORT_BY_STATUS:
-                Log.v(String.format("OptionsItem [%s] has no function", optionsItem));
+                Log.v(String.format("OptionsItem %s has no function", optionsItem));
                 return true;
 
             case HELP:

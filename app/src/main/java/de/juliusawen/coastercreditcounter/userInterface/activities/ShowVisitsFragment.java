@@ -73,7 +73,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
                     .addOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER))
                     .addOnElementTypeClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.VISIT))
                     .addOnElementTypeLongClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.VISIT));
-
         }
 
         this.setHasOptionsMenu(true);
@@ -332,7 +331,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             return;
         }
 
-        IElement latestVisit = SortTool.sortElements(visits, SortType.BY_NAME, SortOrder.DESCENDING).get(0);
+        IElement latestVisit = SortTool.sortElements(visits, SortType.BY_DATE, SortOrder.DESCENDING).get(0);
         Log.d(String.format("expanding for %s", latestVisit));
         this.viewModel.showVisitsAdapterFacade.getAdapter().expandGroupHeaderForItem(latestVisit);
     }
