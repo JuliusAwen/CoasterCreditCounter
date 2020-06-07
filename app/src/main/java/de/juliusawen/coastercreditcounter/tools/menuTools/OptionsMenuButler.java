@@ -60,6 +60,8 @@ public class OptionsMenuButler
                     sortEnabled = this.getElements().size() > 1;
                     sortAscendingVisible = true;
                     sortDescendingVisible = true;
+
+                    expandAndCollapseAllVisible = true;
                     break;
                 }
 
@@ -421,79 +423,94 @@ public class OptionsMenuButler
         {
             master.invalidateOptionsMenu();
 
+            boolean handled = false;
+
             switch(optionsItem)
             {
                 case SORT_ASCENDING:
                 case SORT_BY_NAME_ASCENDING:
                     this.viewModel.setElements(SortTool.sortElements(this.getElements(), SortType.BY_NAME, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_DESCENDING:
                 case SORT_BY_NAME_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_NAME, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_PARK_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_PARK, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_PARK_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_PARK, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_CREDIT_TYPE_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CREDIT_TYPE, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_CREDIT_TYPE_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CREDIT_TYPE, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_CATEGORY_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CATEGORY, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_CATEGORY_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_CATEGORY, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_MANUFACTURER_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MANUFACTURER, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_MANUFACTURER_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MANUFACTURER, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_MODEL_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MODEL, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_MODEL_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_MODEL, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_STATUS_ASCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_STATUS, SortOrder.ASCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
 
                 case SORT_BY_STATUS_DESCENDING:
                     this.setElements(SortTool.sortElements(this.getElements(), SortType.BY_STATUS, SortOrder.DESCENDING));
-                    this.getContentRecyclerViewAdapter().setContent(this.getElements());
-                    return true;
+                    handled = true;
+                    break;
+            }
+
+            if(handled)
+            {
+                this.getContentRecyclerViewAdapter().setContent(this.getElements());
+
+                if(this.getContentRecyclerViewAdapter().getGroupType() != null)
+                {
+                    Log.d(String.format("%s found", this.getContentRecyclerViewAdapter().getGroupType()));
+                    this.getContentRecyclerViewAdapter().groupContent(this.getContentRecyclerViewAdapter().getGroupType());
+                }
+
+                return true;
             }
         }
 
@@ -1098,6 +1115,7 @@ public class OptionsMenuButler
     {
         switch(this.getRequestCode())
         {
+            case PICK_ATTRACTIONS:
             case PICK_MODEL:
             case MANAGE_MODELS:
 

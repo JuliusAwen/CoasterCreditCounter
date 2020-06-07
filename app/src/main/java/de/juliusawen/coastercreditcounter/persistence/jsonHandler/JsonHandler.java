@@ -874,7 +874,7 @@ public class JsonHandler implements IDatabaseWrapper
             jsonArray.put(JSONObject.NULL);
         }
 
-        Log.d("success");
+        Log.v("success");
         return jsonArray;
     }
 
