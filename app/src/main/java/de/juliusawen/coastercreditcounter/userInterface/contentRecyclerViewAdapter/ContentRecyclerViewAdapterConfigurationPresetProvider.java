@@ -28,6 +28,7 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             case SHOW_CREDIT_TYPE:
             case SHOW_CATEGORY:
             case SHOW_MANUFACTURER:
+            case SHOW_MODEL:
             case SHOW_STATUS:
             {
                 relevantChildTypes.add(ElementType.ON_SITE_ATTRACTION);

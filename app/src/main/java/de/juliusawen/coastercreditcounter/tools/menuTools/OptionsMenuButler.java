@@ -26,8 +26,6 @@ public class OptionsMenuButler
     private BaseActivity master;
     private OptionsMenuProvider optionsMenuProvider;
 
-    // find boolean spam at the end of the class
-
     IBaseViewModel viewModel;
 
     public OptionsMenuButler(BaseActivity master)
@@ -211,6 +209,14 @@ public class OptionsMenuButler
                     sortByCategoryVisible = true;
                     sortByCreditTypeVisible = true;
                     sortByModelVisible = true;
+                    sortByStatusVisible = true;
+                    break;
+                }
+
+                case SHOW_MODEL:
+                {
+                    sortByVisible = true;
+                    sortByParkVisible = true;
                     sortByStatusVisible = true;
                     break;
                 }
@@ -793,6 +799,7 @@ public class OptionsMenuButler
             case SHOW_CATEGORY:
             case SHOW_CREDIT_TYPE:
             case SHOW_MANUFACTURER:
+            case SHOW_MODEL:
             case SHOW_STATUS:
                 return true;
 
@@ -816,6 +823,7 @@ public class OptionsMenuButler
             case SHOW_CATEGORY:
             case SHOW_CREDIT_TYPE:
             case SHOW_MANUFACTURER:
+            case SHOW_MODEL:
             case SHOW_STATUS:
                 return true;
 
@@ -836,6 +844,7 @@ public class OptionsMenuButler
             case SHOW_CATEGORY:
             case SHOW_CREDIT_TYPE:
             case SHOW_MANUFACTURER:
+            case SHOW_MODEL:
             case SHOW_STATUS:
                 return true;
 
@@ -942,6 +951,7 @@ public class OptionsMenuButler
             case SHOW_CATEGORY:
             case SHOW_CREDIT_TYPE:
             case SHOW_MANUFACTURER:
+            case SHOW_MODEL:
                 return true;
 
             default:

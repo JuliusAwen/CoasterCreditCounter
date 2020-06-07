@@ -77,6 +77,13 @@ public abstract class ContentRecyclerViewDecorationPresetProvider
                 break;
             }
 
+            case SHOW_MODEL:
+            {
+                decoration.addTypefaceForElementType(ElementType.MODEL, Typeface.BOLD);
+                groupType = GroupType.MODEL;
+                break;
+            }
+
             case SHOW_STATUS:
             {
                 decoration.addTypefaceForElementType(ElementType.STATUS, Typeface.BOLD);

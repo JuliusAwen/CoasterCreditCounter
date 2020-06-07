@@ -78,6 +78,11 @@ public abstract class ActivityDistributor
                 intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.manufacturer));
                 break;
 
+            case SHOW_MODEL:
+                intent = new Intent(context, ShowPropertyActivity.class);
+                intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.model));
+                break;
+
             case SHOW_STATUS:
                 intent = new Intent(context, ShowPropertyActivity.class);
                 intent.putExtra(Constants.EXTRA_TOOLBAR_TITLE, context.getString(R.string.status));

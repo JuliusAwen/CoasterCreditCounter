@@ -331,6 +331,10 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     requestCode = RequestCode.SHOW_MANUFACTURER;
                     break;
 
+                case MODEL:
+                    requestCode = RequestCode.SHOW_MODEL;
+                    break;
+
                 case STATUS:
                     requestCode = RequestCode.SHOW_STATUS;
                     break;
