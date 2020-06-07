@@ -171,9 +171,6 @@
 
         </LinearLayout>
 
-        <include
-            layout="@layout/layout_bottom_spacer"/>
-
     </LinearLayout>
 
 </ScrollView>

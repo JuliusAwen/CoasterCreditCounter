@@ -103,9 +103,11 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                     SortTool.sortElements(element.getChildren(), SortType.BY_NAME, SortOrder.ASCENDING);
                 }
 
-                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
                 this.viewModel.adapterFacade.getConfiguration()
-                        .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
+                        .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY))
+                        .setOnScrollHandleFloatingActionButtonVisibiltyListener(super.createOnScrollHandleFloatingActionButtonVisibilityListener());
+
+                this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
             }
 
             this.viewModel.adapterFacade.getConfiguration().addOnElementTypeClickListener(ElementType.IPROPERTY, super.createOnElementTypeClickListener(ElementType.IPROPERTY));

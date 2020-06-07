@@ -60,9 +60,10 @@ public class ShowPropertyActivity extends BaseActivity
         {
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
 
-            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
             this.viewModel.adapterFacade.getConfiguration()
                     .addOnElementTypeClickListener(ElementType.ON_SITE_ATTRACTION, super.createOnElementTypeClickListener(ElementType.ON_SITE_ATTRACTION));
+
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
             this.viewModel.adapterFacade.setSingleElementAsContent(this.viewModel.property);
             this.viewModel.adapterFacade.getAdapter().expandItem(this.viewModel.property, false);
         }
@@ -103,7 +104,7 @@ public class ShowPropertyActivity extends BaseActivity
     }
 
     @Override
-    protected boolean handleMenuItemSelected(MenuItem item)
+    protected boolean handleOptionsItemSelected(MenuItem item)
     {
         switch(super.getOptionsItem(item))
         {
@@ -156,7 +157,7 @@ public class ShowPropertyActivity extends BaseActivity
                 break;
 
             default:
-                return super.handleMenuItemSelected(item);
+                return super.handleOptionsItemSelected(item);
         }
 
         this.viewModel.adapterFacade.setSingleElementAsContent(this.viewModel.property);

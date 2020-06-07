@@ -80,12 +80,15 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
         if(this.viewModel.showAttractionsAdapterFacade == null)
         {
             this.viewModel.showAttractionsAdapterFacade = new ContentRecyclerViewAdapterFacade();
-            this.viewModel.showAttractionsAdapterFacade.createPreconfiguredAdapter(RequestCode.SHOW_ATTRACTIONS, GroupType.CATEGORY);
+
             this.viewModel.showAttractionsAdapterFacade.getConfiguration()
                     .addOnElementTypeClickListener(ElementType.ON_SITE_ATTRACTION, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.ON_SITE_ATTRACTION))
                     .addOnElementTypeClickListener(ElementType.GROUP_HEADER, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeLongClickListener(ElementType.ON_SITE_ATTRACTION, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.ON_SITE_ATTRACTION))
-                    .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER));
+                    .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
+                    .setOnScrollHandleFloatingActionButtonVisibiltyListener(this.fragmentInteraction.createOnScrollHandleFloatingActionButtonVisibilityListener());
+
+            this.viewModel.showAttractionsAdapterFacade.createPreconfiguredAdapter(RequestCode.SHOW_ATTRACTIONS, GroupType.CATEGORY);
         }
 
         this.setHasOptionsMenu(true);
@@ -318,6 +321,7 @@ public  class ShowAttractionsFragment extends Fragment implements AlertDialogFra
     {
         View.OnClickListener createOnElementTypeClickListener(ElementType elementType);
         View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType);
+        RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener();
         void setFloatingActionButtonVisibility(boolean isVisible);
         void markForUpdate(IElement elementToUpdate);
         void markForDeletion(IElement elementToDelete, boolean deleteDescendants);

@@ -71,14 +71,17 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         if(this.viewModel.adapterFacade == null)
         {
             this.viewModel.adapterFacade = new ContentRecyclerViewAdapterFacade();
-            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
+
             this.viewModel.adapterFacade.getConfiguration()
                     .addOnElementTypeClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeClickListener(ElementType.VISITED_ATTRACTION))
                     .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION))
                     .setOnIncreaseRideCountClickListener(this.createIncreaseRideCountOnClickListener())
-                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener());
+                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener())
+                    .setOnScrollHandleFloatingActionButtonVisibiltyListener(super.createOnScrollHandleFloatingActionButtonVisibilityListener());
+
+            this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
 
             this.updateContentRecyclerView();
         }
@@ -118,7 +121,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
             this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
         }
 
-        this.handleFloatingActionButtonVisibility();
+        this.setFloatingActionButtonVisibility(true);
 
         Log.d(String.format("%s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
     }
@@ -133,7 +136,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.viewModel.visit.setEditingEnabled(true);
                 invalidateOptionsMenu();
                 this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
-                this.handleFloatingActionButtonVisibility();
+                this.setFloatingActionButtonVisibility(true);
 
                 Log.d(String.format("<ENABLE_EDITING> enabled editing for %s", this.viewModel.visit));
                 return true;
@@ -144,7 +147,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 this.viewModel.visit.setEditingEnabled(false);
                 invalidateOptionsMenu();
                 this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
-                this.handleFloatingActionButtonVisibility();
+                this.setFloatingActionButtonVisibility(false);
 
                 Log.d(String.format("<DISABLE_EDITING> disabled editing %s", this.viewModel.visit));
                 return true;
@@ -220,7 +223,8 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                 new LinkedList<IElement>(getNotYetAddedAttractionsWithDefaultStatus()));
     }
 
-    private void handleFloatingActionButtonVisibility()
+    @Override
+    protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.allAttractionsAdded() || !this.viewModel.visit.isEditingEnabled())
         {
@@ -228,7 +232,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         }
         else
         {
-            super.setFloatingActionButtonVisibility(true);
+            super.setFloatingActionButtonVisibility(isVisible);
         }
     }
 
@@ -388,7 +392,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         super.markForUpdate(this.viewModel.longClickedElement.getParent());
         super.markForDeletion(this.viewModel.longClickedElement, true);
         updateContentRecyclerView();
-        this.handleFloatingActionButtonVisibility();
+        this.setFloatingActionButtonVisibility(true);
     }
 
     private View.OnClickListener createIncreaseRideCountOnClickListener()

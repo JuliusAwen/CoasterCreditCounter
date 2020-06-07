@@ -44,7 +44,6 @@ public abstract class ContentRecyclerViewAdapterConfigurationPresetProvider
             case SHOW_VISIT:
             {
                 relevantChildTypes.add(ElementType.VISITED_ATTRACTION);
-                configuration.setBottomSpacer(true);
                 break;
             }
 

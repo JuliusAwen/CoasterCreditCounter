@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -269,10 +270,10 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     {
         return this.viewModel.optionsMenuButler.handleMenuItemSelected(item)
                 ? true
-                : this.handleMenuItemSelected(item);
+                : this.handleOptionsItemSelected(item);
     }
 
-    protected boolean handleMenuItemSelected(MenuItem item)
+    protected boolean handleOptionsItemSelected(MenuItem item)
     {
         Log.e(String.format(Locale.getDefault(), "OptionsItem %s unhandled", this.viewModel.optionsMenuButler.getOptionsItem(item)));
         return false;
@@ -525,14 +526,14 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     // region FloatingActionButton
 
-    public void createFloatingActionButton()
+    protected void createFloatingActionButton()
     {
         Log.d("creating...");
 
         this.floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
-    public void setFloatingActionButtonIcon(Drawable icon)
+    protected void setFloatingActionButtonIcon(Drawable icon)
     {
         Log.v("setting icon...");
         if(this.floatingActionButton != null)
@@ -542,7 +543,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    public void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
+    protected void setFloatingActionButtonOnClickListener(View.OnClickListener onClickListener)
     {
         Log.v("setting onClickListener...");
 
@@ -553,7 +554,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    public void setFloatingActionButtonVisibility(boolean isVisible)
+    protected void setFloatingActionButtonVisibility(boolean isVisible)
     {
         if(this.floatingActionButton != null)
         {
@@ -593,6 +594,38 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             this.floatingActionButton = newFloatingActionButton;
             this.floatingActionButton.show();
         }
+    }
+
+    protected RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener()
+    {
+        return new RecyclerView.OnScrollListener()
+        {
+            boolean floatingActionButtonHidden = false;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0)
+                {
+                    if(!this.floatingActionButtonHidden)
+                    {
+                        Log.v("scrolling up: hiding FloatingActionButton");
+                        BaseActivity.this.setFloatingActionButtonVisibility(false);
+                        this.floatingActionButtonHidden = true;
+                    }
+
+                }
+                else if (dy < 0)
+                {
+                    if(this.floatingActionButtonHidden)
+                    {
+                        Log.v("scrolling down: showing FloatingActionButton");
+                        BaseActivity.this.setFloatingActionButtonVisibility(true);
+                        this.floatingActionButtonHidden = false;
+                    }
+                }
+            }
+        };
     }
 
     // endregion FloatingActionButton

@@ -65,11 +65,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return this.groupType;
     }
 
-    protected boolean useBottomSpacer()
-    {
-        return this.configuration.useBottomSpacer();
-    }
-
     protected boolean hasExternalOnClickListeners()
     {
         return !(this.configuration.getOnClickListenersByElementType().isEmpty() && this.configuration.getOnLongClickListenersByElementType().isEmpty());
@@ -105,6 +100,12 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         Log.d("attaching to RecyclerView...");
         this.recyclerView = recyclerView;
+
+        if(this.configuration.getOnScrollHandleFloatingActionButtonVisibiltyListener() != null)
+        {
+            this.recyclerView.addOnScrollListener(this.configuration.getOnScrollHandleFloatingActionButtonVisibiltyListener());
+        }
+
         super.onAttachedToRecyclerView(recyclerView);
     }
 

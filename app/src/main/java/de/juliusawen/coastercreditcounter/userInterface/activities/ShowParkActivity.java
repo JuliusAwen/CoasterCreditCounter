@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -31,7 +32,6 @@ import de.juliusawen.coastercreditcounter.tools.DrawableProvider;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
-import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 
 public class ShowParkActivity extends BaseActivity implements
@@ -95,17 +95,12 @@ public class ShowParkActivity extends BaseActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    protected boolean handleOptionsItemSelected(MenuItem item)
     {
-        OptionsItem optionsItem = super.getOptionsItem(item);
-
         if(this.getCurrentTab() == ShowParkTab.SHOW_VISITS)
         {
-            switch(optionsItem)
+            switch(super.getOptionsItem(item))
             {
-                case SORT:
-                    return true;
-
                 case SORT_ASCENDING:
                     this.showVisitsFragment.sortAscending();
                     return true;
@@ -116,7 +111,7 @@ public class ShowParkActivity extends BaseActivity implements
             }
         }
 
-        return super.handleMenuItemSelected(item);
+        return super.handleOptionsItemSelected(item);
     }
 
     @Override
@@ -199,6 +194,12 @@ public class ShowParkActivity extends BaseActivity implements
     public View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType)
     {
         return super.createOnElementTypeLongClickListener(elementType);
+    }
+
+    @Override
+    public RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener()
+    {
+        return super.createOnScrollHandleFloatingActionButtonVisibilityListener();
     }
 
     @Override

@@ -226,10 +226,6 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
         {
             return ItemViewType.VISITED_ATTRACTION.ordinal();
         }
-        else if(element.isBottomSpacer())
-        {
-            return ItemViewType.BOTTOM_SPACER.ordinal();
-        }
         else
         {
             return ItemViewType.ELEMENT.ordinal();
@@ -253,11 +249,6 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
             case VISITED_ATTRACTION:
                 view = layoutInflater.inflate(R.layout.layout_recycler_view_item_view_type_visited_attraction, viewGroup, false);
                 viewHolder = new ViewHolderVisitedAttraction(view);
-                break;
-
-            case BOTTOM_SPACER:
-                view = layoutInflater.inflate(R.layout.layout_bottom_spacer, viewGroup, false);
-                viewHolder = new ViewHolderBottomSpacer(view);
                 break;
 
             default:
@@ -285,9 +276,6 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
                 this.bindViewHolderVisitedAttraction(viewHolderVisitedAttraction, position);
                 break;
 
-            case BOTTOM_SPACER:
-                break;
-
             default:
                 throw new IllegalStateException(String.format("unknown ViewType[%s]", itemViewType));
         }
@@ -298,8 +286,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     {
         UNDETERMINED,
         ELEMENT,
-        VISITED_ATTRACTION,
-        BOTTOM_SPACER;
+        VISITED_ATTRACTION;
 
         static ItemViewType getValue(int ordinal)
         {

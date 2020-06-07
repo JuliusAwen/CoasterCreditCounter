@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -33,17 +32,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
-    @Override
-    protected void setContent(List<IElement> content)
-    {
-        super.setContent(content);
-
-        if(super.useBottomSpacer())
-        {
-            this.addBottomSpacer();
-        }
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -290,15 +278,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
 
 
             this.textViewPrettyPrint = view.findViewById(R.id.textViewRecyclerViewItemVisitedAttraction_PrettyPrint);
-        }
-    }
-
-    static class ViewHolderBottomSpacer extends RecyclerView.ViewHolder
-    {
-        ViewHolderBottomSpacer(View view)
-        {
-            super(view);
-            view.setClickable(false);
         }
     }
 }
