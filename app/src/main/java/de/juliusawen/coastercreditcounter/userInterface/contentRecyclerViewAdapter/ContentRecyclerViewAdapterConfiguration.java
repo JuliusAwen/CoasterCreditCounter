@@ -31,6 +31,8 @@ public class ContentRecyclerViewAdapterConfiguration
     private boolean isSelecetable = false;
     private boolean isMultipleSelection = false;
 
+    private boolean useBottomSpacer = false;
+
     public ContentRecyclerViewAdapterConfiguration(ContentRecyclerViewDecoration contentRecyclerViewDecoration)
     {
         this.contentRecyclerViewDecoration = contentRecyclerViewDecoration;
@@ -140,6 +142,16 @@ public class ContentRecyclerViewAdapterConfiguration
     {
         this.relevantChildTypes.add(relevantChildType);
         Log.v(String.format("added %s as relevant child type", relevantChildType));
+    }
+
+    public boolean useBottomSpacer()
+    {
+        return this.useBottomSpacer;
+    }
+
+    public void setBottomSpacer(boolean useBottomSpacer)
+    {
+        this.useBottomSpacer = useBottomSpacer;
     }
 
     @Override

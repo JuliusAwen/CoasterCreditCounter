@@ -65,6 +65,11 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return this.groupType;
     }
 
+    protected boolean useBottomSpacer()
+    {
+        return this.configuration.useBottomSpacer();
+    }
+
     protected boolean hasExternalOnClickListeners()
     {
         return !(this.configuration.getOnClickListenersByElementType().isEmpty() && this.configuration.getOnLongClickListenersByElementType().isEmpty());
