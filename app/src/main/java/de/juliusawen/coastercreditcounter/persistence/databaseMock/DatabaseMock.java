@@ -14,6 +14,7 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Location;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Park;
 import de.juliusawen.coastercreditcounter.dataModel.elements.Visit;
+import de.juliusawen.coastercreditcounter.dataModel.elements.annotations.Note;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.OnSiteAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Category;
@@ -405,6 +406,19 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides07092019.put(krake, 2);
         rides07092019.put(limit, 1);
         heidePark.addChildAndSetParent(this.createVisit(7, 9, 2019, rides07092019));
+
+
+        // 2020
+        LinkedHashMap<OnSiteAttraction, Integer> rides0506202 = new LinkedHashMap<>();
+        rides0506202.put(colossos, 2);
+        rides0506202.put(desertRace, 2);
+        rides0506202.put(krake, 3);
+        rides0506202.put(flugDerDaemonen, 1);
+        rides0506202.put(grottenblitz, 1);
+        rides0506202.put(scream, 2);
+        rides0506202.put(mountainRafting, 1);
+        rides0506202.put(monorail, 1);
+        heidePark.addChildAndSetParent(this.createVisit(5, 6, 2020, rides0506202));
     }
 
     private void mockWalibiHolland()
@@ -420,6 +434,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction untamed = OnSiteAttraction.create("Untamed");
         untamed.setModel(models.RMC_IBoxTrack);
+        untamed.addChildAndSetParent(Note.create("Attended opening day on June 1st 2019"));
         walibiHolland.addChildAndSetParent(untamed);
 
         OnSiteAttraction lostGravity = OnSiteAttraction.create("Lost Gravity", 7);
@@ -1070,6 +1085,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction fenix = OnSiteAttraction.create("Fēnix");
         fenix.setModel(models.BollingerAndMabillard_WingCoaster);
+        fenix.addChildAndSetParent(Note.create("Attended opening day on July 7th 2018"));
         toverland.addChildAndSetParent(fenix);
 
         OnSiteAttraction dwervelwind = OnSiteAttraction.create("Dwervelwind");
