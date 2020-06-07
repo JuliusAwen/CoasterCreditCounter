@@ -1,9 +1,6 @@
 package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +25,9 @@ import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IHasStat
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Manufacturer;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Model;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.Status;
-import de.juliusawen.coastercreditcounter.enums.SortOrder;
+import de.juliusawen.coastercreditcounter.enums.SortType;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
+import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
@@ -321,23 +319,14 @@ class GroupHeaderProvider
 
     private LinkedList<IElement> groupByYear(List<IElement> elements)
     {
-        LinkedList<Visit> visits = ConvertTool.convertElementsToType(elements, Visit.class);
-
-        if(visits.isEmpty())
-        {
-            Log.v("no Elements to group");
-            return new LinkedList<IElement>(visits);
-        }
-
-        Log.d(String.format(Locale.getDefault(), "adding SpecialGroupHeaders to [%d] Visits...", visits.size()));
+        Log.d(String.format(Locale.getDefault(), "adding SpecialGroupHeaders to [%d] Elements...", elements.size()));
 
         for(SpecialGroupHeader specialGroupHeader : this.specialGroupHeaders)
         {
             specialGroupHeader.getChildren().clear();
         }
 
-        visits = this.sortVisitsByDateAccordingToSortOrder(visits);
-
+        LinkedList<Visit> visits = ConvertTool.convertElementsToType(SortTool.sortElements(elements, SortType.BY_DATE, Visit.getSortOrder()), Visit.class);
         LinkedList<IElement> groupedVisits = new LinkedList<>();
 
         for(Visit visit : visits)
@@ -384,41 +373,5 @@ class GroupHeaderProvider
 
         Log.v(String.format(Locale.getDefault(), "[%d] SpecialGroupHeaders added", groupedVisits.size()));
         return groupedVisits;
-    }
-
-    private LinkedList<Visit> sortVisitsByDateAccordingToSortOrder(List<Visit> visits)
-    {
-        DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        HashMap<String, Visit> visitsByDateString = new HashMap<>();
-
-        for(Visit visit : visits)
-        {
-            String dateString = simpleDateFormat.format(visit.getCalendar().getTime());
-            visitsByDateString.put(dateString, visit);
-            Log.v(String.format("parsed date [%s] from name %s", dateString, visit));
-        }
-
-        ArrayList<String> dateStrings = new ArrayList<>(visitsByDateString.keySet());
-        Collections.sort(dateStrings);
-
-        LinkedList<Visit> sortedVisits = new LinkedList<>();
-
-        if(Visit.getSortOrder() == SortOrder.ASCENDING)
-        {
-            for(String dateString : dateStrings)
-            {
-                sortedVisits.add(visitsByDateString.get(dateString));
-            }
-        }
-        else
-        {
-            for(String dateString : dateStrings)
-            {
-                sortedVisits.add(0, visitsByDateString.get(dateString));
-            }
-        }
-
-        Log.i(String.format(Locale.getDefault(), "sorted [%d] visits [%s]", visits.size(), Visit.getSortOrder()));
-        return sortedVisits;
     }
 }

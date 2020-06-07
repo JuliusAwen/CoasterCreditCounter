@@ -25,4 +25,9 @@ public enum GroupType
             return values()[0];
         }
     }
+
+    public String toString()
+    {
+        return String.format("GroupType[%s]", this.name());
+    }
 }

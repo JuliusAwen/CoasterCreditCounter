@@ -103,6 +103,9 @@ public class ShowParkActivity extends BaseActivity implements
         {
             switch(optionsItem)
             {
+                case SORT:
+                    return true;
+
                 case SORT_ASCENDING:
                     this.showVisitsFragment.sortAscending();
                     return true;

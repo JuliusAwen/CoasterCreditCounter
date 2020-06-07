@@ -223,7 +223,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
         }
         else
         {
-            Log.d(String.format("item [%s] is either already expanded or unknown", item));
+            Log.d(String.format("item %s is either already expanded or unknown", item));
         }
     }
 
