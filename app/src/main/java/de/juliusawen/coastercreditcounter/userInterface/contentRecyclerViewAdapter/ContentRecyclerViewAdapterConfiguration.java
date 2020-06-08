@@ -2,8 +2,6 @@ package de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdap
 
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -22,8 +20,6 @@ public class ContentRecyclerViewAdapterConfiguration
 
     private View.OnClickListener onIncreaseRideCountClickListener;
     private View.OnClickListener onDecreaseRideCountClickListener;
-
-    private RecyclerView.OnScrollListener onScrollHandleFloatingActionButtonVisibiltyListener;
 
     // ElementTypes that are either expanded/collapsed or selected when parent is clicked
     private final LinkedHashSet<ElementType> relevantChildTypes = new LinkedHashSet<>();
@@ -76,17 +72,6 @@ public class ContentRecyclerViewAdapterConfiguration
     public ContentRecyclerViewAdapterConfiguration setOnIncreaseRideCountClickListener(View.OnClickListener onIncreaseRideCountClickListener)
     {
         this.onIncreaseRideCountClickListener = onIncreaseRideCountClickListener;
-        return this;
-    }
-
-    public RecyclerView.OnScrollListener getOnScrollHandleFloatingActionButtonVisibiltyListener()
-    {
-        return this.onScrollHandleFloatingActionButtonVisibiltyListener;
-    }
-
-    public ContentRecyclerViewAdapterConfiguration setOnScrollHandleFloatingActionButtonVisibiltyListener(RecyclerView.OnScrollListener onScrollHandleFloatingActionButtonVisibiltyListener)
-    {
-        this.onScrollHandleFloatingActionButtonVisibiltyListener = onScrollHandleFloatingActionButtonVisibiltyListener;
         return this;
     }
 
@@ -186,14 +171,12 @@ public class ContentRecyclerViewAdapterConfiguration
                 "    [%d] OnElementTypeClickListener(s)%s\n"+
                 "    [%d] OnElementTypeLongClickListener(s)%s\n" +
                 "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]" +
-                "    OnScrollHandleFloatingActionButtonVisibiltyListener added [%S]",
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
                 this.onClickListenersByElementType.size(), onClickListenerTypesString,
                 this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString,
-                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null,
-                this.onScrollHandleFloatingActionButtonVisibiltyListener != null
+                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null
         );
     }
 }

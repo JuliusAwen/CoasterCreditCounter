@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -594,38 +593,6 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
             this.floatingActionButton = newFloatingActionButton;
             this.floatingActionButton.show();
         }
-    }
-
-    protected RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener()
-    {
-        return new RecyclerView.OnScrollListener()
-        {
-            boolean floatingActionButtonHidden = false;
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy > 0)
-                {
-                    if(!this.floatingActionButtonHidden)
-                    {
-                        Log.v("scrolling up: hiding FloatingActionButton");
-                        BaseActivity.this.setFloatingActionButtonVisibility(false);
-                        this.floatingActionButtonHidden = true;
-                    }
-
-                }
-                else if (dy < 0)
-                {
-                    if(this.floatingActionButtonHidden)
-                    {
-                        Log.v("scrolling down: showing FloatingActionButton");
-                        BaseActivity.this.setFloatingActionButtonVisibility(true);
-                        this.floatingActionButtonHidden = false;
-                    }
-                }
-            }
-        };
     }
 
     // endregion FloatingActionButton

@@ -72,8 +72,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             this.viewModel.showVisitsAdapterFacade.getConfiguration()
                     .addOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.SPECIAL_GROUP_HEADER))
                     .addOnElementTypeClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeClickListener(ElementType.VISIT))
-                    .addOnElementTypeLongClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.VISIT))
-                    .setOnScrollHandleFloatingActionButtonVisibiltyListener(this.fragmentInteraction.createOnScrollHandleFloatingActionButtonVisibilityListener());
+                    .addOnElementTypeLongClickListener(ElementType.VISIT, this.fragmentInteraction.createOnElementTypeLongClickListener(ElementType.VISIT));
 
             this.viewModel.showVisitsAdapterFacade.createPreconfiguredAdapter(RequestCode.SHOW_VISITS);
         }
@@ -343,7 +342,6 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     {
         View.OnClickListener createOnElementTypeClickListener(ElementType elementType);
         View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType);
-        RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener();
         void setFloatingActionButtonVisibility(boolean isVisible);
         void markForDeletion(IElement elementToDelete, boolean deleteDescendants);
         void markForUpdate(IElement elementToDelete);

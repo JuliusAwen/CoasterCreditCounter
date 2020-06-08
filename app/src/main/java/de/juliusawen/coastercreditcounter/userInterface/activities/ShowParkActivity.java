@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -194,12 +193,6 @@ public class ShowParkActivity extends BaseActivity implements
     public View.OnLongClickListener createOnElementTypeLongClickListener(ElementType elementType)
     {
         return super.createOnElementTypeLongClickListener(elementType);
-    }
-
-    @Override
-    public RecyclerView.OnScrollListener createOnScrollHandleFloatingActionButtonVisibilityListener()
-    {
-        return super.createOnScrollHandleFloatingActionButtonVisibilityListener();
     }
 
     @Override

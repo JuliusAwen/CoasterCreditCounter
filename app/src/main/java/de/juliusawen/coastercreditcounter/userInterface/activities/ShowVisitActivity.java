@@ -78,8 +78,7 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION))
                     .setOnIncreaseRideCountClickListener(this.createIncreaseRideCountOnClickListener())
-                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener())
-                    .setOnScrollHandleFloatingActionButtonVisibiltyListener(super.createOnScrollHandleFloatingActionButtonVisibilityListener());
+                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener());
 
             this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
 

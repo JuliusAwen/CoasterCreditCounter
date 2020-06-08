@@ -100,8 +100,7 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
                 }
 
                 this.viewModel.adapterFacade.getConfiguration()
-                        .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY))
-                        .setOnScrollHandleFloatingActionButtonVisibiltyListener(super.createOnScrollHandleFloatingActionButtonVisibilityListener());
+                        .addOnElementTypeLongClickListener(ElementType.IPROPERTY, super.createOnElementTypeLongClickListener(ElementType.IPROPERTY));
 
                 this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode, this.viewModel.typeToManage);
             }

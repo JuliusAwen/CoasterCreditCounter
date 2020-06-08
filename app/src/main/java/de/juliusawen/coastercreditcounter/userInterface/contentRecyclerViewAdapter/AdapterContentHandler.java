@@ -102,11 +102,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         Log.d("attaching to RecyclerView...");
         this.recyclerView = recyclerView;
 
-        if(this.configuration.getOnScrollHandleFloatingActionButtonVisibiltyListener() != null)
-        {
-            this.recyclerView.addOnScrollListener(this.configuration.getOnScrollHandleFloatingActionButtonVisibiltyListener());
-        }
-
         super.onAttachedToRecyclerView(recyclerView);
     }
 
