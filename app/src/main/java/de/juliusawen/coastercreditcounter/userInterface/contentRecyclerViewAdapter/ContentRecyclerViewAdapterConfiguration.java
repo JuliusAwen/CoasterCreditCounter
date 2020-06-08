@@ -15,6 +15,8 @@ import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
 public class ContentRecyclerViewAdapterConfiguration
 {
+    private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
+
     private final Map<ElementType, View.OnClickListener> onClickListenersByElementType = new HashMap<>();
     private final Map<ElementType, View.OnLongClickListener> onLongClickListenersByElementType = new HashMap<>();
 
@@ -22,8 +24,6 @@ public class ContentRecyclerViewAdapterConfiguration
     private View.OnClickListener onDecreaseRideCountClickListener;
 
     private RecyclerView.OnScrollListener onScrollHandleFloatingActionButtonVisibiltyListener;
-
-    private ContentRecyclerViewDecoration contentRecyclerViewDecoration;
 
     // ElementTypes that are either expanded/collapsed or selected when parent is clicked
     private final LinkedHashSet<ElementType> relevantChildTypes = new LinkedHashSet<>();
@@ -39,6 +39,11 @@ public class ContentRecyclerViewAdapterConfiguration
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
     }
 
+    public ContentRecyclerViewDecoration getDecoration()
+    {
+        return this.contentRecyclerViewDecoration;
+    }
+
     Map<ElementType, View.OnClickListener> getOnClickListenersByElementType()
     {
         return this.onClickListenersByElementType;
@@ -52,14 +57,14 @@ public class ContentRecyclerViewAdapterConfiguration
     public ContentRecyclerViewAdapterConfiguration addOnElementTypeClickListener(ElementType elementType, View.OnClickListener onClickListener)
     {
         this.onClickListenersByElementType.put(elementType, onClickListener);
-        Log.v(String.format("%s", elementType));
+        Log.d(String.format("%s", elementType));
         return this;
     }
 
     public ContentRecyclerViewAdapterConfiguration addOnElementTypeLongClickListener(ElementType elementType, View.OnLongClickListener onLongClickListener)
     {
         this.onLongClickListenersByElementType.put(elementType, onLongClickListener);
-        Log.v(String.format("%s", elementType));
+        Log.d(String.format("%s", elementType));
         return this;
     }
 
@@ -96,31 +101,6 @@ public class ContentRecyclerViewAdapterConfiguration
         return this;
     }
 
-    public ContentRecyclerViewDecoration getDecoration()
-    {
-        return this.contentRecyclerViewDecoration;
-    }
-
-    public boolean isSelecetable()
-    {
-        return this.isSelecetable;
-    }
-
-    public void setSelectable(boolean isSelecetable)
-    {
-        this.isSelecetable = isSelecetable;
-    }
-
-    public boolean isMultipleSelection()
-    {
-        return this.isMultipleSelection;
-    }
-
-    public void setMultipleSelection(boolean isMultipleSelection)
-    {
-        this.isMultipleSelection = isMultipleSelection;
-    }
-
     LinkedHashSet<ElementType> getRelevantChildTypes()
     {
         return this.relevantChildTypes;
@@ -144,6 +124,28 @@ public class ContentRecyclerViewAdapterConfiguration
         Log.v(String.format("added %s as relevant child type", relevantChildType));
     }
 
+    public boolean isSelecetable()
+    {
+        return this.isSelecetable;
+    }
+
+    public void setSelectable(boolean isSelecetable)
+    {
+        this.isSelecetable = isSelecetable;
+        Log.d(String.format("isSelectable[%S]", isSelecetable));
+    }
+
+    public boolean isMultipleSelection()
+    {
+        return this.isMultipleSelection;
+    }
+
+    public void setMultipleSelection(boolean isMultipleSelection)
+    {
+        this.isMultipleSelection = isMultipleSelection;
+        Log.d(String.format("isMultipleSelection[%S]", isMultipleSelection));
+    }
+
     public boolean useBottomSpacer()
     {
         return this.useBottomSpacer;
@@ -152,6 +154,7 @@ public class ContentRecyclerViewAdapterConfiguration
     public void setBottomSpacer(boolean useBottomSpacer)
     {
         this.useBottomSpacer = useBottomSpacer;
+        Log.d(String.format("useBottomSpacer[%S]", useBottomSpacer));
     }
 
     @Override
@@ -182,13 +185,15 @@ public class ContentRecyclerViewAdapterConfiguration
                 "    [%d] relevant child type(s)%s\n"+
                 "    [%d] OnElementTypeClickListener(s)%s\n"+
                 "    [%d] OnElementTypeLongClickListener(s)%s\n" +
-                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]",
+                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]" +
+                "    OnScrollHandleFloatingActionButtonVisibiltyListener added [%S]",
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
                 this.onClickListenersByElementType.size(), onClickListenerTypesString,
                 this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString,
-                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null
+                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null,
+                this.onScrollHandleFloatingActionButtonVisibiltyListener != null
         );
     }
 }
