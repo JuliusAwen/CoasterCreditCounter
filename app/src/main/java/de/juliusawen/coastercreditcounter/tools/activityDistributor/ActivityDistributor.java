@@ -488,6 +488,7 @@ public abstract class ActivityDistributor
             case PICK_CREDIT_TYPE:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CREDIT_TYPE.ordinal());
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_credit_type));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_credit_type);
@@ -497,6 +498,7 @@ public abstract class ActivityDistributor
             case PICK_CATEGORY:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.CATEGORY.ordinal());
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_category));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_category);
@@ -505,6 +507,7 @@ public abstract class ActivityDistributor
 
             case PICK_MANUFACTURER:
                 intent = new Intent(context, ManagePropertiesActivity.class);
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MANUFACTURER.ordinal());
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_manufacturer));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
@@ -515,6 +518,7 @@ public abstract class ActivityDistributor
             case PICK_MODEL:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.MODEL.ordinal());
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_model));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_model);
@@ -524,6 +528,7 @@ public abstract class ActivityDistributor
             case PICK_STATUS:
                 intent = new Intent(context, ManagePropertiesActivity.class);
                 intent.putExtra(Constants.EXTRA_TYPE_TO_MANAGE, ElementType.STATUS.ordinal());
+                intent.putExtra(Constants.EXTRA_SINGLE_PICK, true);
                 intent.putExtra(Constants.EXTRA_HELP_TITLE, context.getString(R.string.title_pick_status));
                 intent.putExtra(Constants.EXTRA_HELP_TEXT, context.getString(R.string.help_text_pick_element));
                 toolbarTitle = context.getString(R.string.title_pick_status);

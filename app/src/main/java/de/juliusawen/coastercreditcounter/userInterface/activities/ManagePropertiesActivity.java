@@ -72,16 +72,12 @@ public class ManagePropertiesActivity extends BaseActivity implements AlertDialo
             Log.d(String.format("%s", this.viewModel.requestCode));
         }
 
-        this.viewModel.isSelectionMode = this.viewModel.requestCode == RequestCode.PICK_CREDIT_TYPE
-                || this.viewModel.requestCode == RequestCode.PICK_CATEGORY
-                || this.viewModel.requestCode == RequestCode.PICK_MANUFACTURER
-                || this.viewModel.requestCode == RequestCode.PICK_MODEL
-                || this.viewModel.requestCode == RequestCode.PICK_STATUS;
-
         if(this.viewModel.typeToManage == null)
         {
             this.viewModel.typeToManage = ElementType.getValue(getIntent().getIntExtra(Constants.EXTRA_TYPE_TO_MANAGE, -1));
         }
+
+        this.viewModel.isSelectionMode = getIntent().getBooleanExtra(Constants.EXTRA_SINGLE_PICK, false);
 
         if(this.viewModel.adapterFacade == null)
         {

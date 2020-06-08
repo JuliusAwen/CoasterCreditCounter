@@ -160,6 +160,7 @@ class GroupHeaderProvider
         switch(groupType)
         {
             case PARK:
+            {
                 if(element.isAttraction())
                 {
                     groupElement = element.getParent();
@@ -170,8 +171,10 @@ class GroupHeaderProvider
                 }
 
                 break;
+            }
 
             case CREDIT_TYPE:
+            {
                 if(element.hasCreditType())
                 {
                     groupElement = ((IHasCreditType) element).getCreditType();
@@ -186,8 +189,10 @@ class GroupHeaderProvider
                     Log.e(String.format("%s has no CreditType", element));
                 }
                 break;
+            }
 
             case CATEGORY:
+            {
                 if(element.hasCategory())
                 {
                     groupElement = ((IHasCategory) element).getCategory();
@@ -202,8 +207,10 @@ class GroupHeaderProvider
                     Log.e(String.format("%s has no Category", element));
                 }
                 break;
+            }
 
             case MANUFACTURER:
+            {
                 if(element.hasManufacturer())
                 {
                     groupElement = ((IHasManufacturer) element).getManufacturer();
@@ -219,8 +226,10 @@ class GroupHeaderProvider
                 }
 
                 break;
+            }
 
             case MODEL:
+            {
                 if(element.hasModel())
                 {
                     groupElement = ((IHasModel) element).getModel();
@@ -235,8 +244,10 @@ class GroupHeaderProvider
                     Log.e(String.format("%s has no Model", element));
                 }
                 break;
+            }
 
             case STATUS:
+            {
                 if(element.hasStatus())
                 {
                     groupElement = ((IHasStatus) element).getStatus();
@@ -252,6 +263,7 @@ class GroupHeaderProvider
                 }
 
                 break;
+            }
         }
 
         return groupElement;
