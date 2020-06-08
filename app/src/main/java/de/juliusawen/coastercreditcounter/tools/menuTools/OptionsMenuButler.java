@@ -1262,7 +1262,9 @@ public class OptionsMenuButler
     private IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
         return this.viewModel != null
-                ? this.viewModel.getContentRecyclerViewAdapterFacade().getAdapter()
+                ? this.viewModel.getContentRecyclerViewAdapterFacade() != null
+                    ? this.viewModel.getContentRecyclerViewAdapterFacade().getAdapter()
+                    : null
                 : null;
     }
 
