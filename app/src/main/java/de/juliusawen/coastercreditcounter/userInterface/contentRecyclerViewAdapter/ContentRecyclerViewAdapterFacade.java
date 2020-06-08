@@ -11,9 +11,10 @@ import de.juliusawen.coastercreditcounter.tools.logger.Log;
 
 public class ContentRecyclerViewAdapterFacade
 {
-    private ContentRecyclerViewDecoration decoration;
-    private ContentRecyclerViewAdapterConfiguration configuration;
     private ContentRecyclerViewAdapter adapter;
+    private ContentRecyclerViewAdapterConfiguration configuration;
+    private ContentRecyclerViewDecoration decoration;
+
 
     public ContentRecyclerViewAdapterFacade()
     {
@@ -42,6 +43,11 @@ public class ContentRecyclerViewAdapterFacade
         this.adapter = new ContentRecyclerViewAdapter(this.configuration);
     }
 
+    public IContentRecyclerViewAdapter getAdapter()
+    {
+        return this.adapter;
+    }
+
     public ContentRecyclerViewAdapterConfiguration getConfiguration()
     {
         return this.configuration;
@@ -50,11 +56,6 @@ public class ContentRecyclerViewAdapterFacade
     public ContentRecyclerViewDecoration getDecoration()
     {
         return this.decoration;
-    }
-
-    public IContentRecyclerViewAdapter getAdapter()
-    {
-        return this.adapter;
     }
 
     public void applyPresetDecoration(RequestCode requestCode, GroupType groupType)
