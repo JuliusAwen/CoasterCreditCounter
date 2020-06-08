@@ -4,9 +4,8 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.BaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
 public class PickElementsViewModel extends BaseViewModel
 {
@@ -24,9 +23,9 @@ public class PickElementsViewModel extends BaseViewModel
     }
 
     @Override
-    public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    public ContentRecyclerViewAdapterFacade getContentRecyclerViewAdapterFacade()
     {
-        return this.adapterFacade.getAdapter();
+        return this.adapterFacade;
     }
 
     @Override

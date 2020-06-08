@@ -3,10 +3,8 @@ package de.juliusawen.coastercreditcounter.userInterface.activities;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.IProperty;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterConfiguration;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.BaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
-import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
 
 public class ShowPropertyViewModel extends BaseViewModel
 {
@@ -21,15 +19,9 @@ public class ShowPropertyViewModel extends BaseViewModel
     }
 
     @Override
-    public IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
+    public ContentRecyclerViewAdapterFacade getContentRecyclerViewAdapterFacade()
     {
-        return this.adapterFacade.getAdapter();
-    }
-
-    @Override
-    public ContentRecyclerViewAdapterConfiguration getContentRecyclerViewAdapterConfiguration()
-    {
-        return this.adapterFacade.getConfiguration();
+        return this.adapterFacade;
     }
 
     @Override

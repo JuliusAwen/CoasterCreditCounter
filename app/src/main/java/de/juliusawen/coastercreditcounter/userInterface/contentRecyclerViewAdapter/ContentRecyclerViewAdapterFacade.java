@@ -47,6 +47,11 @@ public class ContentRecyclerViewAdapterFacade
         return this.configuration;
     }
 
+    public ContentRecyclerViewDecoration getDecoration()
+    {
+        return this.decoration;
+    }
+
     public IContentRecyclerViewAdapter getAdapter()
     {
         return this.adapter;

@@ -1,8 +1,8 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IBaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.BaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.IBaseViewModel;
 
 public class DeveloperOptionsViewModel extends BaseViewModel implements IBaseViewModel
 {

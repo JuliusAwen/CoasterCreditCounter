@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.menuTools.BaseViewModel;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.BaseViewModel;
 
 public class NavigationHubViewModel extends BaseViewModel
 {

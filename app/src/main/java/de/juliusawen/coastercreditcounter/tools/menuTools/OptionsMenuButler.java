@@ -16,6 +16,7 @@ import de.juliusawen.coastercreditcounter.tools.SortTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.userInterface.activities.BaseActivity;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.IBaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewDecorationPresetProvider;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.IContentRecyclerViewAdapter;
@@ -553,7 +554,7 @@ public class OptionsMenuButler
             if(groupType != null)
             {
                 ContentRecyclerViewDecorationPresetProvider.applyDecorationPreset(
-                        this.viewModel.getContentRecyclerViewAdapterConfiguration().getDecoration(),
+                        this.viewModel.getContentRecyclerViewAdapterFacade().getDecoration(),
                         this.getRequestCode(),
                         groupType);
 
@@ -1261,7 +1262,7 @@ public class OptionsMenuButler
     private IContentRecyclerViewAdapter getContentRecyclerViewAdapter()
     {
         return this.viewModel != null
-                ? this.viewModel.getContentRecyclerViewAdapter()
+                ? this.viewModel.getContentRecyclerViewAdapterFacade().getAdapter()
                 : null;
     }
 

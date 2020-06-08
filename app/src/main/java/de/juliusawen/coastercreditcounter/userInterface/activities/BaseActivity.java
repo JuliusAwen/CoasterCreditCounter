@@ -38,11 +38,11 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
-import de.juliusawen.coastercreditcounter.tools.menuTools.IBaseViewModel;
 import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.IBaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
 
 public abstract class BaseActivity extends AppCompatActivity  implements IPopupMenuAgentClient, HelpOverlayFragment.HelpOverlayFragmentInteractionListener
@@ -69,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         if(App.isInitialized)
         {
             this.viewModel.isInitializingApp = false;
-            this.toolbar = findViewById(R.id.toolbar);
+            this.toolbar = super.findViewById(R.id.toolbar);
 
             if(this.viewModel.optionsMenuButler == null)
             {
@@ -152,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
 
     // endregion ActivityLifecycle
 
-    // region AppInitaialization
+    // region AppInitialization
 
     private void startAppInitialization()
     {
@@ -229,7 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         }
     }
 
-    // endregion AppInitaialization
+    // endregion AppInitialization
 
     //region OptionsMenu
 

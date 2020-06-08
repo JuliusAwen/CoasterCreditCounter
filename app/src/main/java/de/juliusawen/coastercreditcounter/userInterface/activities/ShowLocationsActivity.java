@@ -42,7 +42,7 @@ public class ShowLocationsActivity extends BaseActivity implements AlertDialogFr
 
     protected void setContentView()
     {
-        setContentView(R.layout.activity_show_locations);
+        super.setContentView(R.layout.activity_show_locations);
     }
 
     public void create()
