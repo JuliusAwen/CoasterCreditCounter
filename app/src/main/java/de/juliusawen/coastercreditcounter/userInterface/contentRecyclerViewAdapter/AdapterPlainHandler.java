@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.R;
@@ -15,7 +14,6 @@ import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.attractions.VisitedAttraction;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
-import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.ConvertTool;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -33,28 +31,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
         this.internalOnClickListener = this.getInternalOnClickListener();
         this.internalOnLongClickListener = this.getInternalOnLongClickListener();
         Log.frame(LogLevel.VERBOSE, "instantiated", '=', true);
-    }
-
-    @Override
-    protected void setContent(List<IElement> content)
-    {
-        super.setContent(content);
-
-        if(super.useBottomSpacer())
-        {
-            this.addBottomSpacer();
-        }
-    }
-
-    @Override
-    protected void groupContent(GroupType groupType)
-    {
-        super.groupContent(groupType);
-
-        if(super.useBottomSpacer())
-        {
-            this.addBottomSpacer();
-        }
     }
 
     private View.OnClickListener getInternalOnClickListener()
@@ -237,15 +213,6 @@ abstract class AdapterPlainHandler extends AdapterContentHandler
     protected boolean formatAsPrettyPrint()
     {
         return this.formatAsPrettyPrint;
-    }
-
-    protected void addBottomSpacer()
-    {
-        if(!super.content.isEmpty() && !(super.getItem(super.getItemCount() - 1) instanceof BottomSpacer))
-        {
-            super.insertItem(new BottomSpacer());
-            Log.d("added BottomSpacer");
-        }
     }
 
     static class ViewHolderElement extends RecyclerView.ViewHolder

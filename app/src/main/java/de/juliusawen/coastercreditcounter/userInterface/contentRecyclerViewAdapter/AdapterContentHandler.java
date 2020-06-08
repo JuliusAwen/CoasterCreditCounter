@@ -13,6 +13,7 @@ import java.util.Map;
 
 import de.juliusawen.coastercreditcounter.dataModel.elements.IElement;
 import de.juliusawen.coastercreditcounter.dataModel.elements.properties.ElementType;
+import de.juliusawen.coastercreditcounter.dataModel.elements.temporary.BottomSpacer;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
 
@@ -63,11 +64,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     protected GroupType getGroupType()
     {
         return this.groupType;
-    }
-
-    protected boolean useBottomSpacer()
-    {
-        return this.configuration.useBottomSpacer();
     }
 
     protected boolean hasExternalOnClickListeners()
@@ -131,6 +127,8 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
         this.content = content;
         this.ungroupedContent = new ArrayList<>(content);
+        this.addBottomSpacerIfRequested();
+
         super.notifyDataSetChanged();
     }
 
@@ -239,12 +237,29 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         Log.d(String.format("setting %s...", this.groupType));
 
         this.content = this.groupHeaderProvider.groupElements(this.ungroupedContent, groupType);
+        this.addBottomSpacerIfRequested();
+
         super.notifyDataSetChanged();
         this.scrollToItem(this.getItem(0));
     }
 
+    protected void addBottomSpacerIfRequested()
+    {
+        if(this.configuration.useBottomSpacer() && !this.content.isEmpty() && !(this.getItem(this.getItemCount() - 1) instanceof BottomSpacer))
+        {
+            this.insertItem(new BottomSpacer());
+            Log.d("added BottomSpacer");
+        }
+    }
+
     protected void scrollToItem(IElement element)
     {
+        if(this.recyclerView == null)
+        {
+            Log.w("cannot scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
+            return;
+        }
+
         if(this.content.isEmpty())
         {
             Log.w("cannot scroll - Content is empty");
@@ -254,12 +269,6 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         if(!this.exists(element))
         {
             Log.w(String.format("cannot scroll - %s does not exist in Content", element));
-            return;
-        }
-
-        if(this.recyclerView == null)
-        {
-            Log.w("cannot scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
             return;
         }
 
