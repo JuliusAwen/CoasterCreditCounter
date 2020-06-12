@@ -94,7 +94,13 @@ public class ContentRecyclerViewAdapterConfiguration
     public void addRelevantChildTypes(LinkedHashSet<ElementType> relevantChildTypes)
     {
         this.relevantChildTypes.addAll(relevantChildTypes);
-        Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types", relevantChildTypes.size()));
+
+        StringBuilder relevantChildTypesString = new StringBuilder();
+        for(ElementType elementType : relevantChildTypes)
+        {
+            relevantChildTypesString.append(String.format(" %s", elementType));
+        }
+        Log.v(String.format(Locale.getDefault(), "added [%d] relevant child types:%s", relevantChildTypes.size(), relevantChildTypesString));
     }
 
     public void addRelevantChildType(ElementType relevantChildType)
@@ -139,18 +145,37 @@ public class ContentRecyclerViewAdapterConfiguration
     @Override
     public String toString()
     {
+        String indent = "        ";
+        StringBuilder childTypesString = new StringBuilder();
+        for(ElementType elementType : this.getRelevantChildTypes())
+        {
+            childTypesString.append(String.format("\n%s%s", indent, elementType));
+        }
+
+        StringBuilder onClickListenerTypesString = new StringBuilder();
+        for(ElementType elementType : this.onClickListenersByElementType.keySet())
+        {
+            onClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
+        }
+
+        StringBuilder onLongClickListenerTypesString = new StringBuilder();
+        for(ElementType elementType : this.onLongClickListenersByElementType.keySet())
+        {
+            onLongClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
+        }
+
         return String.format(Locale.getDefault(),
                 "ContentRecyclerViewConfiguration:\n" +
                 "    isSelectable[%S], isMultipleSelection[%S]\n" +
-                "    [%d] relevant child type(s)\n"+
-                "    [%d] OnElementTypeClickListener(s)\n"+
-                "    [%d] OnElementTypeLongClickListener(s)\n" +
-                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]" +
+                "    [%d] relevant child type(s)%s\n"+
+                "    [%d] OnElementTypeClickListener(s)%s\n"+
+                "    [%d] OnElementTypeLongClickListener(s)%s\n" +
+                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]",
 
                 this.isSelecetable, this.isMultipleSelection,
-                this.relevantChildTypes.size(),
-                this.onClickListenersByElementType.size(),
-                this.onLongClickListenersByElementType.size(),
+                this.relevantChildTypes.size(), childTypesString,
+                this.onClickListenersByElementType.size(), onClickListenerTypesString,
+                this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString,
                 this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null
         );
     }
