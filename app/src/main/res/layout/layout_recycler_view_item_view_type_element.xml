@@ -9,7 +9,8 @@
         android:id="@+id/linearLayoutRecyclerView"
         style="@style/StandardBarLayout"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="?selectableItemBackground">
 
         <View
             android:id="@+id/viewRecyclerViewItem_Seperator"
