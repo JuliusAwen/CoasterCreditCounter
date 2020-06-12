@@ -200,19 +200,15 @@ public class ShowParkActivity extends BaseActivity implements
     {
         switch(this.getCurrentTab())
         {
-            case SHOW_PARK_OVERVIEW:
-                break;
-
             case SHOW_ATTRACTIONS:
-                this.showAttractionsFragment.handleOnElementTypeLongClick(elementType, view);
-                break;
+                return this.showAttractionsFragment.handleOnElementTypeLongClick(elementType, view);
 
             case SHOW_VISITS:
-                this.showVisitsFragment.handleOnElementTypeLongClick(elementType, view);
-                break;
-        }
+                return this.showVisitsFragment.handleOnElementTypeLongClick(elementType, view);
 
-        return super.handleOnElementTypeLongClick(elementType, view);
+            default:
+                return super.handleOnElementTypeLongClick(elementType, view);
+        }
     }
 
     @Override
