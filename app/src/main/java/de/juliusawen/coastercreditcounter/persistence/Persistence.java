@@ -1,5 +1,6 @@
 package de.juliusawen.coastercreditcounter.persistence;
 
+import android.content.Intent;
 import android.net.Uri;
 
 import java.util.HashSet;
@@ -102,7 +103,7 @@ public class Persistence
         return this.jsonHandler.exportContent(App.content, exportFileDocumentTreeUri, exportFileName);
     }
 
-    public boolean trySynchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
+    public void synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
     {
         int size;
 
@@ -156,7 +157,9 @@ public class Persistence
             Log.d(String.format("DELETE %s", element));
         }
 
-        return this.databaseWrapper.synchronize(elementsToCreate, elementsToUpdate, elementsToDelete);
+        Intent intent = new Intent(App.getContext(), PersistenceService.class);
+        intent.setAction(Constants.ACTION_SAVE);
+        App.getContext().startService(intent);
     }
 
     public StatisticsGlobalTotals fetchStatisticsGlobalTotals()

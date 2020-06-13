@@ -1754,35 +1754,28 @@ public final class DatabaseMock implements IDatabaseWrapper
     public boolean saveContent(Content content)
     {
         Log.w("DatabaseMock is not able to persist any data - content not persited");
-        return true;
-    }
-
-    @Override
-    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
-    {
-        Log.w("DatabaseMock is not able to persist any data - persistence not synchronized");
-        return true;
+        return false;
     }
 
     @Override
     public boolean create(Set<IElement> elements)
     {
         Log.w("DatabaseMock is not able to persist any data - elements not created");
-        return true;
+        return false;
     }
 
     @Override
     public boolean update(Set<IElement> elements)
     {
         Log.w("DatabaseMock is not able to persist any data - elements not updated");
-        return true;
+        return false;
     }
 
     @Override
     public boolean delete(Set<IElement> elements)
     {
         Log.w("DatabaseMock is not able to persist any data - elements not deleted");
-        return true;
+        return false;
     }
 
     @Override

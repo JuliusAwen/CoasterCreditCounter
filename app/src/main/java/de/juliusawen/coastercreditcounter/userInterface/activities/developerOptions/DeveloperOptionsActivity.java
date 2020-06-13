@@ -9,10 +9,15 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Locale;
 
 import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.R;
+import de.juliusawen.coastercreditcounter.application.App;
 import de.juliusawen.coastercreditcounter.tools.logger.ILogBrokerClient;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -106,6 +111,11 @@ public class DeveloperOptionsActivity extends BaseActivity implements ILogBroker
                 this.requestFormattedLog(LogLevel.ERROR);
                 return true;
 
+            case SHOW_DUMPED_LOG:
+                this.changeViewMode(Mode.SHOW_LOG);
+                this.showDumpedLog();
+                return true;
+
             case SHOW_LOG:
                 return true;
 
@@ -148,11 +158,20 @@ public class DeveloperOptionsActivity extends BaseActivity implements ILogBroker
         this.textViewShowBuildConfigIsDebug.setText(String.format("IsDebug = %S", BuildConfig.DEBUG));
     }
 
+    private void showDumpedLog()
+    {
+        String rawOutput = this.retrieveDumpedLog();
+
+        super.setToolbarTitleAndSubtitle(toolbarTitle, "formatting log...");
+        super.showProgressBar(true);
+        new Log.Formatter().execute(rawOutput, LogLevel.VERBOSE, this);
+    }
+
     private void requestFormattedLog(LogLevel logLevel)
     {
         super.setToolbarTitleAndSubtitle(toolbarTitle, "formatting log...");
         super.showProgressBar(true);
-        new Log.Formatter().execute(logLevel, this);
+        new Log.Formatter().execute(Log.getRawOutput(), logLevel, this);
     }
 
     @Override
@@ -171,5 +190,55 @@ public class DeveloperOptionsActivity extends BaseActivity implements ILogBroker
         }, 100);
 
         super.showProgressBar(false);
+    }
+
+    public String retrieveDumpedLog()
+    {
+        String fileName = App.config.getDumpedLogFileName();
+        Log.d(String.format("reading from [%s]", fileName));
+
+        String output = "empty";
+
+        File file = new File(App.getContext().getFilesDir(), fileName);
+
+        if(file.exists())
+        {
+            int length = (int) file.length();
+            byte[] bytes = new byte[length];
+
+            FileInputStream fileInputStream = null;
+            try
+            {
+                fileInputStream = new FileInputStream(file);
+                //noinspection ResultOfMethodCallIgnored
+                fileInputStream.read(bytes);
+            }
+            catch(FileNotFoundException e)
+            {
+                Log.e(String.format("FileNotFoundException: [%s] does not exist!\n[%s]", fileName, e.getMessage()));
+            }
+            catch(IOException e)
+            {
+                Log.e(String.format("IOException: reading FileInputStream failed!\n[%s] ", e.getMessage()));
+            }
+            finally
+            {
+                try
+                {
+                    fileInputStream.close();
+                    output = new String(bytes);
+                }
+                catch(IOException e)
+                {
+                    Log.e(String.format("IOException: closing FileInputStream failed!\n[%s] ", e.getMessage()));
+                }
+            }
+        }
+        else
+        {
+            Log.e(String.format("file [%s] does not exist - returning empty output", fileName));
+        }
+
+        return output;
     }
 }

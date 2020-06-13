@@ -34,22 +34,18 @@ public class PersistenceService extends IntentService
             switch(action)
             {
                 case Constants.ACTION_CREATE:
-
                     this.create(intent);
                     break;
 
                 case Constants.ACTION_DELETE:
-
                     this.delete(intent);
                     break;
 
                 case Constants.ACTION_UPDATE:
-
                     this.update(intent);
                     break;
 
                 case Constants.ACTION_SAVE:
-
                     this.save();
                     break;
             }
@@ -81,7 +77,7 @@ public class PersistenceService extends IntentService
         Set<IElement> elementsToDelete = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_DELETE_UUIDS)));
         Log.d(String.format(Locale.getDefault(), "deleting [%d] Elements...", elementsToDelete.size()));
 
-        if(databaseWrapper.delete(elementsToDelete))
+        if(this.databaseWrapper.delete(elementsToDelete))
         {
             Log.i("success");
         }
@@ -96,7 +92,7 @@ public class PersistenceService extends IntentService
         Set<IElement> elementsToUpdate = new HashSet<>(App.content.getContentByUuidStrings(intent.getStringArrayListExtra(Constants.EXTRA_ELEMENTS_TO_UPDATE_UUIDS)));
         Log.d(String.format(Locale.getDefault(), "updating [%d] Elements...", elementsToUpdate.size()));
 
-        if(databaseWrapper.update(elementsToUpdate))
+        if(this.databaseWrapper.update(elementsToUpdate))
         {
             Log.i("success");
         }
@@ -110,7 +106,7 @@ public class PersistenceService extends IntentService
     {
         Log.d("saving content...");
 
-        if(databaseWrapper.saveContent(App.content))
+        if(this.databaseWrapper.saveContent(App.content))
         {
             Log.i("success");
         }

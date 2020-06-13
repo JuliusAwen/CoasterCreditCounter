@@ -215,7 +215,12 @@ public abstract class Log
 
     private static void store(LogLevel logLevel, String message)
     {
-        Log.rawOutput.append(String.format("%s %s-%s\n", new Date(), logLevel.ordinal(), message));
+        Log.rawOutput.append(String.format("%s %s %s-%s\n", Constants.LOG_TAG, new Date(), logLevel.ordinal(), message));
+    }
+
+    public static String getRawOutput()
+    {
+        return Log.rawOutput.toString();
     }
 
     public static class Formatter extends AsyncTask<Object, Void, ILogBrokerClient>
@@ -226,40 +231,41 @@ public abstract class Log
         @Override
         protected ILogBrokerClient doInBackground(Object... params)
         {
-            this.requestedLogLevel = (LogLevel) params[0];
+            String rawOutput = (String) params[0];
+            this.requestedLogLevel = (LogLevel) params[1];
 
             this.formattedLog = new SpannableStringBuilder();
             String line;
             String lineBreak = System.getProperty("line.separator");
 
-            BufferedReader log = new BufferedReader(new StringReader(Log.rawOutput.toString()));
+            BufferedReader log = new BufferedReader(new StringReader(rawOutput));
             int color = App.config.colorsByLogLevel.get(LogLevel.NONE);
 
             try
             {
                 while((line = log.readLine()) != null)
                 {
-                    if(!line.startsWith(" "))
+                    if(line.contains(Constants.LOG_TAG))
                     {
                         String[] substrings = line.split("-");
                         String[] dateTimeAndLogLevel = substrings[0].split(" ");
-                        int logLevel = Integer.parseInt(dateTimeAndLogLevel[6]);
+                        int logLevel = Integer.parseInt(dateTimeAndLogLevel[7]);
 
                         if(logLevel >= this.requestedLogLevel.ordinal())
                         {
                             color = App.config.colorsByLogLevel.get(LogLevel.getValue(logLevel));
 
-                            String dayOfMonth = dateTimeAndLogLevel[2];
-                            String month = dateTimeAndLogLevel[1];
-                            String year = dateTimeAndLogLevel[5];
-                            String time = dateTimeAndLogLevel[3];
+                            String dayOfMonth = dateTimeAndLogLevel[3];
+                            String month = dateTimeAndLogLevel[2];
+                            String year = dateTimeAndLogLevel[6];
+                            String time = dateTimeAndLogLevel[4];
 
                             String callerTag = substrings[1].substring(0, substrings[1].indexOf(" "));
                             String message = substrings[1].substring(substrings[1].indexOf(" ") + 1);
 
                             SpannableStringBuilder formattedLine = new SpannableStringBuilder();
 
-                            formattedLine.append(StringTool.getSpannableStringWithTypeface(String.format("[%s. %s %s %s %s]",
+                            formattedLine.append(StringTool.getSpannableStringWithTypeface(String.format("%s. %s %s %s [%s]",
                                     dayOfMonth, month, year, time, LogLevel.getValue(logLevel)), Typeface.ITALIC));
                             formattedLine.append(lineBreak);
                             formattedLine.append(StringTool.getSpannableStringWithTypeface(callerTag, Typeface.BOLD));
@@ -276,15 +282,13 @@ public abstract class Log
                         this.formattedLog.append(lineBreak);
                     }
                 }
-
-                this.formattedLog.append("\n\n\n\n\n\n ");
             }
             catch(IOException e)
             {
                 e.printStackTrace();
             }
 
-            return (ILogBrokerClient) params[1];
+            return (ILogBrokerClient) params[2];
         }
 
         @Override

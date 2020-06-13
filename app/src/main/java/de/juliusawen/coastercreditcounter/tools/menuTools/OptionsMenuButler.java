@@ -730,7 +730,8 @@ public class OptionsMenuButler
                         .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_DEBUG)
                         .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_INFO)
                         .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_WARNING)
-                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_ERROR);
+                        .addToGroup(OptionsItem.SHOW_LOG, OptionsItem.SHOW_LOG_ERROR)
+                        .add(OptionsItem.SHOW_DUMPED_LOG);
             }
         }
 

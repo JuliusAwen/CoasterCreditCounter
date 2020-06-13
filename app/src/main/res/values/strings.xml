@@ -143,6 +143,8 @@
     <string name="menu_item_developer_options_show_log_warning">WARNING</string>
     <string name="menu_item_developer_options_show_log_error">ERROR</string>
 
+    <string name="menu_item_developer_options_show_dumped_log">Show dumped log</string>
+
 
     <!--NAVIGATION HUB-->
     <string name="subtitle_navigation_hub">Navigation Hub</string>

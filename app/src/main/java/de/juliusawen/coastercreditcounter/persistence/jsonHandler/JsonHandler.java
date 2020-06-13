@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.persistence.jsonHandler;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
@@ -48,7 +47,6 @@ import de.juliusawen.coastercreditcounter.dataModel.statistics.StatisticsGlobalT
 import de.juliusawen.coastercreditcounter.enums.SortOrder;
 import de.juliusawen.coastercreditcounter.persistence.IDatabaseWrapper;
 import de.juliusawen.coastercreditcounter.persistence.IPersistable;
-import de.juliusawen.coastercreditcounter.persistence.PersistenceService;
 import de.juliusawen.coastercreditcounter.persistence.databaseMock.DatabaseMock;
 import de.juliusawen.coastercreditcounter.tools.Stopwatch;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
@@ -1251,16 +1249,6 @@ public class JsonHandler implements IDatabaseWrapper
             Log.e(String.format("Exception [%s]", e.getMessage()));
             return false;
         }
-
-        return true;
-    }
-
-    @Override
-    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
-    {
-        Intent intent = new Intent(App.getContext(), PersistenceService.class);
-        intent.setAction(Constants.ACTION_SAVE);
-        App.getContext().startService(intent);
 
         return true;
     }

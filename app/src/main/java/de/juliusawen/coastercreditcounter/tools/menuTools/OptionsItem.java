@@ -84,7 +84,9 @@ public enum OptionsItem
     SHOW_LOG_DEBUG(R.string.menu_item_developer_options_show_log_debug, -1),
     SHOW_LOG_INFO(R.string.menu_item_developer_options_show_log_info, -1),
     SHOW_LOG_WARNING(R.string.menu_item_developer_options_show_log_warning, -1),
-    SHOW_LOG_ERROR(R.string.menu_item_developer_options_show_log_error, -1);
+    SHOW_LOG_ERROR(R.string.menu_item_developer_options_show_log_error, -1),
+
+    SHOW_DUMPED_LOG(R.string.menu_item_developer_options_show_dumped_log, -1);
 
     public final int stringResource;
     public final int drawableResource;

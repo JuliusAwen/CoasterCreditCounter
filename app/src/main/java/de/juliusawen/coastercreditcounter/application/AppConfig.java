@@ -21,6 +21,7 @@ public class AppConfig
 
     private final String exportFileName = "CoasterCreditCounterExport.json";
     private final String preferencesFileName = "Preferences.json";
+    private final String dumpedLogFileName = "CoasterCreditCounterLog.txt";
 
     //below is only working when isDebugBuild = true
 
@@ -104,6 +105,11 @@ public class AppConfig
     public String getPreferencesFileName()
     {
         return this.preferencesFileName;
+    }
+
+    public String getDumpedLogFileName()
+    {
+        return this.dumpedLogFileName;
     }
 
     public boolean isDebugBuild()
