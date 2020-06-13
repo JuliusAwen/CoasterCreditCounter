@@ -41,6 +41,7 @@ import de.juliusawen.coastercreditcounter.tools.menuTools.IPopupMenuAgentClient;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.OptionsMenuButler;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
+import de.juliusawen.coastercreditcounter.userInterface.activities.developerOptions.DeveloperOptionsActivity;
 import de.juliusawen.coastercreditcounter.userInterface.baseViewModel.IBaseViewModel;
 import de.juliusawen.coastercreditcounter.userInterface.toolFragments.HelpOverlayFragment;
 

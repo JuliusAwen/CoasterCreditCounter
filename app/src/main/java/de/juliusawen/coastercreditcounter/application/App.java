@@ -23,14 +23,9 @@ public class App extends Application
 
     private static Application instance;
 
-    public static Application getInstance()
-    {
-        return App.instance;
-    }
-
     public static Context getContext()
     {
-        return getInstance().getApplicationContext();
+        return App.instance.getApplicationContext();
     }
 
     @Override

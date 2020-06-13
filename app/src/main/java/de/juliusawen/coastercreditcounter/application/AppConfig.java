@@ -1,5 +1,10 @@
 package de.juliusawen.coastercreditcounter.application;
 
+import android.graphics.Color;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import de.juliusawen.coastercreditcounter.BuildConfig;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.logger.LogLevel;
@@ -42,9 +47,18 @@ public class AppConfig
 
     public final int maxHeightForNoteInDP = 120;
 
+    public final Map<LogLevel, Integer> colorsByLogLevel = new HashMap<>();
+
 
     public AppConfig()
     {
+        colorsByLogLevel.put(LogLevel.NONE, Color.parseColor("#2196F3"));
+        colorsByLogLevel.put(LogLevel.VERBOSE, Color.parseColor("#9876AA"));
+        colorsByLogLevel.put(LogLevel.DEBUG, Color.parseColor("#000000"));
+        colorsByLogLevel.put(LogLevel.INFO, Color.parseColor("#4CAF50"));
+        colorsByLogLevel.put(LogLevel.WARNING, Color.parseColor("#FFC107"));
+        colorsByLogLevel.put(LogLevel.ERROR, Color.parseColor("#FF6B69"));
+
         Log.frame(LogLevel.INFO, "instantiated", '#', true);
         Log.wrap(LogLevel.INFO, this.toString(), '-', false);
     }

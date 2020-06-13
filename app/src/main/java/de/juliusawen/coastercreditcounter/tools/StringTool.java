@@ -2,6 +2,7 @@ package de.juliusawen.coastercreditcounter.tools;
 
 import android.content.res.Resources;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
@@ -29,6 +30,12 @@ public abstract class StringTool
         SpannableString spannableString = new SpannableString(string);
         spannableString.setSpan(new ForegroundColorSpan(color), 0, spannableString.length(), 0);
         return spannableString;
+    }
+
+    public static SpannableStringBuilder getSpannableStringBuilderWithColor(SpannableStringBuilder spannableStringBuilder, int color)
+    {
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(color), 0, spannableStringBuilder.length(), 0);
+        return spannableStringBuilder;
     }
 
     public static SpannableString buildSpannableStringWithTypeface(String originalString, String substring, int typeface)
