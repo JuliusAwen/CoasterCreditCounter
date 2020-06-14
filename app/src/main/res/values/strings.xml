@@ -30,6 +30,7 @@
     <string name="text_untracked_rides">Untracked rides:</string>
 
     <string name="text_total_rides">total rides: %1$d</string>
+    <string name="text_total_rides_untracked">(%1$d untracked)</string>
 
 
     <!--STATISTICS-->

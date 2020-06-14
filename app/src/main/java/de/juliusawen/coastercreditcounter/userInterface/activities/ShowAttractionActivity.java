@@ -281,11 +281,11 @@ public class ShowAttractionActivity extends BaseActivity implements AlertDialogF
                 Typeface.BOLD));
 
         this.textViewAttractionDetailTotalRideCount.setText(StringTool.buildSpannableStringWithTypeface(
-                String.format(Locale.getDefault(), "%s %d%s",
+                String.format(Locale.getDefault(), "%s %d %s",
                         getString(R.string.header_total_ride_count),
                         this.viewModel.attraction.fetchTotalRideCount(),
                         this.viewModel.attraction.getUntracktedRideCount() > 0
-                                ? String.format(Locale.getDefault(), " (%d untracked)", this.viewModel.attraction.getUntracktedRideCount())
+                                ? getString(R.string.text_total_rides_untracked, this.viewModel.attraction.getUntracktedRideCount())
                                 : ""),
                 getString(R.string.header_total_ride_count),
                 Typeface.BOLD));

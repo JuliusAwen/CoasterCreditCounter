@@ -11,8 +11,7 @@
         android:id="@+id/frameLayoutDialogUpDown_Down"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackground">
+        android:layout_weight="1">
 
     <ImageButton
         style="@style/StandardImageHolder"
@@ -34,8 +33,7 @@
         android:id="@+id/frameLayoutDialogUpDown_Up"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackground">
+        android:layout_weight="1">
 
         <ImageButton
             style="@style/StandardImageHolder"
