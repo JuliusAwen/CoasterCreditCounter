@@ -16,6 +16,8 @@ public interface IDatabaseWrapper
     boolean update(Set<IElement> elements);
     boolean delete(Set<IElement> elements);
 
+    boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete);
+
     StatisticsGlobalTotals fetchStatisticsGlobalTotals();
     List<IElement> fetchCurrentVisits();
 }

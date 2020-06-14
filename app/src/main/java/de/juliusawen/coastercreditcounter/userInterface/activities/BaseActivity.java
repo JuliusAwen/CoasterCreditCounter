@@ -809,7 +809,7 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
         {
             Log.i("synchronizing...");
 
-            App.persistence.synchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete));
+            App.persistence.trySynchronize(new HashSet<>(this.viewModel.elementsToCreate), new HashSet<>(this.viewModel.elementsToUpdate), new HashSet<>(this.viewModel.elementsToDelete));
 
             this.viewModel.elementsToCreate.clear();
             this.viewModel.elementsToUpdate.clear();

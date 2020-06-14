@@ -1779,6 +1779,13 @@ public final class DatabaseMock implements IDatabaseWrapper
     }
 
     @Override
+    public boolean synchronize(Set<IElement> elementsToCreate, Set<IElement> elementsToUpdate, Set<IElement> elementsToDelete)
+    {
+        Log.w("DatabaseMock is not able to persist any data - persistence not synchronized");
+        return true;
+    }
+
+    @Override
     public StatisticsGlobalTotals fetchStatisticsGlobalTotals()
     {
         Log.w("mock implementation to satisfy interface - invalid statistics returned");

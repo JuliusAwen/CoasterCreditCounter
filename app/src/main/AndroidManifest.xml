@@ -49,8 +49,7 @@
 
         <service
             android:name=".persistence.PersistenceService"
-            android:exported="false"
-            android:process=":persistence"/>
+            android:exported="false"/>
     </application>
 
 </manifest>
