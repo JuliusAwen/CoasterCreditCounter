@@ -19,4 +19,6 @@ public class EditAttractionViewModel extends ViewModel
     public Model model;
     public Status status;
     public int untrackedRideCount;
+
+    public boolean editUntrackedRideCountEnabled;
 }

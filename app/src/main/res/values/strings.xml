@@ -27,6 +27,7 @@
     <string name="text_select_all">select all</string>
     <string name="text_deselect_all">deselect all</string>
 
+    <string name="text_add_untracked_rides">add untracked rides</string>
     <string name="text_untracked_rides">Untracked rides:</string>
 
     <string name="text_total_rides">total rides: %1$d</string>

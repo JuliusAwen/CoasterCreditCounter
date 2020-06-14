@@ -141,35 +141,48 @@
         </LinearLayout>
 
         <LinearLayout
-            style="@style/CreateOrEditAttractionBarLayout"
-            android:id="@+id/linearLayoutCreateOrEditAttraction_UntrackedRideCount"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                style="@style/CreateOrEditAttractionTextView"
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
-                android:gravity="start|center_vertical"
-                android:textStyle="bold"
-                android:text="@string/text_untracked_rides"/>
+            <LinearLayout
+                style="@style/CreateOrEditAttractionBarLayout"
+                android:id="@+id/linearLayoutCreateOrEditAttraction_EditUntrackedRideCount"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    style="@style/CreateOrEditAttractionTextView"
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:textStyle="bold"
+                    android:text="@string/text_untracked_rides"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/StandardTextInputLayout"
+                    android:id="@+id/textInputLayoutCreateOrEditAttractionName_EditUntrackedRideCount"
+                    android:layout_weight="1"
+                    android:layout_width="0sp"
+                    android:gravity="start|center_vertical"
+                    android:textSize="16sp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/StandardTextInputEditText"
+                        android:id="@+id/textInputEditTextCreateOrEditAttraction_EditUntrackedRideCount"
+                        android:inputType="number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <Button
                 style="@style/StandardTextInputLayout"
-                android:id="@+id/textInputLayoutCreateOrEditAttractionName_UntrackedRideCount"
-                android:layout_weight="1"
-                android:layout_width="0sp"
-                android:gravity="start|center_vertical"
-                android:textSize="16sp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/StandardTextInputEditText"
-                    android:id="@+id/textInputEditTextCreateOrEditAttraction_UntrackedRideCount"
-                    android:inputType="number"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:id="@+id/ButtonLayoutCreateOrEditAttractionName_ShowUntrackedRideCount">
+            </Button>
 
         </LinearLayout>
+
 
     </LinearLayout>
 

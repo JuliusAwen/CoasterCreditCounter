@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,9 +68,10 @@ public class EditAttractionActivity extends BaseActivity
     private TextView textViewStatus;
     private ImageView imageViewPickStatus;
 
-    private LinearLayout layoutUntrackedRideCount;
-    private TextInputLayout textInputLayoutUntrackedRideCount;
-    private TextInputEditText textInputEditTextUntrackedRideCount;
+    private LinearLayout layoutEditUntrackedRideCount;
+    private TextInputLayout textInputEditUntrackedRideCount;
+    private TextInputEditText textInputEditTextEditUntrackedRideCount;
+    private Button buttonShowUntrackedRideCount;
 
     private Drawable pickIconBlack;
     private Drawable pickIconGrey;
@@ -104,9 +106,10 @@ public class EditAttractionActivity extends BaseActivity
         this.textViewStatus = findViewById(R.id.textViewCreateOrEditAttraction_Status);
         this.imageViewPickStatus = findViewById(R.id.imageViewCreateOrEditAttraction_PickStatus);
 
-        this.layoutUntrackedRideCount = findViewById(R.id.linearLayoutCreateOrEditAttraction_UntrackedRideCount);
-        this.textInputLayoutUntrackedRideCount = findViewById(R.id.textInputLayoutCreateOrEditAttractionName_UntrackedRideCount);
-        this.textInputEditTextUntrackedRideCount = findViewById(R.id.textInputEditTextCreateOrEditAttraction_UntrackedRideCount);
+        this.layoutEditUntrackedRideCount = findViewById(R.id.linearLayoutCreateOrEditAttraction_EditUntrackedRideCount);
+        this.textInputEditUntrackedRideCount = findViewById(R.id.textInputLayoutCreateOrEditAttractionName_EditUntrackedRideCount);
+        this.textInputEditTextEditUntrackedRideCount = findViewById(R.id.textInputEditTextCreateOrEditAttraction_EditUntrackedRideCount);
+        this.buttonShowUntrackedRideCount = findViewById(R.id.ButtonLayoutCreateOrEditAttractionName_ShowUntrackedRideCount);
 
 
         this.pickIconBlack = DrawableProvider.getColoredDrawableMutation(R.drawable.arrow_drop_down, R.color.black);
@@ -126,7 +129,7 @@ public class EditAttractionActivity extends BaseActivity
         this.decorateLayoutManufacturer();
         this.decorateLayoutModel();
         this.decorateLayoutStatus();
-        this.createTextInputUntrackedRideCount();
+        this.decorateLayoutUntrackedRideCount();
 
         super.createHelpOverlayFragment(getString(R.string.title_help, getIntent().getStringExtra(Constants.EXTRA_HELP_TITLE)), getIntent().getStringExtra(Constants.EXTRA_HELP_TEXT));
         super.createToolbar();
@@ -254,7 +257,7 @@ public class EditAttractionActivity extends BaseActivity
 
     private void handleEditAttraction()
     {
-        if(this.textInputLayoutAttractionName.getError() != null || this.textInputLayoutUntrackedRideCount.getError() != null)
+        if(this.textInputLayoutAttractionName.getError() != null || this.textInputEditUntrackedRideCount.getError() != null)
         {
             Log.w("some input is invalid");
             return;
@@ -265,7 +268,7 @@ public class EditAttractionActivity extends BaseActivity
         if(untrackedRideCount < 0)
         {
             Log.w("entered untracked ride count is invalid");
-            this.textInputLayoutUntrackedRideCount.setError(getString(R.string.error_number_invalid));
+            this.textInputEditUntrackedRideCount.setError(getString(R.string.error_number_invalid));
             return;
         }
         else
@@ -356,7 +359,7 @@ public class EditAttractionActivity extends BaseActivity
     private int fetchUntrackedRideCountFromTextInput()
     {
         int untrackedRideCount = -1;
-        String untrackedRideCountString = this.textInputEditTextUntrackedRideCount.getText().toString().trim();
+        String untrackedRideCountString = this.textInputEditTextEditUntrackedRideCount.getText().toString().trim();
 
         if(!untrackedRideCountString.isEmpty())
         {
@@ -392,15 +395,7 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void afterTextChanged(Editable editable)
             {
-                if (editable.length() > textInputLayoutAttractionName.getCounterMaxLength())
-                {
-                    textInputLayoutAttractionName.setError(EditAttractionActivity.this.getString(R.string.error_character_count_exceeded,
-                            textInputLayoutAttractionName.getCounterMaxLength()));
-                }
-                else
-                {
-                    textInputLayoutAttractionName.setError(null);
-                }
+                handleTextInputEditTextAttractionNameAfterTextChanged(editable);
             }
         });
 
@@ -411,15 +406,33 @@ public class EditAttractionActivity extends BaseActivity
             {
                 if(!hasFocus)
                 {
-                    if(textInputEditTextAttractionName.getText().toString().trim().isEmpty())
-                    {
-                        decorateTextInputAttractionName();
-                    }
+                    handleTextInputEditTextAttractionNameOnFocusLost();
                 }
             }
         });
 
         this.decorateTextInputAttractionName();
+    }
+
+    private void handleTextInputEditTextAttractionNameAfterTextChanged(Editable editable)
+    {
+        if (editable.length() > this.textInputLayoutAttractionName.getCounterMaxLength())
+        {
+            this.textInputLayoutAttractionName.setError(EditAttractionActivity.this.getString(R.string.error_character_count_exceeded,
+                    this.textInputLayoutAttractionName.getCounterMaxLength()));
+        }
+        else
+        {
+            this.textInputLayoutAttractionName.setError(null);
+        }
+    }
+
+    private void handleTextInputEditTextAttractionNameOnFocusLost()
+    {
+        if(this.textInputEditTextAttractionName.getText().toString().trim().isEmpty())
+        {
+            decorateTextInputAttractionName();
+        }
     }
 
     private boolean trySetCreditType(CreditType creditType)
@@ -671,13 +684,20 @@ public class EditAttractionActivity extends BaseActivity
         this.imageViewPickStatus.setImageDrawable(App.content.getContentOfType(Status.class).size() > 1 ? this.pickIconBlack : this.pickIconGrey);
     }
 
+    private void decorateLayoutUntrackedRideCount()
+    {
+        this.createTextInputUntrackedRideCount();
+        this.decorateButtonShowEditUntrackedRideCount();
+        this.handleEditUntrackedRideCountVisibility();
+    }
+
     private void createTextInputUntrackedRideCount()
     {
-        this.textInputLayoutUntrackedRideCount.setError(null);
-        this.textInputLayoutUntrackedRideCount.setCounterMaxLength(App.config.maxDigitCount);
+        this.textInputEditUntrackedRideCount.setError(null);
+        this.textInputEditUntrackedRideCount.setCounterMaxLength(App.config.maxDigitCount);
 
-        this.textInputEditTextUntrackedRideCount.setOnEditorActionListener(this.getOnEditorActionListener());
-        this.textInputEditTextUntrackedRideCount.addTextChangedListener(new TextWatcher()
+        this.textInputEditTextEditUntrackedRideCount.setOnEditorActionListener(this.getOnEditorActionListener());
+        this.textInputEditTextEditUntrackedRideCount.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
@@ -688,49 +708,106 @@ public class EditAttractionActivity extends BaseActivity
             @Override
             public void afterTextChanged(Editable editable)
             {
-                if(editable.length() > textInputLayoutUntrackedRideCount.getCounterMaxLength())
-                {
-                    textInputLayoutUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_digit_count_exceeded, 
-                            textInputLayoutUntrackedRideCount.getCounterMaxLength()));
-                }
-                else if(editable.length() == 0)
-                {
-                    textInputLayoutUntrackedRideCount.setHint(getString(R.string.hint_edit_untracked_ride_count, viewModel.attraction.getUntracktedRideCount()));
-                }
-                else if(!editable.toString().trim().isEmpty() && Integer.parseInt(editable.toString()) < 0)
-                {
-                    textInputLayoutUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_number_invalid));
-                }
-                else
-                {
-                    textInputLayoutUntrackedRideCount.setError(null);
-                    textInputLayoutUntrackedRideCount.setHint(null);
-                }
+                handleTextInputEditTextEditUntrackedRideCountAfterTextChanged(editable);
             }
         });
 
-        this.textInputEditTextUntrackedRideCount.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        this.textInputEditTextEditUntrackedRideCount.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
             @Override
             public void onFocusChange(View view, boolean hasFocus)
             {
-                if(!hasFocus)
-                {
-                    if(textInputEditTextUntrackedRideCount.getText().toString().trim().isEmpty())
-                    {
-                        decorateTextInputUntrackedRideCount();
-                    }
-                }
+                handleTextInputEditTextEditUntrackedRideCountOnFocusChange(hasFocus);
             }
         });
 
-        this.layoutUntrackedRideCount.setVisibility(View.VISIBLE);
         this.decorateTextInputUntrackedRideCount();
+    }
+
+    private void handleTextInputEditTextEditUntrackedRideCountAfterTextChanged(Editable editable)
+    {
+        if(editable.length() > this.textInputEditUntrackedRideCount.getCounterMaxLength())
+        {
+            this.textInputEditUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_digit_count_exceeded,
+                    this.textInputEditUntrackedRideCount.getCounterMaxLength()));
+        }
+        else if(editable.length() == 0)
+        {
+            this.textInputEditUntrackedRideCount.setHint(getString(R.string.hint_edit_untracked_ride_count, viewModel.attraction.getUntracktedRideCount()));
+        }
+        else if(!editable.toString().trim().isEmpty() && Integer.parseInt(editable.toString()) < 0)
+        {
+            this.textInputEditUntrackedRideCount.setError(EditAttractionActivity.this.getString(R.string.error_number_invalid));
+        }
+        else
+        {
+            this.textInputEditUntrackedRideCount.setError(null);
+            this.textInputEditUntrackedRideCount.setHint(null);
+        }
+    }
+    private void handleTextInputEditTextEditUntrackedRideCountOnFocusChange(boolean hasFocus)
+    {
+        if(hasFocus)
+        {
+            this.textInputEditTextEditUntrackedRideCount.setSelection(this.textInputEditTextEditUntrackedRideCount.getText().length());
+        }
+        else
+        {
+            if(this.textInputEditTextEditUntrackedRideCount.getText().toString().trim().isEmpty() || this.textInputEditTextEditUntrackedRideCount.getText().toString().trim().equals("0"))
+            {
+                this.decorateTextInputUntrackedRideCount();
+            }
+
+            this.handleEditUntrackedRideCountVisibility();
+        }
     }
 
     private void decorateTextInputUntrackedRideCount()
     {
-        this.textInputEditTextUntrackedRideCount.setText(String.valueOf(this.viewModel.attraction.getUntracktedRideCount()));
+        this.textInputEditTextEditUntrackedRideCount.setText(String.valueOf(this.viewModel.attraction.getUntracktedRideCount()));
+        if(this.viewModel.attraction.getUntracktedRideCount() == 0)
+        {
+            this.viewModel.editUntrackedRideCountEnabled = false;
+        }
+    }
+
+    private void decorateButtonShowEditUntrackedRideCount()
+    {
+        this.buttonShowUntrackedRideCount.setText(getString(R.string.text_add_untracked_rides));
+        this.buttonShowUntrackedRideCount.setOnClickListener(this.createOnButtonEnableEditUntrackedRidesClickListener());
+    }
+
+    private View.OnClickListener createOnButtonEnableEditUntrackedRidesClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnButtonEnableEditUntrackedRidesClick();
+            }
+        };
+    }
+
+    private void handleOnButtonEnableEditUntrackedRidesClick()
+    {
+        this.viewModel.editUntrackedRideCountEnabled = true;
+        this.handleEditUntrackedRideCountVisibility();
+        this.textInputEditTextEditUntrackedRideCount.requestFocus();
+    }
+
+    private void handleEditUntrackedRideCountVisibility()
+    {
+        if(this.viewModel.attraction.getUntracktedRideCount() > 0 || this.viewModel.editUntrackedRideCountEnabled)
+        {
+            this.buttonShowUntrackedRideCount.setVisibility(View.GONE);
+            this.layoutEditUntrackedRideCount.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            this.layoutEditUntrackedRideCount.setVisibility(View.GONE);
+            this.buttonShowUntrackedRideCount.setVisibility(View.VISIBLE);
+        }
     }
 
     private TextView.OnEditorActionListener getOnEditorActionListener()
