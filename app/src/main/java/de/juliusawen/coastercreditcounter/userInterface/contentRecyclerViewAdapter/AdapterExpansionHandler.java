@@ -113,7 +113,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
     }
 
     @Override
-    protected boolean handleOnClick(View view, boolean performExternalClick)
+    protected boolean handleOnElementTypeClick(View view, boolean performExternalOnElementTypeClick)
     {
         if(view.getId() == R.id.imageViewRecyclerView)
         {
@@ -121,7 +121,7 @@ abstract class AdapterExpansionHandler extends AdapterSelectionHandler
             return true;
         }
 
-        return super.handleOnClick(view, performExternalClick);
+        return super.handleOnElementTypeClick(view, performExternalOnElementTypeClick);
     }
 
     protected void toggleExpansion(IElement item)

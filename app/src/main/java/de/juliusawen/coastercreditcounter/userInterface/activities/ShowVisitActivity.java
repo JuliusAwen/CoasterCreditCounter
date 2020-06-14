@@ -1,6 +1,5 @@
 package de.juliusawen.coastercreditcounter.userInterface.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
@@ -8,8 +7,6 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,17 +31,15 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 import de.juliusawen.coastercreditcounter.tools.Toaster;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.ActivityDistributor;
 import de.juliusawen.coastercreditcounter.tools.activityDistributor.RequestCode;
-import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.ConfirmSnackbar;
-import de.juliusawen.coastercreditcounter.tools.confirmSnackbar.IConfirmSnackbarClient;
 import de.juliusawen.coastercreditcounter.tools.logger.Log;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupItem;
 import de.juliusawen.coastercreditcounter.tools.menuTools.PopupMenuAgent;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapter;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.ContentRecyclerViewAdapterFacade;
 import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.GroupType;
-import de.juliusawen.coastercreditcounter.userInterface.toolFragments.AlertDialogFragment;
+import de.juliusawen.coastercreditcounter.userInterface.contentRecyclerViewAdapter.OnClickListenerType;
 
-public class ShowVisitActivity extends BaseActivity implements AlertDialogFragment.AlertDialogListener, IConfirmSnackbarClient
+public class ShowVisitActivity extends BaseActivity
 {
     private ShowVisitViewModel viewModel;
 
@@ -76,9 +71,9 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
                     .addOnElementTypeClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeClickListener(ElementType.VISITED_ATTRACTION))
                     .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
-                    .addOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION))
-                    .setOnIncreaseRideCountClickListener(this.createIncreaseRideCountOnClickListener())
-                    .setOnDecreaseRideCountClickListener(this.createDecreaseRideCountOnClickListener());
+                    .addOnClickListener(OnClickListenerType.INCREASE_RIDE_COUNT, this.createIncreaseRideCountOnClickListener())
+                    .addOnClickListener(OnClickListenerType.DECREASE_RIDE_COUNT, this.createDecreaseRideCountOnClickListener())
+                    .addOnClickListener(OnClickListenerType.REMOVE_VISITED_ATTRACTION, this.createOnRemoveVisitedAttractionClickListener());
 
             this.viewModel.adapterFacade.createPreconfiguredAdapter(this.viewModel.requestCode);
 
@@ -274,17 +269,12 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
     {
         this.viewModel.longClickedElement = (Element) view.getTag();
 
-        switch(elementType)
+        if(elementType == ElementType.GROUP_HEADER)
         {
-            case GROUP_HEADER:
-                return this.handleOnGroupHeaderLongClick(view);
-
-            case VISITED_ATTRACTION:
-                return this.handleOnVisitedAttractionLongClick(view);
-
-            default:
-                return super.handleOnElementTypeLongClick(elementType, view);
+            return this.handleOnGroupHeaderLongClick(view);
         }
+
+        return super.handleOnElementTypeLongClick(elementType, view);
     }
 
     private boolean handleOnGroupHeaderLongClick(View view)
@@ -300,98 +290,22 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
         return true;
     }
 
-    private boolean handleOnVisitedAttractionLongClick(View view)
-    {
-        PopupMenuAgent.getMenu()
-                .add(PopupItem.REMOVE_ELEMENT)
-                .show(ShowVisitActivity.this, view);
-
-        return true;
-    }
-
     @Override
     public void handlePopupItemClicked(PopupItem item)
     {
-        switch(item)
+        if(item == PopupItem.SORT_ATTRACTIONS)
         {
-            case SORT_ATTRACTIONS:
-                List<IElement> attractions = new ArrayList<>();
-                if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
-                {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
-                }
-                else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
-                {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
-                }
-                ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
-                break;
-
-            case REMOVE_ELEMENT:
-                if(((VisitedAttraction)this.viewModel.longClickedElement).fetchTotalRideCount() > 0)
-                {
-                    AlertDialogFragment alertDialogFragmentRemove =
-                            AlertDialogFragment.newInstance(
-                                    R.drawable.warning,
-                                    getString(R.string.alert_dialog_title_remove),
-                                    getString(R.string.alert_dialog_message_remove_visited_attraction, viewModel.longClickedElement.getName()),
-                                    getString(R.string.text_accept),
-                                    getString(R.string.text_cancel),
-                                    RequestCode.REMOVE,
-                                    false);
-
-                    alertDialogFragmentRemove.setCancelable(false);
-                    alertDialogFragmentRemove.show(getSupportFragmentManager(), Constants.FRAGMENT_TAG_ALERT_DIALOG);
-                }
-                else
-                {
-                    removeVisitedAttraction();
-                }
-                break;
-        }
-    }
-
-
-    @Override
-    public void handleAlertDialogClick(RequestCode requestCode, int which)
-    {
-        if(which == DialogInterface.BUTTON_POSITIVE)
-        {
-            if(requestCode == RequestCode.REMOVE)
+            List<IElement> attractions = new ArrayList<>();
+            if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
             {
-                super.setFloatingActionButtonVisibility(false);
-
-                ConfirmSnackbar.Show(
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.action_confirm_remove_text, viewModel.longClickedElement.getName()),
-                                Snackbar.LENGTH_LONG),
-                        requestCode,
-                        this);
+                attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
             }
+            else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+            {
+                attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+            }
+            ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
         }
-    }
-
-    @Override
-    public void handleActionConfirmed(RequestCode requestCode)
-    {
-        Log.i(String.format("handling confirmed action [%s]", requestCode));
-
-        if(requestCode == RequestCode.REMOVE)
-        {
-            removeVisitedAttraction();
-        }
-        super.setFloatingActionButtonVisibility(true);
-    }
-
-    private void removeVisitedAttraction()
-    {
-        Log.i(String.format("removing %s...", viewModel.longClickedElement));
-
-        super.markForUpdate(this.viewModel.longClickedElement.getParent());
-        super.markForDeletion(this.viewModel.longClickedElement, true);
-        updateContentRecyclerView();
-        this.setFloatingActionButtonVisibility(true);
     }
 
     private View.OnClickListener createIncreaseRideCountOnClickListener()
@@ -428,11 +342,32 @@ public class ShowVisitActivity extends BaseActivity implements AlertDialogFragme
 
     private void handleOnDecreaseRideCountClick(VisitedAttraction visitedAttraction)
     {
-        Log.v(String.format(" decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
+        Log.v(String.format("decreasing %s's ride count for %s", visitedAttraction.getOnSiteAttraction(), visitedAttraction.getParent()));
         visitedAttraction.decreaseTrackedRideCount(App.preferences.getIncrement());
         this.viewModel.adapterFacade.getAdapter().notifyItemChanged(visitedAttraction);
         super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
     }
+
+    private View.OnClickListener createOnRemoveVisitedAttractionClickListener()
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                handleOnRemoveVisitedAttractionClick((VisitedAttraction) view.getTag());
+            }
+        };
+    }
+
+    private void handleOnRemoveVisitedAttractionClick(VisitedAttraction visitedAttraction)
+    {
+        Log.d(String.format("removing %s...", visitedAttraction));
+        this.viewModel.adapterFacade.getAdapter().removeItem(visitedAttraction);
+        this.setFloatingActionButtonVisibility(true);
+        super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
+    }
+
 
     private boolean allAttractionsAdded()
     {

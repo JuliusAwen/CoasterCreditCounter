@@ -18,8 +18,7 @@ public class ContentRecyclerViewAdapterConfiguration
     private final Map<ElementType, View.OnClickListener> onClickListenersByElementType = new HashMap<>();
     private final Map<ElementType, View.OnLongClickListener> onLongClickListenersByElementType = new HashMap<>();
 
-    private View.OnClickListener onIncreaseRideCountClickListener;
-    private View.OnClickListener onDecreaseRideCountClickListener;
+    private final Map<OnClickListenerType, View.OnClickListener> onClickListenersByOnClickListenerType = new HashMap<>();
 
     // ElementTypes that are either expanded/collapsed or selected when parent is clicked
     private final LinkedHashSet<ElementType> relevantChildTypes = new LinkedHashSet<>();
@@ -64,25 +63,15 @@ public class ContentRecyclerViewAdapterConfiguration
         return this;
     }
 
-    public View.OnClickListener getOnIncreaseRideCountClickListener()
+    Map<OnClickListenerType, View.OnClickListener> getOnClickListenersByOnClickListenerType()
     {
-        return this.onIncreaseRideCountClickListener;
+        return this.onClickListenersByOnClickListenerType;
     }
 
-    public ContentRecyclerViewAdapterConfiguration setOnIncreaseRideCountClickListener(View.OnClickListener onIncreaseRideCountClickListener)
+    public ContentRecyclerViewAdapterConfiguration addOnClickListener(OnClickListenerType onClickListenerType, View.OnClickListener onClickListener)
     {
-        this.onIncreaseRideCountClickListener = onIncreaseRideCountClickListener;
-        return this;
-    }
-
-    public View.OnClickListener getOnDecreaseRideCountClickListener()
-    {
-        return this.onDecreaseRideCountClickListener;
-    }
-
-    public ContentRecyclerViewAdapterConfiguration setOnDecreaseRideCountClickListener(View.OnClickListener onDecreaseRideCountClickListener)
-    {
-        this.onDecreaseRideCountClickListener = onDecreaseRideCountClickListener;
+        this.onClickListenersByOnClickListenerType.put(onClickListenerType, onClickListener);
+        Log.d(String.format("%s", onClickListenerType));
         return this;
     }
 
@@ -152,31 +141,37 @@ public class ContentRecyclerViewAdapterConfiguration
             childTypesString.append(String.format("\n%s%s", indent, elementType));
         }
 
-        StringBuilder onClickListenerTypesString = new StringBuilder();
+        StringBuilder onElementTypeClickListenersString = new StringBuilder();
         for(ElementType elementType : this.onClickListenersByElementType.keySet())
         {
-            onClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
+            onElementTypeClickListenersString.append(String.format("\n%s%s", indent, elementType));
         }
 
-        StringBuilder onLongClickListenerTypesString = new StringBuilder();
+        StringBuilder onElementTypeLongClickListenersString = new StringBuilder();
         for(ElementType elementType : this.onLongClickListenersByElementType.keySet())
         {
-            onLongClickListenerTypesString.append(String.format("\n%s%s", indent, elementType));
+            onElementTypeLongClickListenersString.append(String.format("\n%s%s", indent, elementType));
+        }
+
+        StringBuilder onClickListenersString = new StringBuilder();
+        for(OnClickListenerType onClickListenerType : this.onClickListenersByOnClickListenerType.keySet())
+        {
+            onClickListenersString.append(String.format("\n%s%s", indent, onClickListenerType));
         }
 
         return String.format(Locale.getDefault(),
                 "ContentRecyclerViewConfiguration:\n" +
-                "    isSelectable[%S], isMultipleSelection[%S]\n" +
-                "    [%d] relevant child type(s)%s\n"+
-                "    [%d] OnElementTypeClickListener(s)%s\n"+
-                "    [%d] OnElementTypeLongClickListener(s)%s\n" +
-                "    OnIncreaseRideCountClickListener added [%S], OnDecreaseRideCountClickListener added [%S]",
+                    "    isSelectable[%S], isMultipleSelection[%S]\n" +
+                    "    [%d] relevant child type(s)%s\n"+
+                    "    [%d] OnElementTypeClickListener(s)%s\n"+
+                    "    [%d] OnElementTypeLongClickListener(s)%s\n" +
+                    "    [%d] OnClickListener(s)%s\n",
 
                 this.isSelecetable, this.isMultipleSelection,
                 this.relevantChildTypes.size(), childTypesString,
-                this.onClickListenersByElementType.size(), onClickListenerTypesString,
-                this.onLongClickListenersByElementType.size(), onLongClickListenerTypesString,
-                this.onIncreaseRideCountClickListener != null, this.onDecreaseRideCountClickListener != null
+                this.onClickListenersByElementType.size(), onElementTypeClickListenersString,
+                this.onLongClickListenersByElementType.size(), onElementTypeLongClickListenersString,
+                this.onClickListenersByOnClickListenerType.size(), onClickListenersString
         );
     }
 }

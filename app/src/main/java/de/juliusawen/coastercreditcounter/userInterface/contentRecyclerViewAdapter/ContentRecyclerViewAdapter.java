@@ -206,15 +206,15 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     }
 
     @Override
-    protected boolean handleOnClick(View view, boolean performExternalClick)
+    protected boolean handleOnElementTypeClick(View view, boolean performExternalOnElementTypeClick)
     {
-        return super.handleOnClick(view, performExternalClick);
+        return super.handleOnElementTypeClick(view, performExternalOnElementTypeClick);
     }
 
     @Override
-    protected boolean handleOnLongClick(View view, boolean performExternalClick)
+    protected boolean handleOnElementTypeLongClick(View view, boolean performExternalOnElementTypeLongClick)
     {
-        return super.handleOnLongClick(view, performExternalClick);
+        return super.handleOnElementTypeLongClick(view, performExternalOnElementTypeLongClick);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     {
         IElement element = super.getItem(position);
 
-        if(element.isVisitedAttraction() && super.hasRideCountClickListeners())
+        if(element.isVisitedAttraction())
         {
             return ItemViewType.VISITED_ATTRACTION.ordinal();
         }

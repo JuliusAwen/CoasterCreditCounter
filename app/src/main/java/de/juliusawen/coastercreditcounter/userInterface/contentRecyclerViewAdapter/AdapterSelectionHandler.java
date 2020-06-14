@@ -51,9 +51,9 @@ abstract class AdapterSelectionHandler extends AdapterDecorationHandler
     }
 
     @Override
-    protected boolean handleOnClick(View view, boolean performExternalClick)
+    protected boolean handleOnElementTypeClick(View view, boolean performExternalOnElementTypeClick)
     {
-        boolean isConsumed = super.handleOnClick(view, performExternalClick);
+        boolean isConsumed = super.handleOnElementTypeClick(view, performExternalOnElementTypeClick);
 
         if(super.isSelectable() && !isConsumed)
         {

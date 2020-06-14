@@ -66,34 +66,24 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
         return this.groupType;
     }
 
-    protected boolean hasExternalOnClickListeners()
+    protected boolean hasExternalOnElementTypeClickListeners()
     {
         return !(this.configuration.getOnClickListenersByElementType().isEmpty() && this.configuration.getOnLongClickListenersByElementType().isEmpty());
     }
 
-    protected Map<ElementType, View.OnClickListener> getExternalOnClickListenersByType()
+    protected Map<ElementType, View.OnClickListener> getExternalOnClickListenersByElementType()
     {
         return this.configuration.getOnClickListenersByElementType();
     }
 
-    protected Map<ElementType, View.OnLongClickListener> getExternalOnLongClickListenersByType()
+    protected Map<ElementType, View.OnLongClickListener> getExternalOnLongClickListenersByElementType()
     {
         return this.configuration.getOnLongClickListenersByElementType();
     }
 
-    protected boolean hasRideCountClickListeners()
+    protected Map<OnClickListenerType, View.OnClickListener> getExternalOnClickListenersByOnClickListenerType()
     {
-        return this.configuration.getOnIncreaseRideCountClickListener() != null && this.configuration.getOnDecreaseRideCountClickListener() != null;
-    }
-
-    protected View.OnClickListener getOnIncreaseRideCountClickListener()
-    {
-        return this.configuration.getOnIncreaseRideCountClickListener();
-    }
-
-    protected View.OnClickListener getOnDecreaseRideCountClickListener()
-    {
-        return this.configuration.getOnDecreaseRideCountClickListener();
+        return this.configuration.getOnClickListenersByOnClickListenerType();
     }
 
     @Override
