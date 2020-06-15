@@ -362,10 +362,13 @@ public class ShowVisitActivity extends BaseActivity
 
     private void handleOnRemoveVisitedAttractionClick(VisitedAttraction visitedAttraction)
     {
-        Log.d(String.format("removing %s...", visitedAttraction));
-        this.viewModel.adapterFacade.getAdapter().removeItem(visitedAttraction);
+        Log.i(String.format("removing %s...", viewModel.longClickedElement));
+
+        super.markForUpdate(this.viewModel.visit.getParent());
+        super.markForDeletion(visitedAttraction, true);
+
+        updateContentRecyclerView();
         this.setFloatingActionButtonVisibility(true);
-        super.markForUpdate(ShowVisitActivity.this.viewModel.visit);
     }
 
 
