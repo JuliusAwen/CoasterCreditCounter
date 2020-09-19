@@ -118,7 +118,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction fly = OnSiteAttraction.create("F.L.Y.");
         fly.setModel(models.Vekoma_FlyingCoaster);
-        fly.setStatus(statuses.UnderConstruction);
+
         phantasialand.addChildAndSetParent(fly);
 
         OnSiteAttraction coloradoAdventure = OnSiteAttraction.create("Colorado Adventure", 11);
