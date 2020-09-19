@@ -241,19 +241,19 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
     {
         if(this.recyclerView == null)
         {
-            Log.w("cannot scroll - ContentRecyclerViewAdapter is not attached to RecyclerView yet");
+            Log.w("cannot scroll: ContentRecyclerViewAdapter is not attached to RecyclerView yet");
             return;
         }
 
         if(this.content.isEmpty())
         {
-            Log.w("cannot scroll - Content is empty");
+            Log.w("cannot scroll: Content is empty");
             return;
         }
 
         if(!this.exists(element))
         {
-            Log.w(String.format("cannot scroll - %s does not exist in Content", element));
+            Log.w(String.format("cannot scroll: %s does not exist in Content", element));
             return;
         }
 

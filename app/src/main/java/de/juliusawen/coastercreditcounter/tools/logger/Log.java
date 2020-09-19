@@ -18,6 +18,7 @@ import de.juliusawen.coastercreditcounter.tools.StringTool;
 public abstract class Log
 {
     private static StringBuilder rawOutput = new StringBuilder();
+    private static final String seperator = "§";
 
     private static final String tag = Constants.LOG_TAG;
     private static LogLevel printRestrictionLogLevel = LogLevel.NONE;
@@ -215,7 +216,7 @@ public abstract class Log
 
     private static void store(LogLevel logLevel, String message)
     {
-        Log.rawOutput.append(String.format("%s %s %s-%s\n", Constants.LOG_TAG, new Date(), logLevel.ordinal(), message));
+        Log.rawOutput.append(String.format("%s %s %s%s%s\n", Constants.LOG_TAG, new Date(), logLevel.ordinal(), Log.seperator, message));
     }
 
     public static String getRawOutput()
@@ -247,7 +248,7 @@ public abstract class Log
                 {
                     if(line.contains(Constants.LOG_TAG))
                     {
-                        String[] substrings = line.split("-");
+                        String[] substrings = line.split(Log.seperator);
                         String[] dateTimeAndLogLevel = substrings[0].split(" ");
                         int logLevel = Integer.parseInt(dateTimeAndLogLevel[7]);
 
