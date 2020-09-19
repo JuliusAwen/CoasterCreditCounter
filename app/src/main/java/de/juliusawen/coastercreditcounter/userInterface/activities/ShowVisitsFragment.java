@@ -225,6 +225,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
     private void pickDate()
     {
         Log.i(String.format("picking date for visit in %s", this.viewModel.park));
+        this.fragmentInteraction.setFloatingActionButtonVisibility(false);
 
         this.viewModel.calendar = (Calendar)((Visit)this.viewModel.longClickedElement).getCalendar().clone();
         int year = this.viewModel.calendar.get(Calendar.YEAR);
@@ -238,6 +239,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             {
                 handleOnDateSet(year, month, day);
                 viewModel.datePickerDialog.dismiss();
+                ShowVisitsFragment.this.fragmentInteraction.setFloatingActionButtonVisibility(true);
             }
         }, year, month, day);
 
@@ -246,6 +248,7 @@ public class ShowVisitsFragment extends Fragment implements AlertDialogFragment.
             public void onClick(DialogInterface dialog, int position)
             {
                 viewModel.datePickerDialog.dismiss();
+                ShowVisitsFragment.this.fragmentInteraction.setFloatingActionButtonVisibility(true);
             }
         });
 

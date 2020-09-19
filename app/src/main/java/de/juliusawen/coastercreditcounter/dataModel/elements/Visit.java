@@ -106,8 +106,10 @@ public final class Visit extends Element implements IPersistable
     public static boolean isTodayOrInTheFuture(Visit visit)
     {
         Calendar instant = Calendar.getInstance();
-        return Visit.isSameDay(visit.getCalendar(), instant) ||
-                (visit.getCalendar().get(Calendar.YEAR) > instant.get(Calendar.YEAR) || visit.getCalendar().get(Calendar.DAY_OF_YEAR) > instant.get(Calendar.DAY_OF_YEAR));
+
+        return visit.getCalendar().get(Calendar.YEAR) > instant.get(Calendar.YEAR) ||
+                (visit.getCalendar().get(Calendar.YEAR) == instant.get(Calendar.YEAR) && visit.getCalendar().get(Calendar.DAY_OF_YEAR) > instant.get(Calendar.DAY_OF_YEAR)) ||
+                Visit.isSameDay(visit.getCalendar(), instant);
     }
 
     public static SortOrder getSortOrder()

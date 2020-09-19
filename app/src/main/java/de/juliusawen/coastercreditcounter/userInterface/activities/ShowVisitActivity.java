@@ -98,61 +98,6 @@ public class ShowVisitActivity extends BaseActivity
     }
 
     @Override
-    protected void resume()
-    {
-        invalidateOptionsMenu();
-
-        if(Visit.isTodayOrInTheFuture(this.viewModel.visit))
-        {
-            this.viewModel.visit.setEditingEnabled(true);
-        }
-
-        if(this.viewModel.visit.isEditingEnabled())
-        {
-            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
-        }
-        else
-        {
-            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
-        }
-
-        this.setFloatingActionButtonVisibility(true);
-
-        Log.d(String.format("%s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(super.getOptionsItem(item))
-        {
-            case ENABLE_EDITING:
-            {
-                this.viewModel.visit.setEditingEnabled(true);
-                invalidateOptionsMenu();
-                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
-                this.setFloatingActionButtonVisibility(true);
-
-                Log.d(String.format("<ENABLE_EDITING> enabled editing for %s", this.viewModel.visit));
-                return true;
-            }
-
-            case DISABLE_EDITING:
-            {
-                this.viewModel.visit.setEditingEnabled(false);
-                invalidateOptionsMenu();
-                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
-                this.setFloatingActionButtonVisibility(false);
-
-                Log.d(String.format("<DISABLE_EDITING> disabled editing %s", this.viewModel.visit));
-                return true;
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -210,6 +155,58 @@ public class ShowVisitActivity extends BaseActivity
         }
 
         return sortedVisitedAttractions;
+    }
+
+    @Override
+    protected void resume()
+    {
+        invalidateOptionsMenu();
+
+        this.viewModel.visit.setEditingEnabled(Visit.isTodayOrInTheFuture(this.viewModel.visit));
+
+        if(this.viewModel.visit.isEditingEnabled())
+        {
+            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
+        }
+        else
+        {
+            this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
+        }
+
+        this.setFloatingActionButtonVisibility(true);
+
+        Log.d(String.format("%s isEditingEnabled[%S]", this.viewModel.visit, this.viewModel.visit.isEditingEnabled()));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(super.getOptionsItem(item))
+        {
+            case ENABLE_EDITING:
+            {
+                this.viewModel.visit.setEditingEnabled(true);
+                invalidateOptionsMenu();
+                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(false);
+                this.setFloatingActionButtonVisibility(true);
+
+                Log.d(String.format("<ENABLE_EDITING> enabled editing for %s", this.viewModel.visit));
+                return true;
+            }
+
+            case DISABLE_EDITING:
+            {
+                this.viewModel.visit.setEditingEnabled(false);
+                invalidateOptionsMenu();
+                this.viewModel.adapterFacade.getAdapter().setFormatAsPrettyPrint(true);
+                this.setFloatingActionButtonVisibility(false);
+
+                Log.d(String.format("<DISABLE_EDITING> disabled editing %s", this.viewModel.visit));
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void decorateFloatingActionButton()
