@@ -118,7 +118,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction fly = OnSiteAttraction.create("F.L.Y.");
         fly.setModel(models.Vekoma_FlyingCoaster);
-
+        fly.addChildAndSetParent(Note.create("Soft opened on september 16th 2020"));
         phantasialand.addChildAndSetParent(fly);
 
         OnSiteAttraction coloradoAdventure = OnSiteAttraction.create("Colorado Adventure", 11);
@@ -434,7 +434,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction untamed = OnSiteAttraction.create("Untamed");
         untamed.setModel(models.RMC_IBoxTrack);
-        untamed.addChildAndSetParent(Note.create("Attended opening day on June 1st 2019"));
+        untamed.addChildAndSetParent(Note.create("Attended opening day on june 1st 2019"));
         walibiHolland.addChildAndSetParent(untamed);
 
         OnSiteAttraction lostGravity = OnSiteAttraction.create("Lost Gravity", 7);
@@ -1085,7 +1085,7 @@ public final class DatabaseMock implements IDatabaseWrapper
 
         OnSiteAttraction fenix = OnSiteAttraction.create("Fēnix");
         fenix.setModel(models.BollingerAndMabillard_WingCoaster);
-        fenix.addChildAndSetParent(Note.create("Attended opening day on July 7th 2018"));
+        fenix.addChildAndSetParent(Note.create("Attended opening day on july 7th 2018"));
         toverland.addChildAndSetParent(fenix);
 
         OnSiteAttraction dwervelwind = OnSiteAttraction.create("Dwervelwind");
