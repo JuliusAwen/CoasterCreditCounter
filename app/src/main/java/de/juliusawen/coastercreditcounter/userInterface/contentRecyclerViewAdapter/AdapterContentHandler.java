@@ -230,7 +230,7 @@ abstract class AdapterContentHandler extends RecyclerView.Adapter<RecyclerView.V
 
     protected void addBottomSpacerIfRequested()
     {
-        if(this.configuration.useBottomSpacer() && !this.content.isEmpty() && !(this.getItem(this.getItemCount() - 1) instanceof BottomSpacer))
+        if(this.configuration.useBottomSpacer() && !this.content.isEmpty() && !(this.getItem(this.getItemCount() - 1).isBottomSpacer()))
         {
             this.insertItem(new BottomSpacer());
             Log.d("added BottomSpacer");

@@ -40,7 +40,6 @@ public class ContentRecyclerViewAdapter extends AdapterExpansionHandler implemen
     @Override
     public void insertItem(IElement element)
     {
-        Log.i(String.format("inserting %s...", element));
         super.insertItem(element);
     }
 

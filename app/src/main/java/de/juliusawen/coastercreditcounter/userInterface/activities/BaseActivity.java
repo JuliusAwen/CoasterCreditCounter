@@ -93,6 +93,13 @@ public abstract class BaseActivity extends AppCompatActivity  implements IPopupM
     protected abstract void create();
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.frame(LogLevel.INFO, String.format("processing result [%s]", this.getClass().getSimpleName()), '*', false);
+    }
+
+    @Override
     protected final void onResume()
     {
         super.onResume();

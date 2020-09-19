@@ -180,20 +180,36 @@ public class ShowVisitActivity extends BaseActivity
 
                 case SORT_ATTRACTIONS:
                 {
-                    IElement parent = resultElements.get(0).getParent();
-                    if(parent != null)
-                    {
-                        this.viewModel.visit.reorderChildren(resultElements);
-                        Log.d(String.format("<SortAttractions> replaced %s's <children> with <sorted children>", this.viewModel.visit));
+                    this.viewModel.visit.reorderChildren(this.fetchSortedVisitedAttractions(resultElements));
+                    Log.d(String.format("<SortAttractions> replaced %s's <children> with <sorted children>", this.viewModel.visit));
 
-                        updateContentRecyclerView();
+                    updateContentRecyclerView();
 
-                        super.markForUpdate(this.viewModel.visit);
-                    }
+                    super.markForUpdate(this.viewModel.visit);
                     break;
                 }
             }
         }
+    }
+
+    private List<IElement> fetchSortedVisitedAttractions(List<IElement> onSiteAttractions)
+    {
+        List<IElement> sortedVisitedAttractions = new ArrayList<>();
+        List<VisitedAttraction> visitedAttractions = this.viewModel.visit.getChildrenAsType(VisitedAttraction.class);
+
+        for(IElement onSiteAttraction : onSiteAttractions)
+        {
+            for(VisitedAttraction visitedAttraction : visitedAttractions)
+            {
+                if(visitedAttraction.getOnSiteAttraction().equals(onSiteAttraction))
+                {
+                    sortedVisitedAttractions.add(visitedAttraction);
+                    break;
+                }
+            }
+        }
+
+        return sortedVisitedAttractions;
     }
 
     private void decorateFloatingActionButton()
@@ -313,14 +329,12 @@ public class ShowVisitActivity extends BaseActivity
             case SORT_ATTRACTIONS:
             {
                 List<IElement> attractions = new ArrayList<>();
-                if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+                List<VisitedAttraction> visitedAttractions = this.viewModel.longClickedElement.getChildrenAsType(VisitedAttraction.class);
+                for(VisitedAttraction visitedAttraction : visitedAttractions)
                 {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+                    attractions.add(visitedAttraction.getOnSiteAttraction());
                 }
-                else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
-                {
-                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
-                }
+
                 ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
                 break;
             }
@@ -387,12 +401,12 @@ public class ShowVisitActivity extends BaseActivity
 
     private void handleOnRemoveVisitedAttractionClick(VisitedAttraction visitedAttraction)
     {
-        Log.i(String.format("removing %s...", viewModel.longClickedElement));
+        Log.i(String.format("removing %s...", this.viewModel.longClickedElement));
 
         super.markForUpdate(this.viewModel.visit.getParent());
         super.markForDeletion(visitedAttraction, true);
 
-        updateContentRecyclerView();
+        this.updateContentRecyclerView();
         this.setFloatingActionButtonVisibility(true);
     }
 
