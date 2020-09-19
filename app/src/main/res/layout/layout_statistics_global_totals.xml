@@ -37,4 +37,7 @@
 
     </LinearLayout>
 
+    <include
+        layout="@layout/layout_text_view_more"/>
+
 </FrameLayout>

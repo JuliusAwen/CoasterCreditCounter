@@ -33,6 +33,8 @@
     <string name="text_total_rides">total rides: %1$d</string>
     <string name="text_total_rides_untracked">(%1$d untracked)</string>
 
+    <string name="text_more">…</string>
+
 
     <!--STATISTICS-->
     <string name="statistic_total_coaster_credits"><b>Total credits:</b></string>

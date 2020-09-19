@@ -36,4 +36,7 @@
 
     </ScrollView>
 
+    <include
+        layout="@layout/layout_text_view_more"/>
+
 </de.juliusawen.coastercreditcounter.userInterface.customViews.FrameLayoutWithMaxHeight>
