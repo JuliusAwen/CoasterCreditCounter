@@ -103,14 +103,11 @@ public final class Visit extends Element implements IPersistable
         super.setName(date);
     }
 
-    public static boolean isCurrentVisit(Visit visit)
+    public static boolean isTodayOrInTheFuture(Visit visit)
     {
-        return Visit.isSameDay(Calendar.getInstance(), visit.getCalendar());
-    }
-
-    public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)
-    {
-        return calendar.get(Calendar.YEAR) == compareCalendar.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == compareCalendar.get(Calendar.DAY_OF_YEAR);
+        Calendar instant = Calendar.getInstance();
+        return Visit.isSameDay(visit.getCalendar(), instant) ||
+                (visit.getCalendar().get(Calendar.YEAR) > instant.get(Calendar.YEAR) || visit.getCalendar().get(Calendar.DAY_OF_YEAR) > instant.get(Calendar.DAY_OF_YEAR));
     }
 
     public static SortOrder getSortOrder()
@@ -139,6 +136,11 @@ public final class Visit extends Element implements IPersistable
 
         Log.i(String.format(Locale.getDefault(), "[%d] visits found for [%s]", foundVisits.size(), StringTool.fetchSimpleDate(calendar)));
         return foundVisits;
+    }
+
+    public static boolean isSameDay(Calendar calendar, Calendar compareCalendar)
+    {
+        return calendar.get(Calendar.YEAR) == compareCalendar.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == compareCalendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public void setEditingEnabled(boolean enabled)

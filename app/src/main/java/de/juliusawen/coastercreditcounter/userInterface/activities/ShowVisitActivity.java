@@ -101,7 +101,7 @@ public class ShowVisitActivity extends BaseActivity
     {
         invalidateOptionsMenu();
 
-        if(Visit.isCurrentVisit(this.viewModel.visit))
+        if(Visit.isTodayOrInTheFuture(this.viewModel.visit))
         {
             this.viewModel.visit.setEditingEnabled(true);
         }
