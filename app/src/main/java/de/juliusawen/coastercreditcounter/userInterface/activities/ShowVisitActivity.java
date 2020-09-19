@@ -71,6 +71,7 @@ public class ShowVisitActivity extends BaseActivity
                     .addOnElementTypeClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeClickListener(ElementType.GROUP_HEADER))
                     .addOnElementTypeClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeClickListener(ElementType.VISITED_ATTRACTION))
                     .addOnElementTypeLongClickListener(ElementType.GROUP_HEADER, super.createOnElementTypeLongClickListener(ElementType.GROUP_HEADER))
+                    .addOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION, super.createOnElementTypeLongClickListener(ElementType.VISITED_ATTRACTION))
                     .addOnClickListener(OnClickListenerType.INCREASE_RIDE_COUNT, this.createIncreaseRideCountOnClickListener())
                     .addOnClickListener(OnClickListenerType.DECREASE_RIDE_COUNT, this.createDecreaseRideCountOnClickListener())
                     .addOnClickListener(OnClickListenerType.REMOVE_VISITED_ATTRACTION, this.createOnRemoveVisitedAttractionClickListener());
@@ -269,12 +270,17 @@ public class ShowVisitActivity extends BaseActivity
     {
         this.viewModel.longClickedElement = (Element) view.getTag();
 
-        if(elementType == ElementType.GROUP_HEADER)
+        switch(elementType)
         {
-            return this.handleOnGroupHeaderLongClick(view);
-        }
+            case GROUP_HEADER:
+                return this.handleOnGroupHeaderLongClick(view);
 
-        return super.handleOnElementTypeLongClick(elementType, view);
+            case VISITED_ATTRACTION:
+                return this.handleOnVisitedAttractionLongClick(view);
+
+            default:
+                return super.handleOnElementTypeLongClick(elementType, view);
+        }
     }
 
     private boolean handleOnGroupHeaderLongClick(View view)
@@ -290,21 +296,40 @@ public class ShowVisitActivity extends BaseActivity
         return true;
     }
 
+    private boolean handleOnVisitedAttractionLongClick(View view)
+    {
+        PopupMenuAgent.getMenu()
+                .add(PopupItem.REMOVE_ELEMENT)
+                .show(ShowVisitActivity.this, view);
+
+        return true;
+    }
+
     @Override
     public void handlePopupItemClicked(PopupItem item)
     {
-        if(item == PopupItem.SORT_ATTRACTIONS)
+        switch(item)
         {
-            List<IElement> attractions = new ArrayList<>();
-            if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+            case SORT_ATTRACTIONS:
             {
-                attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+                List<IElement> attractions = new ArrayList<>();
+                if(this.viewModel.longClickedElement.hasChildrenOfType(Attraction.class))
+                {
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(Attraction.class);
+                }
+                else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+                {
+                    attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                }
+                ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
+                break;
             }
-            else if(this.viewModel.longClickedElement.hasChildrenOfType(VisitedAttraction.class))
+
+            case REMOVE_ELEMENT:
             {
-                attractions = this.viewModel.longClickedElement.getChildrenOfType(VisitedAttraction.class);
+                this.handleOnRemoveVisitedAttractionClick((VisitedAttraction) this.viewModel.longClickedElement);
+                break;
             }
-            ActivityDistributor.startActivitySortForResult(ShowVisitActivity.this, RequestCode.SORT_ATTRACTIONS, attractions);
         }
     }
 
