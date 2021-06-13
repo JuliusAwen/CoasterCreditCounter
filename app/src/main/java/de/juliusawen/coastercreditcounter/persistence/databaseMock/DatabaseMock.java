@@ -227,6 +227,7 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides14122018.put(chiapas, 1);
         phantasialand.addChildAndSetParent(this.createVisit(14, 12, 2018, rides14122018));
 
+        //2019
         LinkedHashMap<OnSiteAttraction, Integer> rides28092019 = new LinkedHashMap<>();
         rides28092019.put(coloradoAdventure, 1);
         rides28092019.put(blackMamba, 1);
@@ -242,6 +243,20 @@ public final class DatabaseMock implements IDatabaseWrapper
         rides28092019.put(riverQuest, 1);
         rides28092019.put(geisterRiksha, 1);
         phantasialand.addChildAndSetParent(this.createVisit(28, 9, 2019, rides28092019));
+
+        //2020
+        LinkedHashMap<OnSiteAttraction, Integer> rides23092020 = new LinkedHashMap<>();
+        rides23092020.put(taron, 1);
+        rides23092020.put(blackMamba, 1);
+        rides23092020.put(fly, 3);
+        rides23092020.put(coloradoAdventure, 1);
+        rides23092020.put(winjasFear, 1);
+        rides23092020.put(fengJuPalace, 1);
+        rides23092020.put(pferdekarusell, 1);
+        rides23092020.put(chiapas, 1);
+        rides23092020.put(geisterRiksha, 1);
+        rides23092020.put(mausAuChocolat, 1);
+        phantasialand.addChildAndSetParent(this.createVisit(23, 9, 2020, rides23092020));
     }
 
     private void mockHeidePark()
